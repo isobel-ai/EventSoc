@@ -1,0 +1,52 @@
+{
+  "name": "eventsoc",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "test": "jest --passWithNoTests"
+  },
+  "dependencies": {
+    "@expo/webpack-config": "^19.0.0",
+    "@gluestack-style/react": "^1.0.5",
+    "@gluestack-ui/themed": "^1.0.5",
+    "@reduxjs/toolkit": "^1.9.7",
+    "expo": "~49.0.13",
+    "expo-status-bar": "~1.6.0",
+    "firebase": "^10.5.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.72.5",
+    "react-native-svg": "13.9.0",
+    "react-native-web": "~0.19.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@types/react": "~18.2.14",
+    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "@typescript-eslint/parser": "^6.7.5",
+    "eslint": "^8.51.0",
+    "eslint-plugin-react": "^7.33.2",
+    "husky": "^8.0.3",
+    "jest": "^29.7.0",
+    "lint-staged": "^14.0.1",
+    "prettier": "3.0.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^5.1.3"
+  },
+  "private": true,
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && test"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  }
+}
