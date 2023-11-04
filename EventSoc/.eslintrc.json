@@ -32,6 +32,6 @@
         "default-param-last": ["error"],
         "dot-notation": "error",
         "eqeqeq": ["error", "smart"],
-        "sort-imports": "error"
+        "react/react-in-jsx-scope": "off"
     }   
 }
