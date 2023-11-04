@@ -3,12 +3,21 @@ import {
   ButtonText,
   ButtonIcon,
   AddIcon,
-  VStack
+  VStack,
+  ScrollView
 } from "@gluestack-ui/themed";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ScreenView from "../components/ScreenView";
+import SocEvent from "../models/SocEvent";
+import { getManagedEvents } from "../services/eventsService";
 
 export default function ManageEventsScreen() {
+  const [managedEvents, setManagedEvents] = useState<SocEvent[]>([]);
+
+  useEffect(() => getManagedEvents(setManagedEvents), []);
+
+  console.log(managedEvents);
+
   return (
     <ScreenView>
       <VStack>
@@ -17,6 +26,7 @@ export default function ManageEventsScreen() {
           <ButtonText>Create Event</ButtonText>
         </Button>
       </VStack>
+      <ScrollView></ScrollView>
     </ScreenView>
   );
 }
