@@ -1,15 +1,14 @@
-import { GluestackUIProvider, Text, Box } from "@gluestack-ui/themed";
+import { GluestackUIProvider } from "@gluestack-ui/themed";
 import { config } from "./config/gluestack-ui.config";
+import { NavigationContainer } from "@react-navigation/native";
+import MainTabNavigator from "./src/navigation/MainTabNavigator";
 
 export default function App() {
   return (
     <GluestackUIProvider config={config}>
-      <Box
-        width="100%"
-        justifyContent="center"
-        alignItems="center">
-        <Text>Open up App.js to start working on your app!</Text>
-      </Box>
+      <NavigationContainer>
+        <MainTabNavigator />
+      </NavigationContainer>
     </GluestackUIProvider>
   );
 }
