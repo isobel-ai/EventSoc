@@ -18,7 +18,6 @@
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/drawer": "^6.6.6",
     "@react-navigation/native": "^6.1.9",
-    "@reduxjs/toolkit": "^1.9.7",
     "expo": "~49.0.13",
     "expo-status-bar": "~1.6.0",
     "firebase": "^10.5.0",
