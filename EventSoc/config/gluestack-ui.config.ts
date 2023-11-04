@@ -27,6 +27,8 @@ export const gluestackUIConfig = createConfig({
   } as const,
   tokens: {
     colors: {
+      navigationLightPink: '#f472b6',
+      navigationDarkPink: '#ec4899',
       rose50: '#fff1f2',
       rose100: '#ffe4e6',
       rose200: '#fecdd3',
