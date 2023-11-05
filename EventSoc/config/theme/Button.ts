@@ -6,7 +6,6 @@ export const Button = createStyle({
   flexDirection: "row",
   justifyContent: "center",
   alignItems: "center",
-  width: "70%",
 
   _text: {
     color: "$textLight0",
