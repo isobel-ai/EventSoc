@@ -6,7 +6,5 @@ interface Props {
 }
 
 export default function ScreenView(props: Props) {
-  return (
-    <View style={{ paddingTop: 20, paddingBottom: 20 }}>{props.children}</View>
-  );
+  return <View style={{ padding: 20 }}>{props.children}</View>;
 }
