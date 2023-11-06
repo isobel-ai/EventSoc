@@ -1,10 +1,10 @@
-import ScreenView from "../components/ScreenView";
 import { Text } from "@gluestack-ui/themed";
+import ScreenView from "../../components/ScreenView";
 
 export default function CreateEventScreen() {
   return (
     <ScreenView>
-      <Text>Create Event Screen</Text>
+      <Text>Create event</Text>
     </ScreenView>
   );
 }

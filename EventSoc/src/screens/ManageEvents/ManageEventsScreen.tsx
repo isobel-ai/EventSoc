@@ -7,12 +7,12 @@ import {
   ScrollView
 } from "@gluestack-ui/themed";
 import React, { useEffect, useState } from "react";
-import ScreenView from "../components/ScreenView";
-import SocEvent from "../models/SocEvent";
-import { getManagedEvents } from "../services/eventsService";
-import EventList from "../components/EventList";
+import ScreenView from "../../components/ScreenView";
+import SocEvent from "../../models/SocEvent";
+import { getManagedEvents } from "../../services/eventsService";
+import EventList from "../../components/EventList";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { ManageEventsStackParamList } from "../navigation/ManageEventsStackNavigator";
+import { ManageEventsStackParamList } from "../../navigation/ManageEventsStackNavigator";
 
 type Props = {
   navigation: StackNavigationProp<ManageEventsStackParamList>;

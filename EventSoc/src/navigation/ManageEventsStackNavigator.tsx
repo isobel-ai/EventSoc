@@ -2,10 +2,10 @@ import {
   StackNavigationOptions,
   createStackNavigator
 } from "@react-navigation/stack";
-import ManageEventsScreen from "../screens/ManageEventsScreen";
-import CreateEventScreen from "../screens/CreateEventScreen";
+import ManageEventsScreen from "../screens/ManageEvents/ManageEventsScreen";
 import { config } from "../../config/gluestack-ui.config";
-import EditEventScreen from "../screens/EditEventScreen";
+import CreateEventScreen from "../screens/ManageEvents/CreateEventScreen";
+import EditEventScreen from "../screens/ManageEvents/EditEventScreen";
 
 export type ManageEventsStackParamList = {
   Home: undefined;
