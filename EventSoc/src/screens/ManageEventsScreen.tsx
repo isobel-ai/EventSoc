@@ -11,8 +11,14 @@ import ScreenView from "../components/ScreenView";
 import SocEvent from "../models/SocEvent";
 import { getManagedEvents } from "../services/eventsService";
 import EventList from "../components/EventList";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { ManageEventsStackParamList } from "../navigation/ManageEventsStackNavigator";
 
-export default function ManageEventsScreen() {
+type Props = {
+  navigation: StackNavigationProp<ManageEventsStackParamList>;
+};
+
+export default function ManageEventsScreen(props: Props) {
   const [managedEvents, setManagedEvents] = useState<SocEvent[]>([]);
 
   useEffect(() => getManagedEvents(setManagedEvents), []);
@@ -22,7 +28,8 @@ export default function ManageEventsScreen() {
       <VStack space={"md"}>
         <Button
           size={"xl"}
-          width={325}>
+          width={325}
+          onPress={() => props.navigation.navigate("Create Event")}>
           <ButtonIcon
             as={AddIcon}
             size="xl"
