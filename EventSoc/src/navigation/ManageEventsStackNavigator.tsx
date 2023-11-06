@@ -6,6 +6,7 @@ import ManageEventsScreen from "../screens/ManageEvents/ManageEventsScreen";
 import { config } from "../../config/gluestack-ui.config";
 import CreateEventScreen from "../screens/ManageEvents/CreateEventScreen";
 import EditEventScreen from "../screens/ManageEvents/EditEventScreen";
+import { CloseIcon, Icon } from "@gluestack-ui/themed";
 
 export type ManageEventsStackParamList = {
   Home: undefined;
@@ -20,7 +21,14 @@ export default function ManageEventsStackNavigator() {
     headerStyle: {
       backgroundColor: config.tokens.colors.navigationDarkPink
     },
-    headerBackTitleVisible: false
+    headerBackTitleVisible: false,
+    headerBackImage: () => (
+      <Icon
+        as={CloseIcon}
+        size="xl"
+        style={{ paddingLeft: 40 }}
+      />
+    )
   });
 
   return (
