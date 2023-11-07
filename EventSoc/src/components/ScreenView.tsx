@@ -1,10 +1,16 @@
-import { View } from "@gluestack-ui/themed";
 import { ReactNode } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Props {
   children: ReactNode;
 }
 
 export default function ScreenView(props: Props) {
-  return <View style={{ padding: 20 }}>{props.children}</View>;
+  return (
+    <SafeAreaView
+      edges={["bottom", "left", "right"]}
+      style={{ paddingTop: 20, paddingBottom: 10 }}>
+      {props.children}
+    </SafeAreaView>
+  );
 }
