@@ -27,7 +27,7 @@ export function retrieveEventPicture(
 
 function uploadEventImage(srcUrl: string, destUrl: string) {
   const destRef = ref(eventPicturesRef, destUrl);
-  fetch(srcUrl)
+  return fetch(srcUrl)
     .then((res) => res.blob())
     .then((blob) => uploadBytes(destRef, blob))
     .catch((err) => console.log(err));
@@ -37,8 +37,12 @@ export function createEvent(createSocEvent: CreateSocEvent) {
   const eventRef = doc(eventsCol);
 
   if (createSocEvent.socEvent.hasPicture) {
-    uploadEventImage(createSocEvent.pictureURL, eventRef.id);
+    return uploadEventImage(createSocEvent.pictureURL, eventRef.id).then(() =>
+      setDoc(eventRef, createSocEvent.socEvent).catch((err) => console.log(err))
+    );
   }
 
-  setDoc(eventRef, createSocEvent.socEvent).catch((err) => console.log(err));
+  return setDoc(eventRef, createSocEvent.socEvent).catch((err) =>
+    console.log(err)
+  );
 }
