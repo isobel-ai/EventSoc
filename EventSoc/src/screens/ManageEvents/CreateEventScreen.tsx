@@ -1,5 +1,5 @@
 import ScreenView from "../../components/ScreenView";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { StackScreenProps } from "@react-navigation/stack";
 import { ManageEventsStackParamList } from "../../navigation/ManageEventsStackNavigator";
 import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
@@ -9,9 +9,7 @@ import { CreateSocEvent, defaultCreateSocEvent } from "../../models/SocEvent";
 import { createEvent } from "../../services/eventsService";
 import CreateEventAlertDialog from "../../components/CreateEventAlertDialog";
 
-type Props = {
-  navigation: StackNavigationProp<ManageEventsStackParamList>;
-};
+type Props = StackScreenProps<ManageEventsStackParamList, "Create Event">;
 
 export default function CreateEventScreen(props: Props) {
   const [createSocEvent, setCreateSocEvent] = useState<CreateSocEvent>(
