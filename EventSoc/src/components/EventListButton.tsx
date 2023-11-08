@@ -11,42 +11,49 @@ import {
   MenuItemLabel,
   TrashIcon
 } from "@gluestack-ui/themed";
-import SocEvent from "../models/SocEvent";
+import { RetrieveSocEvent } from "../models/SocEvent";
 import { useEffect, useState } from "react";
-import { getEventPicture } from "../services/eventsService";
+import { retrieveEventPicture } from "../services/eventsService";
 import { config } from "../../config/gluestack-ui.config";
 
 interface Props {
-  event: SocEvent;
+  retrieveSocEvent: RetrieveSocEvent;
 }
 
 export default function EventListButton(props: Props) {
   const [img, setImg] = useState<string>("");
 
   useEffect(() => {
-    props.event.pictureURL && getEventPicture(props.event.pictureURL, setImg);
+    props.retrieveSocEvent.socEvent.hasPicture &&
+      retrieveEventPicture(props.retrieveSocEvent.id, setImg);
   }, []);
 
   return (
     <Button
       backgroundColor={config.tokens.colors.eventButtonGray}
       height={100}
-      width={325}>
+      width={325}
+      style={img ? { justifyContent: "flex-start" } : {}}>
       {img && (
         <Image
           size="md"
           source={img}
           alt=""
-          style={{ position: "absolute", left: 10 }}
+          style={{ left: -10 }}
         />
       )}
-      <ButtonText>{props.event.name}</ButtonText>
+      <ButtonText
+        numberOfLines={2}
+        ellipsizeMode="tail"
+        lineBreakStrategyIOS="standard">
+        {props.retrieveSocEvent.socEvent.name}
+      </ButtonText>
       <Menu
         placement="bottom right"
         trigger={({ ...triggerProps }) => {
           return (
             <Button
-              style={{ position: "absolute", right: 10, top: 5 }}
+              style={{ position: "absolute", right: 10, top: -5 }}
               {...triggerProps}
               variant="link">
               <ButtonIcon
