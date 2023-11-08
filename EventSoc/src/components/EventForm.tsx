@@ -13,24 +13,23 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { StyleProp, ViewStyle } from "react-native";
 import { setDate, setTime } from "../helpers/DateTimeHelper";
+import { CreateSocEvent } from "../models/SocEvent";
 
 interface Props {
-  image: string;
-  setImage: React.Dispatch<React.SetStateAction<string>>;
-
-  setName: React.Dispatch<React.SetStateAction<string>>;
-
-  setDesc: React.Dispatch<React.SetStateAction<string>>;
-
-  startDate: Date;
-  setStartDate: React.Dispatch<React.SetStateAction<Date>>;
-
-  endDate: Date;
-  setEndDate: React.Dispatch<React.SetStateAction<Date>>;
+  createSocEvent: CreateSocEvent;
+  setCreateSocEvent: React.Dispatch<React.SetStateAction<CreateSocEvent>>;
 }
 
 export default function EventForm(props: Props) {
   const dateTimePickerStyle: StyleProp<ViewStyle> = { left: -10 };
+
+  const setPictureURL = (url: string) => {
+    props.setCreateSocEvent({
+      ...props.createSocEvent,
+      pictureURL: url,
+      socEvent: { ...props.createSocEvent.socEvent, hasPicture: Boolean(url) }
+    });
+  };
 
   return (
     <ScrollView
@@ -40,8 +39,8 @@ export default function EventForm(props: Props) {
         gap: 20
       }}>
       <PictureUpload
-        image={props.image}
-        setImage={props.setImage}
+        image={props.createSocEvent.pictureURL}
+        setImage={setPictureURL}
       />
       <FormControl isRequired={true}>
         <FormControlLabel>
@@ -50,7 +49,12 @@ export default function EventForm(props: Props) {
         <Input>
           <InputField
             placeholder="Event name"
-            onChangeText={(t) => props.setName(t)}
+            onChangeText={(t) =>
+              props.setCreateSocEvent({
+                ...props.createSocEvent,
+                socEvent: { ...props.createSocEvent.socEvent, name: t }
+              })
+            }
           />
         </Input>
       </FormControl>
@@ -61,7 +65,12 @@ export default function EventForm(props: Props) {
         <Textarea>
           <TextareaInput
             placeholder="Event Description"
-            onChangeText={(t) => props.setDesc(t)}
+            onChangeText={(t) =>
+              props.setCreateSocEvent({
+                ...props.createSocEvent,
+                socEvent: { ...props.createSocEvent.socEvent, description: t }
+              })
+            }
           />
         </Textarea>
       </FormControl>
@@ -72,21 +81,41 @@ export default function EventForm(props: Props) {
         <HStack>
           <DateTimePicker
             style={dateTimePickerStyle}
-            value={props.startDate}
+            value={props.createSocEvent.socEvent.startDate}
             mode={"date"}
             minimumDate={new Date()}
             onChange={(_, date) =>
-              date && props.setStartDate(setDate(props.startDate, date))
+              date &&
+              props.setCreateSocEvent({
+                ...props.createSocEvent,
+                socEvent: {
+                  ...props.createSocEvent.socEvent,
+                  startDate: setDate(
+                    props.createSocEvent.socEvent.startDate,
+                    date
+                  )
+                }
+              })
             }
           />
           <DateTimePicker
             style={dateTimePickerStyle}
-            value={props.startDate}
+            value={props.createSocEvent.socEvent.startDate}
             mode={"time"}
             minimumDate={new Date()}
             is24Hour={true}
             onChange={(_, date) =>
-              date && props.setStartDate(setTime(props.startDate, date))
+              date &&
+              props.setCreateSocEvent({
+                ...props.createSocEvent,
+                socEvent: {
+                  ...props.createSocEvent.socEvent,
+                  startDate: setTime(
+                    props.createSocEvent.socEvent.startDate,
+                    date
+                  )
+                }
+              })
             }
           />
         </HStack>
@@ -98,21 +127,35 @@ export default function EventForm(props: Props) {
         <HStack>
           <DateTimePicker
             style={dateTimePickerStyle}
-            value={props.endDate}
+            value={props.createSocEvent.socEvent.endDate}
             mode={"date"}
             minimumDate={new Date()}
             onChange={(_, date) =>
-              date && props.setEndDate(setDate(props.endDate, date))
+              date &&
+              props.setCreateSocEvent({
+                ...props.createSocEvent,
+                socEvent: {
+                  ...props.createSocEvent.socEvent,
+                  endDate: setDate(props.createSocEvent.socEvent.endDate, date)
+                }
+              })
             }
           />
           <DateTimePicker
             style={dateTimePickerStyle}
-            value={props.endDate}
+            value={props.createSocEvent.socEvent.endDate}
             mode={"time"}
             minimumDate={new Date()}
             is24Hour={true}
             onChange={(_, date) =>
-              date && props.setEndDate(setTime(props.endDate, date))
+              date &&
+              props.setCreateSocEvent({
+                ...props.createSocEvent,
+                socEvent: {
+                  ...props.createSocEvent.socEvent,
+                  endDate: setTime(props.createSocEvent.socEvent.endDate, date)
+                }
+              })
             }
           />
         </HStack>

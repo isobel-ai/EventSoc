@@ -6,7 +6,7 @@ import uploadPictureImage = require("../assets/images/photoUpload.png");
 
 interface Props {
   image: string;
-  setImage: React.Dispatch<React.SetStateAction<string>>;
+  setImage: (url: string) => void;
 }
 
 export default function PictureUpload(props: Props) {
