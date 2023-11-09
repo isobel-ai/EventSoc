@@ -7,6 +7,9 @@ import { config } from "../../config/gluestack-ui.config";
 import CreateEventScreen from "../screens/ManageEvents/CreateEventScreen";
 import EditEventScreen from "../screens/ManageEvents/EditEventScreen";
 import { CloseIcon, Icon } from "@gluestack-ui/themed";
+import ManageSocEventContext from "../contexts/ManageSocEventContext";
+import { RetrieveSocEvent, defaultRetrieveSocEvent } from "../models/SocEvent";
+import { useState } from "react";
 
 export type ManageEventsStackParamList = {
   Home: undefined;
@@ -15,6 +18,11 @@ export type ManageEventsStackParamList = {
 };
 
 export default function ManageEventsStackNavigator() {
+  const [toEditEvent, setToEditEvent] = useState<RetrieveSocEvent>(
+    defaultRetrieveSocEvent
+  );
+  const [eventDeleted, setEventDeleted] = useState<boolean>(false);
+
   const Stack = createStackNavigator<ManageEventsStackParamList>();
 
   const stackScreenOptions = (): StackNavigationOptions => ({
@@ -32,22 +40,25 @@ export default function ManageEventsStackNavigator() {
   });
 
   return (
-    <Stack.Navigator screenOptions={stackScreenOptions}>
-      <Stack.Screen
-        name="Home"
-        component={ManageEventsScreen}
-        options={{
-          headerShown: false
-        }}
-      />
-      <Stack.Screen
-        name="Create Event"
-        component={CreateEventScreen}
-      />
-      <Stack.Screen
-        name="Edit Event"
-        component={EditEventScreen}
-      />
-    </Stack.Navigator>
+    <ManageSocEventContext.Provider
+      value={{ toEditEvent, setToEditEvent, eventDeleted, setEventDeleted }}>
+      <Stack.Navigator screenOptions={stackScreenOptions}>
+        <Stack.Screen
+          name="Home"
+          component={ManageEventsScreen}
+          options={{
+            headerShown: false
+          }}
+        />
+        <Stack.Screen
+          name="Create Event"
+          component={CreateEventScreen}
+        />
+        <Stack.Screen
+          name="Edit Event"
+          component={EditEventScreen}
+        />
+      </Stack.Navigator>
+    </ManageSocEventContext.Provider>
   );
 }

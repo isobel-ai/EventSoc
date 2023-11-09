@@ -9,35 +9,75 @@ import {
   MenuItem,
   Icon,
   MenuItemLabel,
-  TrashIcon
+  TrashIcon,
+  HStack,
+  AlertDialog,
+  AlertDialogBackdrop,
+  AlertDialogContent,
+  AlertDialogHeader,
+  Heading,
+  AlertDialogBody,
+  Text,
+  AlertDialogCloseButton,
+  AlertDialogFooter,
+  CloseIcon
 } from "@gluestack-ui/themed";
 import { RetrieveSocEvent } from "../models/SocEvent";
-import { useEffect, useState } from "react";
-import { retrieveEventPicture } from "../services/eventsService";
 import { config } from "../../config/gluestack-ui.config";
+import { useManageSocEventContext } from "../contexts/ManageSocEventContext";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { ManageEventsStackParamList } from "../navigation/ManageEventsStackNavigator";
+import { useState } from "react";
+import { deleteEvent } from "../services/eventsService";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 interface Props {
   retrieveSocEvent: RetrieveSocEvent;
 }
 
 export default function EventListButton(props: Props) {
-  const [img, setImg] = useState<string>("");
+  const { setToEditEvent, setEventDeleted } = useManageSocEventContext();
 
-  useEffect(() => {
-    props.retrieveSocEvent.socEvent.hasPicture &&
-      retrieveEventPicture(props.retrieveSocEvent.id, setImg);
-  }, []);
+  const { navigate } =
+    useNavigation<NavigationProp<ManageEventsStackParamList>>();
+
+  const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
+
+  const menuSelectionHandler = (keys: Iterable<React.Key> | string) => {
+    const keySet = new Set<React.Key>(keys);
+    if (keySet.has("edit")) {
+      goToEditEventPage();
+    } else if (keySet.has("delete")) {
+      setShowAlertDialog(true);
+    }
+  };
+
+  const goToEditEventPage = () => {
+    setToEditEvent(props.retrieveSocEvent);
+    navigate("Edit Event");
+  };
+
+  const deleteAndRefresh = () => {
+    deleteEvent(
+      props.retrieveSocEvent.id,
+      props.retrieveSocEvent.pictureUrl
+    ).then(() => setEventDeleted(true)); // Cases the page to refresh
+  };
 
   return (
     <Button
       backgroundColor={config.tokens.colors.eventButtonGray}
       height={100}
       width={325}
-      style={img ? { justifyContent: "flex-start" } : {}}>
-      {img && (
+      style={
+        props.retrieveSocEvent.pictureUrl
+          ? { justifyContent: "flex-start" }
+          : {}
+      }>
+      {props.retrieveSocEvent.pictureUrl && (
         <Image
           size="md"
-          source={img}
+          source={props.retrieveSocEvent.pictureUrl}
           alt=""
           style={{ left: -10 }}
         />
@@ -46,10 +86,12 @@ export default function EventListButton(props: Props) {
         numberOfLines={2}
         ellipsizeMode="tail"
         lineBreakStrategyIOS="standard">
-        {props.retrieveSocEvent.socEvent.name}
+        {props.retrieveSocEvent.name}
       </ButtonText>
       <Menu
         placement="bottom right"
+        selectionMode="single"
+        onSelectionChange={menuSelectionHandler}
         trigger={({ ...triggerProps }) => {
           return (
             <Button
@@ -63,7 +105,9 @@ export default function EventListButton(props: Props) {
             </Button>
           );
         }}>
-        <MenuItem textValue="Edit Event">
+        <MenuItem
+          key="edit"
+          textValue="Edit Event">
           <Icon
             as={DownloadIcon}
             size="xl"
@@ -71,7 +115,9 @@ export default function EventListButton(props: Props) {
           />
           <MenuItemLabel size="sm">Edit Event</MenuItemLabel>
         </MenuItem>
-        <MenuItem textValue="Delete Event">
+        <MenuItem
+          key="delete"
+          textValue="Delete Event">
           <Icon
             as={TrashIcon}
             size="xl"
@@ -80,6 +126,54 @@ export default function EventListButton(props: Props) {
           <MenuItemLabel size="sm">Delete Event</MenuItemLabel>
         </MenuItem>
       </Menu>
+      <AlertDialog
+        isOpen={showAlertDialog}
+        onClose={() => {
+          setShowAlertDialog(false);
+        }}>
+        <AlertDialogBackdrop />
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <HStack style={{ gap: 10 }}>
+              <MaterialIcons
+                name="warning"
+                size={40}
+                color={config.tokens.colors.warningYellow}
+              />
+              <Heading size="lg">{"Delete Event?"}</Heading>
+            </HStack>
+            <AlertDialogCloseButton>
+              <Icon
+                as={CloseIcon}
+                size="xl"
+              />
+            </AlertDialogCloseButton>
+          </AlertDialogHeader>
+          <AlertDialogBody>
+            <Text size="md">Deleting an event cannot be undone.</Text>
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <HStack style={{ flex: 1, justifyContent: "space-between" }}>
+              <Button
+                variant="outline"
+                action="secondary"
+                onPress={() => {
+                  setShowAlertDialog(false);
+                }}>
+                <ButtonText>Cancel</ButtonText>
+              </Button>
+              <Button
+                action="negative"
+                onPress={() => {
+                  setShowAlertDialog(false);
+                  deleteAndRefresh();
+                }}>
+                <ButtonText>Delete</ButtonText>
+              </Button>
+            </HStack>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Button>
   );
 }

@@ -13,15 +13,20 @@ import EventList from "../../components/EventList";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ManageEventsStackParamList } from "../../navigation/ManageEventsStackNavigator";
 import { useIsFocused } from "@react-navigation/native";
+import { useManageSocEventContext } from "../../contexts/ManageSocEventContext";
 
 type Props = StackScreenProps<ManageEventsStackParamList, "Home">;
 
 export default function ManageEventsScreen(props: Props) {
+  const { eventDeleted, setEventDeleted } = useManageSocEventContext();
+
   const [managedEvents, setManagedEvents] = useState<RetrieveSocEvent[]>([]);
 
   const isFocused = useIsFocused();
 
-  useEffect(() => retrieveManagedEvents(setManagedEvents), [isFocused]);
+  useEffect(() => {
+    retrieveManagedEvents(setManagedEvents), setEventDeleted(false);
+  }, [isFocused, eventDeleted]);
 
   return (
     <ScreenView>

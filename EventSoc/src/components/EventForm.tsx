@@ -26,8 +26,7 @@ export default function EventForm(props: Props) {
   const setPictureURL = (url: string) => {
     props.setCreateSocEvent({
       ...props.createSocEvent,
-      pictureURL: url,
-      socEvent: { ...props.createSocEvent.socEvent, hasPicture: Boolean(url) }
+      localPictureUrl: url
     });
   };
 
@@ -39,7 +38,7 @@ export default function EventForm(props: Props) {
         gap: 20
       }}>
       <PictureUpload
-        image={props.createSocEvent.pictureURL}
+        image={props.createSocEvent.localPictureUrl}
         setImage={setPictureURL}
       />
       <FormControl isRequired={true}>
@@ -49,10 +48,34 @@ export default function EventForm(props: Props) {
         <Input>
           <InputField
             placeholder="Event name"
+            value={
+              props.createSocEvent.name ? props.createSocEvent.name : undefined
+            }
             onChangeText={(t) =>
               props.setCreateSocEvent({
                 ...props.createSocEvent,
-                socEvent: { ...props.createSocEvent.socEvent, name: t }
+                name: t
+              })
+            }
+          />
+        </Input>
+      </FormControl>
+      <FormControl isRequired={true}>
+        <FormControlLabel>
+          <FormControlLabelText>Event Location</FormControlLabelText>
+        </FormControlLabel>
+        <Input>
+          <InputField
+            placeholder="Event location"
+            value={
+              props.createSocEvent.location
+                ? props.createSocEvent.location
+                : undefined
+            }
+            onChangeText={(l) =>
+              props.setCreateSocEvent({
+                ...props.createSocEvent,
+                location: l
               })
             }
           />
@@ -65,10 +88,15 @@ export default function EventForm(props: Props) {
         <Textarea>
           <TextareaInput
             placeholder="Event Description"
+            value={
+              props.createSocEvent.description
+                ? props.createSocEvent.description
+                : undefined
+            }
             onChangeText={(t) =>
               props.setCreateSocEvent({
                 ...props.createSocEvent,
-                socEvent: { ...props.createSocEvent.socEvent, description: t }
+                description: t
               })
             }
           />
@@ -81,26 +109,20 @@ export default function EventForm(props: Props) {
         <HStack>
           <DateTimePicker
             style={dateTimePickerStyle}
-            value={props.createSocEvent.socEvent.startDate}
+            value={props.createSocEvent.startDate}
             mode={"date"}
             minimumDate={new Date()}
             onChange={(_, date) =>
               date &&
               props.setCreateSocEvent({
                 ...props.createSocEvent,
-                socEvent: {
-                  ...props.createSocEvent.socEvent,
-                  startDate: setDate(
-                    props.createSocEvent.socEvent.startDate,
-                    date
-                  )
-                }
+                startDate: setDate(props.createSocEvent.startDate, date)
               })
             }
           />
           <DateTimePicker
             style={dateTimePickerStyle}
-            value={props.createSocEvent.socEvent.startDate}
+            value={props.createSocEvent.startDate}
             mode={"time"}
             minimumDate={new Date()}
             is24Hour={true}
@@ -108,13 +130,7 @@ export default function EventForm(props: Props) {
               date &&
               props.setCreateSocEvent({
                 ...props.createSocEvent,
-                socEvent: {
-                  ...props.createSocEvent.socEvent,
-                  startDate: setTime(
-                    props.createSocEvent.socEvent.startDate,
-                    date
-                  )
-                }
+                startDate: setTime(props.createSocEvent.startDate, date)
               })
             }
           />
@@ -127,23 +143,20 @@ export default function EventForm(props: Props) {
         <HStack>
           <DateTimePicker
             style={dateTimePickerStyle}
-            value={props.createSocEvent.socEvent.endDate}
+            value={props.createSocEvent.endDate}
             mode={"date"}
             minimumDate={new Date()}
             onChange={(_, date) =>
               date &&
               props.setCreateSocEvent({
                 ...props.createSocEvent,
-                socEvent: {
-                  ...props.createSocEvent.socEvent,
-                  endDate: setDate(props.createSocEvent.socEvent.endDate, date)
-                }
+                endDate: setDate(props.createSocEvent.endDate, date)
               })
             }
           />
           <DateTimePicker
             style={dateTimePickerStyle}
-            value={props.createSocEvent.socEvent.endDate}
+            value={props.createSocEvent.endDate}
             mode={"time"}
             minimumDate={new Date()}
             is24Hour={true}
@@ -151,10 +164,7 @@ export default function EventForm(props: Props) {
               date &&
               props.setCreateSocEvent({
                 ...props.createSocEvent,
-                socEvent: {
-                  ...props.createSocEvent.socEvent,
-                  endDate: setTime(props.createSocEvent.socEvent.endDate, date)
-                }
+                endDate: setTime(props.createSocEvent.endDate, date)
               })
             }
           />
