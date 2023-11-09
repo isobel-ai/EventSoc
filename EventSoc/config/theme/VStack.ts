@@ -1,38 +1,39 @@
-import { createStyle } from '@gluestack-style/react';
+import { createStyle } from "@gluestack-style/react";
 
 export const VStack = createStyle({
-  flexDirection: 'column',
+  flexDirection: "column",
+  alignItems: "center",
   variants: {
     space: {
-      'xs': {
-        gap: `$1`,
+      xs: {
+        gap: `$1`
       },
-      'sm': {
-        gap: `$2`,
+      sm: {
+        gap: `$2`
       },
-      'md': {
-        gap: `$3`,
+      md: {
+        gap: `$3`
       },
-      'lg': {
-        gap: `$4`,
+      lg: {
+        gap: `$4`
       },
-      'xl': {
-        gap: `$5`,
+      xl: {
+        gap: `$5`
       },
-      '2xl': {
-        gap: `$6`,
+      "2xl": {
+        gap: `$6`
       },
-      '3xl': {
-        gap: `$7`,
+      "3xl": {
+        gap: `$7`
       },
-      '4xl': {
-        gap: `$8`,
-      },
+      "4xl": {
+        gap: `$8`
+      }
     },
     reversed: {
       true: {
-        flexDirection: 'column-reverse',
-      },
-    },
-  },
+        flexDirection: "column-reverse"
+      }
+    }
+  }
 });
