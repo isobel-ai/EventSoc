@@ -61,7 +61,7 @@ export default function EventListButton(props: Props) {
     deleteEvent(
       props.retrieveSocEvent.id,
       props.retrieveSocEvent.pictureUrl
-    ).then(() => setEventDeleted(true)); // Cases the page to refresh
+    ).then(() => setEventDeleted(true)); // Causes the page to refresh
   };
 
   return (
