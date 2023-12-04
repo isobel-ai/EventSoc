@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { inMemoryPersistence, initializeAuth } from "firebase/auth";
 import { collection, getFirestore } from "firebase/firestore";
 import { getStorage, ref } from "firebase/storage";
 
@@ -15,10 +15,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+export const auth = initializeAuth(app, { persistence: inMemoryPersistence });
+
 const db = getFirestore(app);
 export const eventsCol = collection(db, "events");
 
 const storage = getStorage(app);
 export const eventPicturesRef = ref(storage, "eventPictures");
-
-export const auth = getAuth(app);
