@@ -1,13 +1,8 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { collection, getFirestore } from "firebase/firestore";
 import { getStorage, ref } from "firebase/storage";
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyAh-K4jPf_6ugoEmaY8mE_JltG5zpSguvE",
   authDomain: "eventsoc-5bfa8.firebaseapp.com",
@@ -18,7 +13,6 @@ const firebaseConfig = {
   measurementId: "G-BLJQFZR42D"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
@@ -26,3 +20,5 @@ export const eventsCol = collection(db, "events");
 
 const storage = getStorage(app);
 export const eventPicturesRef = ref(storage, "eventPictures");
+
+export const auth = getAuth(app);
