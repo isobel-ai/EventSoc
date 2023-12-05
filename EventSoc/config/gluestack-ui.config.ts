@@ -31,6 +31,7 @@ export const gluestackUIConfig = createConfig({
       navigationDarkPink: "#ec4899",
       eventButtonGray: "#a8a29e",
       warningYellow: "#facc15",
+      inputSectionPink: "#fdc6ef",
       error: "#E63535",
       rose50: "#fff1f2",
       rose100: "#ffe4e6",

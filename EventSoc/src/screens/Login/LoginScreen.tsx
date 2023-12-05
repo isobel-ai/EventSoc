@@ -7,7 +7,8 @@ import {
   FormControl,
   Heading,
   Input,
-  InputField
+  InputField,
+  VStack
 } from "@gluestack-ui/themed";
 import ScreenView from "../../components/ScreenView";
 import { config } from "../../../config/gluestack-ui.config";
@@ -42,40 +43,47 @@ export default function LoginScreen(props: Props) {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        gap: 20
+        gap: 15
       }}>
       <Heading
         size="2xl"
         style={{ textAlign: "center" }}>
         Welcome to EventSoc
       </Heading>
-      <FormControl width="80%">
-        <Input>
-          <InputField
-            placeholder="Email"
-            backgroundColor="white"
-            onChangeText={(t) => setEmail(t)}
-          />
-        </Input>
-      </FormControl>
-      <FormControl width="80%">
-        <Input>
-          <InputField
-            type="password"
-            placeholder="Password"
-            backgroundColor="white"
-            onChangeText={(p) => setPassword(p)}
-          />
-        </Input>
-      </FormControl>
-      <Button
-        size="xl"
-        action={"positive"}
+      <VStack
+        gap={20}
+        backgroundColor={config.tokens.colors.inputSectionPink}
         width="80%"
-        isDisabled={!validEntries}
-        onPress={() => login(email, password, setErrMsg)}>
-        <ButtonText>Login</ButtonText>
-      </Button>
+        paddingVertical={10}
+        borderRadius={15}>
+        <FormControl width="80%">
+          <Input>
+            <InputField
+              placeholder="Email"
+              backgroundColor="white"
+              onChangeText={(t) => setEmail(t)}
+            />
+          </Input>
+        </FormControl>
+        <FormControl width="80%">
+          <Input>
+            <InputField
+              type="password"
+              placeholder="Password"
+              backgroundColor="white"
+              onChangeText={(p) => setPassword(p)}
+            />
+          </Input>
+        </FormControl>
+        <Button
+          size="xl"
+          action={"positive"}
+          width="80%"
+          isDisabled={!validEntries}
+          onPress={() => login(email, password, setErrMsg)}>
+          <ButtonText>Login</ButtonText>
+        </Button>
+      </VStack>
       {errorMsg && (
         <Alert
           action="error"
