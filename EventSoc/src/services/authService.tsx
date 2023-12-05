@@ -1,4 +1,4 @@
-import { AuthErrorCodes, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 
 export function login(
@@ -7,7 +7,7 @@ export function login(
   setErrMsg: React.Dispatch<React.SetStateAction<string>>
 ) {
   signInWithEmailAndPassword(auth, email, password).catch((e) => {
-    if (e.message.includes(AuthErrorCodes.INVALID_EMAIL)) {
+    if (e.code === "auth/invalid-login-credentials") {
       setErrMsg("Invalid login details.");
     } else {
       setErrMsg("Something went wrong. Try again later.");
