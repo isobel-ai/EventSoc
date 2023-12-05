@@ -36,6 +36,12 @@ export default function LoginScreen(props: Props) {
     [email, password]
   );
 
+  const handleRegistration = () => {
+    props.navigation.navigate("Register");
+    setEmail("");
+    setPassword("");
+  };
+
   return (
     <ScreenView
       extraStyle={{
@@ -61,6 +67,7 @@ export default function LoginScreen(props: Props) {
             <InputField
               placeholder="Email"
               backgroundColor="white"
+              value={email}
               onChangeText={(t) => setEmail(t)}
             />
           </Input>
@@ -71,6 +78,7 @@ export default function LoginScreen(props: Props) {
               type="password"
               placeholder="Password"
               backgroundColor="white"
+              value={password}
               onChangeText={(p) => setPassword(p)}
             />
           </Input>
@@ -110,7 +118,7 @@ export default function LoginScreen(props: Props) {
       <Button
         size="xl"
         width="80%"
-        onPress={() => props.navigation.navigate("Register")}>
+        onPress={handleRegistration}>
         <ButtonText>Register</ButtonText>
       </Button>
     </ScreenView>
