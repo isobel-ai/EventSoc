@@ -1,4 +1,4 @@
-import { validEvent } from "../src/helpers/InputValidationHelper";
+import { validEvent } from "../src/helpers/EventInputValidationHelper";
 import { SocEvent, defaultSocEvent } from "../src/models/SocEvent";
 
 describe("validEvent", () => {

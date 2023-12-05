@@ -3,7 +3,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { ManageEventsStackParamList } from "../../navigation/ManageEventsStackNavigator";
 import { CreateSocEvent } from "../../models/SocEvent";
 import { useState } from "react";
-import { validEvent } from "../../helpers/InputValidationHelper";
+import { validEvent } from "../../helpers/EventInputValidationHelper";
 import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import CreateEventAlertDialog from "../../components/CreateEventAlertDialog";

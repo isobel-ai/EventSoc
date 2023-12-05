@@ -4,7 +4,7 @@ import { ManageEventsStackParamList } from "../../navigation/ManageEventsStackNa
 import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import { useState } from "react";
-import { validEvent } from "../../helpers/InputValidationHelper";
+import { validEvent } from "../../helpers/EventInputValidationHelper";
 import { CreateSocEvent, defaultCreateSocEvent } from "../../models/SocEvent";
 import { createEvent } from "../../services/eventsService";
 import CreateEventAlertDialog from "../../components/CreateEventAlertDialog";
