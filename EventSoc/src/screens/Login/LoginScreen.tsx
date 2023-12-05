@@ -11,11 +11,15 @@ import {
 } from "@gluestack-ui/themed";
 import ScreenView from "../../components/ScreenView";
 import { config } from "../../../config/gluestack-ui.config";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { login } from "../../services/authService";
 import { StackScreenProps } from "@react-navigation/stack";
 import { LoginStackParamList } from "../../navigation/LoginStackNavigator";
+import {
+  validEmail,
+  validPassword
+} from "../../helpers/AuthInputValidationHelper";
 
 type Props = StackScreenProps<LoginStackParamList, "Login">;
 
@@ -24,6 +28,12 @@ export default function LoginScreen(props: Props) {
   const [password, setPassword] = useState<string>("");
 
   const [errorMsg, setErrMsg] = useState<string>("");
+
+  const [validEntries, setValidEntries] = useState<boolean>(false);
+  useEffect(
+    () => setValidEntries(validEmail(email) && validPassword(password)),
+    [email, password]
+  );
 
   return (
     <ScreenView
@@ -62,6 +72,7 @@ export default function LoginScreen(props: Props) {
         size="xl"
         action={"positive"}
         width="80%"
+        isDisabled={!validEntries}
         onPress={() => login(email, password, setErrMsg)}>
         <ButtonText>Login</ButtonText>
       </Button>
