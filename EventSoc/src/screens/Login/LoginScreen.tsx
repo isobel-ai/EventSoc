@@ -43,7 +43,6 @@ export default function LoginScreen(props: Props) {
         <Input>
           <InputField
             placeholder="Email"
-            placeholderTextColor="black"
             backgroundColor="white"
             onChangeText={(t) => setEmail(t)}
           />
@@ -54,7 +53,6 @@ export default function LoginScreen(props: Props) {
           <InputField
             type="password"
             placeholder="Password"
-            placeholderTextColor="black"
             backgroundColor="white"
             onChangeText={(p) => setPassword(p)}
           />
