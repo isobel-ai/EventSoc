@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import { RetrieveSocEvent, defaultRetrieveSocEvent } from "../models/SocEvent";
 
-type ManageEventContent = {
+type SocietiesContent = {
   toEditEvent: RetrieveSocEvent;
   setToEditEvent: React.Dispatch<React.SetStateAction<RetrieveSocEvent>>;
 
@@ -9,12 +9,12 @@ type ManageEventContent = {
   setEventDeleted: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const ManageSocEventContext = createContext<ManageEventContent>({
+const SocietiesContext = createContext<SocietiesContent>({
   toEditEvent: defaultRetrieveSocEvent,
   setToEditEvent: () => {},
   eventDeleted: false,
   setEventDeleted: () => {}
 });
-export default ManageSocEventContext;
+export default SocietiesContext;
 
-export const useManageSocEventContext = () => useContext(ManageSocEventContext);
+export const useSocietiesContext = () => useContext(SocietiesContext);

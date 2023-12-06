@@ -24,9 +24,9 @@ import {
 } from "@gluestack-ui/themed";
 import { RetrieveSocEvent } from "../models/SocEvent";
 import { config } from "../../config/gluestack-ui.config";
-import { useManageSocEventContext } from "../contexts/ManageSocEventContext";
+import { useSocietiesContext } from "../contexts/SocietiesContext";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { ManageEventsStackParamList } from "../navigation/ManageEventsStackNavigator";
+import { SocietiesStackParamList } from "../navigation/SocietiesStackNavigator";
 import { useState } from "react";
 import { deleteEvent } from "../services/eventsService";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -36,10 +36,9 @@ interface Props {
 }
 
 export default function EventListButton(props: Props) {
-  const { setToEditEvent, setEventDeleted } = useManageSocEventContext();
+  const { setToEditEvent, setEventDeleted } = useSocietiesContext();
 
-  const { navigate } =
-    useNavigation<NavigationProp<ManageEventsStackParamList>>();
+  const { navigate } = useNavigation<NavigationProp<SocietiesStackParamList>>();
 
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
 

@@ -1,20 +1,20 @@
 import ScreenView from "../../components/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
-import { ManageEventsStackParamList } from "../../navigation/ManageEventsStackNavigator";
+import { SocietiesStackParamList } from "../../navigation/SocietiesStackNavigator";
 import { CreateSocEvent } from "../../models/SocEvent";
 import { useState } from "react";
 import { validEvent } from "../../helpers/EventInputValidationHelper";
 import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import CreateEventAlertDialog from "../../components/CreateEventAlertDialog";
-import { useManageSocEventContext } from "../../contexts/ManageSocEventContext";
+import { useSocietiesContext } from "../../contexts/SocietiesContext";
 import { getEventUpdates } from "../../helpers/UpdateHelper";
 import { updateEvent } from "../../services/eventsService";
 
-type Props = StackScreenProps<ManageEventsStackParamList, "Edit Event">;
+type Props = StackScreenProps<SocietiesStackParamList, "Edit Event">;
 
 export default function EditEventScreen(props: Props) {
-  const { toEditEvent } = useManageSocEventContext();
+  const { toEditEvent } = useSocietiesContext();
 
   const { id, ...socEvent } = toEditEvent;
   const beforeSocEvent = Object.assign(socEvent, {

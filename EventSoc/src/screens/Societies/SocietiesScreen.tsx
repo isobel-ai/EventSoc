@@ -11,14 +11,14 @@ import { RetrieveSocEvent } from "../../models/SocEvent";
 import { retrieveManagedEvents } from "../../services/eventsService";
 import EventList from "../../components/EventList";
 import { StackScreenProps } from "@react-navigation/stack";
-import { ManageEventsStackParamList } from "../../navigation/ManageEventsStackNavigator";
+import { SocietiesStackParamList } from "../../navigation/SocietiesStackNavigator";
 import { useIsFocused } from "@react-navigation/native";
-import { useManageSocEventContext } from "../../contexts/ManageSocEventContext";
+import { useSocietiesContext } from "../../contexts/SocietiesContext";
 
-type Props = StackScreenProps<ManageEventsStackParamList, "Home">;
+type Props = StackScreenProps<SocietiesStackParamList, "Home">;
 
-export default function ManageEventsScreen(props: Props) {
-  const { eventDeleted, setEventDeleted } = useManageSocEventContext();
+export default function SocietiesScreen(props: Props) {
+  const { eventDeleted, setEventDeleted } = useSocietiesContext();
 
   const [managedEvents, setManagedEvents] = useState<RetrieveSocEvent[]>([]);
 

@@ -2,28 +2,28 @@ import {
   StackNavigationOptions,
   createStackNavigator
 } from "@react-navigation/stack";
-import ManageEventsScreen from "../screens/ManageEvents/ManageEventsScreen";
+import SocietiesScreen from "../screens/Societies/SocietiesScreen";
 import { config } from "../../config/gluestack-ui.config";
-import CreateEventScreen from "../screens/ManageEvents/CreateEventScreen";
-import EditEventScreen from "../screens/ManageEvents/EditEventScreen";
+import CreateEventScreen from "../screens/Societies/CreateEventScreen";
+import EditEventScreen from "../screens/Societies/EditEventScreen";
 import { CloseIcon, Icon } from "@gluestack-ui/themed";
-import ManageSocEventContext from "../contexts/ManageSocEventContext";
+import SocietiesContext from "../contexts/SocietiesContext";
 import { RetrieveSocEvent, defaultRetrieveSocEvent } from "../models/SocEvent";
 import { useState } from "react";
 
-export type ManageEventsStackParamList = {
+export type SocietiesStackParamList = {
   Home: undefined;
   "Create Event": undefined;
   "Edit Event": undefined;
 };
 
-export default function ManageEventsStackNavigator() {
+export default function SocietiesStackNavigator() {
   const [toEditEvent, setToEditEvent] = useState<RetrieveSocEvent>(
     defaultRetrieveSocEvent
   );
   const [eventDeleted, setEventDeleted] = useState<boolean>(false);
 
-  const Stack = createStackNavigator<ManageEventsStackParamList>();
+  const Stack = createStackNavigator<SocietiesStackParamList>();
 
   const stackScreenOptions = (): StackNavigationOptions => ({
     headerStyle: {
@@ -40,12 +40,12 @@ export default function ManageEventsStackNavigator() {
   });
 
   return (
-    <ManageSocEventContext.Provider
+    <SocietiesContext.Provider
       value={{ toEditEvent, setToEditEvent, eventDeleted, setEventDeleted }}>
       <Stack.Navigator screenOptions={stackScreenOptions}>
         <Stack.Screen
           name="Home"
-          component={ManageEventsScreen}
+          component={SocietiesScreen}
           options={{
             headerShown: false
           }}
@@ -59,6 +59,6 @@ export default function ManageEventsStackNavigator() {
           component={EditEventScreen}
         />
       </Stack.Navigator>
-    </ManageSocEventContext.Provider>
+    </SocietiesContext.Provider>
   );
 }
