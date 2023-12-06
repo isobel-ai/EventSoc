@@ -6,7 +6,6 @@ import { auth, usersCol } from "../config/firebaseConfig";
 import {
   doc,
   getCountFromServer,
-  getDoc,
   query,
   setDoc,
   where
@@ -58,10 +57,4 @@ export function register(
       }
     })
     .catch(() => setErrMsg("Something went wrong. Try again later."));
-}
-
-export function getName(id: string) {
-  return getDoc(doc(usersCol, id)).then((userSnapshot) => {
-    return userSnapshot.exists() ? (userSnapshot.data().name as string) : "";
-  });
 }
