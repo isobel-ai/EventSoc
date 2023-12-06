@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import { Unsubscribe, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
+import { User } from "../models/User";
+import { getName } from "../services/authService";
 
 export function useAuth() {
-  const [userID, setUserID] = React.useState<string>();
+  const [user, setUser] = React.useState<User>();
 
   useEffect(() => {
     const unsubscribeFromAuthStateChanged: Unsubscribe = onAuthStateChanged(
@@ -11,10 +13,12 @@ export function useAuth() {
       (user) => {
         if (user) {
           // Logged in
-          setUserID(user.uid);
+          getName(user.uid)
+            .then((name) => setUser({ id: user.uid, name: name }))
+            .catch((err) => console.log(err));
         } else {
           // Logged out
-          setUserID(undefined);
+          setUser(undefined);
         }
       }
     );
@@ -22,5 +26,5 @@ export function useAuth() {
     return unsubscribeFromAuthStateChanged;
   }, []);
 
-  return { userID };
+  return { user };
 }

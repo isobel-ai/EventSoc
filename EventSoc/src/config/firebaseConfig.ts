@@ -33,6 +33,7 @@ if (!getApps().length) {
 
 const db = getFirestore(app);
 export const eventsCol = collection(db, "events");
+export const usersCol = collection(db, "users");
 
 const storage = getStorage(app);
 export const eventPicturesRef = ref(storage, "eventPictures");

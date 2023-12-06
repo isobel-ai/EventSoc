@@ -7,13 +7,13 @@ import { useAuth } from "./src/hooks/useAuth";
 import LoginStackNavigator from "./src/navigation/LoginStackNavigator";
 
 export default function App() {
-  const { userID } = useAuth();
+  const { user } = useAuth();
 
   return (
     <GluestackUIProvider config={config}>
       <SafeAreaProvider>
         <NavigationContainer>
-          {userID ? <MainTabNavigator /> : <LoginStackNavigator />}
+          {user ? <MainTabNavigator /> : <LoginStackNavigator />}
         </NavigationContainer>
       </SafeAreaProvider>
     </GluestackUIProvider>
