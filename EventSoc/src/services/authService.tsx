@@ -58,3 +58,7 @@ export function register(
     })
     .catch(() => setErrMsg("Something went wrong. Try again later."));
 }
+
+export function signOut() {
+  auth.signOut().catch((err) => console.log(err));
+}
