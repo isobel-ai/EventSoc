@@ -7,9 +7,6 @@ import { config } from "../../config/gluestack-ui.config";
 import CreateEventScreen from "../screens/Societies/CreateEventScreen";
 import EditEventScreen from "../screens/Societies/EditEventScreen";
 import { CloseIcon, Icon } from "@gluestack-ui/themed";
-import SocietiesContext from "../contexts/SocietiesContext";
-import { RetrieveSocEvent, defaultRetrieveSocEvent } from "../models/SocEvent";
-import { useState } from "react";
 
 export type SocietiesStackParamList = {
   Home: undefined;
@@ -18,11 +15,6 @@ export type SocietiesStackParamList = {
 };
 
 export default function SocietiesStackNavigator() {
-  const [toEditEvent, setToEditEvent] = useState<RetrieveSocEvent>(
-    defaultRetrieveSocEvent
-  );
-  const [eventDeleted, setEventDeleted] = useState<boolean>(false);
-
   const Stack = createStackNavigator<SocietiesStackParamList>();
 
   const stackScreenOptions = (): StackNavigationOptions => ({
@@ -40,25 +32,22 @@ export default function SocietiesStackNavigator() {
   });
 
   return (
-    <SocietiesContext.Provider
-      value={{ toEditEvent, setToEditEvent, eventDeleted, setEventDeleted }}>
-      <Stack.Navigator screenOptions={stackScreenOptions}>
-        <Stack.Screen
-          name="Home"
-          component={SocietiesScreen}
-          options={{
-            headerShown: false
-          }}
-        />
-        <Stack.Screen
-          name="Create Event"
-          component={CreateEventScreen}
-        />
-        <Stack.Screen
-          name="Edit Event"
-          component={EditEventScreen}
-        />
-      </Stack.Navigator>
-    </SocietiesContext.Provider>
+    <Stack.Navigator screenOptions={stackScreenOptions}>
+      <Stack.Screen
+        name="Home"
+        component={SocietiesScreen}
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name="Create Event"
+        component={CreateEventScreen}
+      />
+      <Stack.Screen
+        name="Edit Event"
+        component={EditEventScreen}
+      />
+    </Stack.Navigator>
   );
 }
