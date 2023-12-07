@@ -2,7 +2,7 @@ import { getDoc, doc } from "firebase/firestore";
 import { auth, usersCol } from "../config/firebaseConfig";
 import { User, defaultUser } from "../models/User";
 
-export function getUser() {
+export function retrieveUser() {
   const id = auth.currentUser?.uid;
   return getDoc(doc(usersCol, id))
     .then((userSnapshot) => {

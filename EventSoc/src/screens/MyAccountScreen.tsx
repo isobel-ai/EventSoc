@@ -2,7 +2,7 @@ import { Button, ButtonText, Heading } from "@gluestack-ui/themed";
 import ScreenView from "../components/ScreenView";
 import { User, defaultUser } from "../models/User";
 import { useEffect, useState } from "react";
-import { getUser } from "../services/usersService";
+import { retrieveUser } from "../services/usersService";
 import { useIsFocused } from "@react-navigation/native";
 import { signOut } from "../services/authService";
 
@@ -12,7 +12,7 @@ export default function MyAccountScreen() {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    getUser().then((user) => setUser(user));
+    retrieveUser().then((user) => setUser(user));
   }, [isFocused]);
 
   return (
