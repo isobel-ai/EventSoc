@@ -8,9 +8,9 @@ export function retrieveSocieties(
 ) {
   getDocs(societiesCol)
     .then((societiesSnapshot) => {
-      const societyList = societiesSnapshot.docs.map(
-        (doc) => doc.data() as RetrieveSociety
-      );
+      const societyList = societiesSnapshot.docs.map((doc) => {
+        return { ...doc.data(), id: doc.id } as RetrieveSociety;
+      });
       setSocieties(societyList);
     })
     .catch((err) => console.log("Error: ", err));
@@ -28,9 +28,9 @@ export function retrieveAllAndExecSocieties(
     .then((name) =>
       getDocs(query(societiesCol, where("exec", "array-contains", name)))
         .then((societiesSnapshot) => {
-          const societyList = societiesSnapshot.docs.map(
-            (doc) => doc.data() as RetrieveSociety
-          );
+          const societyList = societiesSnapshot.docs.map((doc) => {
+            return { ...doc.data(), id: doc.id } as RetrieveSociety;
+          });
           setExecSocieties(societyList);
         })
         .catch((err) => console.log("Error: ", err))
