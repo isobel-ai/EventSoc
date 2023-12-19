@@ -11,7 +11,7 @@ import { RetrieveSocEvent } from "../../models/SocEvent";
 import { retrieveManagedEvents } from "../../services/eventsService";
 import EventList from "../../components/EventList";
 import { StackScreenProps } from "@react-navigation/stack";
-import { SocietiesStackParamList } from "../../navigation/SocietiesStackNavigator";
+import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { useIsFocused } from "@react-navigation/native";
 import { useSocietiesContext } from "../../contexts/SocietiesContext";
 

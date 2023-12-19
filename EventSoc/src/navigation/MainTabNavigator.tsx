@@ -8,7 +8,7 @@ import MyEventsScreen from "../screens/MyEventsScreen";
 import NotificationScreen from "../screens/NotificationScreen";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { config } from "../../config/gluestack-ui.config";
-import SocietiesNavigator from "./SocietiesNavigator";
+import SocietiesNavigator from "./Societies/SocietiesNavigator";
 
 export default function MainTabNavigator() {
   const Tab = createBottomTabNavigator();

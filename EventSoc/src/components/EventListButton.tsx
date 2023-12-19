@@ -26,7 +26,7 @@ import { RetrieveSocEvent } from "../models/SocEvent";
 import { config } from "../../config/gluestack-ui.config";
 import { useSocietiesContext } from "../contexts/SocietiesContext";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { SocietiesStackParamList } from "../navigation/SocietiesStackNavigator";
+import { SocietiesStackParamList } from "../navigation/Societies/SocietiesStackNavigator";
 import { useState } from "react";
 import { deleteEvent } from "../services/eventsService";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";

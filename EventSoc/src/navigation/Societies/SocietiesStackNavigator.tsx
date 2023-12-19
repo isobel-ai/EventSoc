@@ -2,11 +2,12 @@ import {
   StackNavigationOptions,
   createStackNavigator
 } from "@react-navigation/stack";
-import SocietiesScreen from "../screens/Societies/SocietiesScreen";
-import { config } from "../../config/gluestack-ui.config";
-import CreateEventScreen from "../screens/Societies/CreateEventScreen";
-import EditEventScreen from "../screens/Societies/EditEventScreen";
+import SocietiesScreen from "../../screens/Societies/SocietiesScreen";
+import { config } from "../../../config/gluestack-ui.config";
+import CreateEventScreen from "../../screens/Societies/CreateEventScreen";
+import EditEventScreen from "../../screens/Societies/EditEventScreen";
 import { CloseIcon, Icon } from "@gluestack-ui/themed";
+import { useSocietiesContext } from "../../contexts/SocietiesContext";
 
 export type SocietiesStackParamList = {
   Home: undefined;
@@ -15,6 +16,8 @@ export type SocietiesStackParamList = {
 };
 
 export default function SocietiesStackNavigator() {
+  const { navigatorRef } = useSocietiesContext();
+
   const Stack = createStackNavigator<SocietiesStackParamList>();
 
   const stackScreenOptions = (): StackNavigationOptions => ({
@@ -32,7 +35,11 @@ export default function SocietiesStackNavigator() {
   });
 
   return (
-    <Stack.Navigator screenOptions={stackScreenOptions}>
+    <Stack.Navigator
+      screenOptions={({ navigation }) => {
+        navigatorRef.current = navigation;
+        return stackScreenOptions();
+      }}>
       <Stack.Screen
         name="Home"
         component={SocietiesScreen}

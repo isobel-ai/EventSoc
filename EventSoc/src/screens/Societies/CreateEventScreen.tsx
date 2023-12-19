@@ -1,6 +1,6 @@
 import ScreenView from "../../components/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
-import { SocietiesStackParamList } from "../../navigation/SocietiesStackNavigator";
+import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import { useState } from "react";
