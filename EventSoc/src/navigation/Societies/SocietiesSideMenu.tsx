@@ -6,32 +6,54 @@ import SocietyList from "../../components/SocietyList";
 import SideMenu, {
   ReactNativeSideMenuProps
 } from "react-native-side-menu-updated";
+import { config } from "../../../config/gluestack-ui.config";
 
 interface Props {
   children: ReactNode;
 }
 
-export default function SocietiesSlideOverModal(props: Props) {
+export default function SocietiesSideMenu(props: Props) {
   const [execSocieties, setExecSocieties] = useState<RetrieveSociety[]>([]);
   const [societies, setSocieties] = useState<RetrieveSociety[]>([]);
 
-  useEffect(
-    () => retrieveAllAndExecSocieties(setSocieties, setExecSocieties),
-    []
-    // [props.isVisible]
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  useEffect(() => {
+    isVisible && retrieveAllAndExecSocieties(setSocieties, setExecSocieties);
+  }, [isVisible]);
+
+  const MenuHeading = ({ title }: { title: string }) => (
+    <Heading
+      backgroundColor={config.tokens.colors.secondary200}
+      width="100%"
+      textAlign="center">
+      {title}
+    </Heading>
   );
 
   const sideMenuProps: ReactNativeSideMenuProps = {
     menu: (
       <VStack
         backgroundColor="white"
-        flex={1}>
-        <Heading>Exec Societies</Heading>
-        <SocietyList societies={execSocieties} />
-        <Heading>All Societies</Heading>
-        <SocietyList societies={societies} />
+        flex={1}
+        borderRightColor="black"
+        borderRightWidth="$2">
+        <MenuHeading title="Exec Societies" />
+        <SocietyList
+          societies={execSocieties}
+          setIsSideMenuOpen={setIsVisible}
+        />
+        <MenuHeading title="All Societies" />
+        <SocietyList
+          societies={societies}
+          setIsSideMenuOpen={setIsVisible}
+        />
       </VStack>
-    )
+    ),
+    isOpen: isVisible,
+    onChange: () => setIsVisible(!isVisible),
+    bounceBackOnOverdraw: false,
+    overlayColor: config.tokens.colors.tintBlack
   };
 
   return <SideMenu {...sideMenuProps}>{props.children}</SideMenu>;

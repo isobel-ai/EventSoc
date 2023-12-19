@@ -12,6 +12,7 @@ import { RetrieveSociety } from "../models/Society";
 
 interface Props {
   societies: RetrieveSociety[];
+  setIsSideMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function SocietyList(props: Props) {
@@ -20,16 +21,18 @@ export default function SocietyList(props: Props) {
   const selectSocietyPage = (soc: RetrieveSociety) => {
     setSelectedSoc(soc);
     navigatorRef.current.navigate("Home");
+    props.setIsSideMenuOpen(false);
   };
 
   return (
-    <ScrollView>
+    <ScrollView scrollsToTop={false}>
       <VStack>
         {props.societies.map((soc) => {
           return (
             <Button
               key={soc.id}
               variant={"link"}
+              size="lg"
               width="100%"
               style={soc.pictureUrl ? { justifyContent: "flex-start" } : {}}
               onPress={() => selectSocietyPage(soc)}>
