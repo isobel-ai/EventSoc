@@ -1,18 +1,28 @@
 import { ReactNode, useEffect, useState } from "react";
 import { RetrieveSociety } from "../../models/Society";
-import { Heading, VStack } from "@gluestack-ui/themed";
+import {
+  AddIcon,
+  Button,
+  ButtonIcon,
+  ButtonText,
+  Heading,
+  VStack
+} from "@gluestack-ui/themed";
 import { retrieveAllAndExecSocieties } from "../../services/societiesService";
 import SocietyList from "../../components/SocietyList";
 import SideMenu, {
   ReactNativeSideMenuProps
 } from "react-native-side-menu-updated";
 import { config } from "../../../config/gluestack-ui.config";
+import { useSocietiesContext } from "../../contexts/SocietiesContext";
 
 interface Props {
   children: ReactNode;
 }
 
 export default function SocietiesSideMenu(props: Props) {
+  const { navigatorRef } = useSocietiesContext();
+
   const [execSocieties, setExecSocieties] = useState<RetrieveSociety[]>([]);
   const [societies, setSocieties] = useState<RetrieveSociety[]>([]);
 
@@ -31,6 +41,11 @@ export default function SocietiesSideMenu(props: Props) {
     </Heading>
   );
 
+  const goToRegisterSocietyScreen = () => {
+    navigatorRef.current.navigate("Register Society");
+    setIsVisible(false);
+  };
+
   const sideMenuProps: ReactNativeSideMenuProps = {
     menu: (
       <VStack
@@ -48,6 +63,18 @@ export default function SocietiesSideMenu(props: Props) {
           societies={societies}
           setIsSideMenuOpen={setIsVisible}
         />
+        <Button
+          size={"xl"}
+          width="100%"
+          borderRadius="$none"
+          onPress={goToRegisterSocietyScreen}>
+          <ButtonIcon
+            as={AddIcon}
+            size="lg"
+            style={{ left: -10 }}
+          />
+          <ButtonText>Register Society</ButtonText>
+        </Button>
       </VStack>
     ),
     isOpen: isVisible,

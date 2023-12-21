@@ -8,9 +8,11 @@ import CreateEventScreen from "../../screens/Societies/CreateEventScreen";
 import EditEventScreen from "../../screens/Societies/EditEventScreen";
 import { CloseIcon, Icon } from "@gluestack-ui/themed";
 import { useSocietiesContext } from "../../contexts/SocietiesContext";
+import RegisterSocietyScreen from "../../screens/Societies/RegisterSocietyScreen";
 
 export type SocietiesStackParamList = {
   Home: undefined;
+  "Register Society": undefined;
   "Create Event": undefined;
   "Edit Event": undefined;
 };
@@ -31,7 +33,8 @@ export default function SocietiesStackNavigator() {
         size="xl"
         style={{ paddingLeft: 40 }}
       />
-    )
+    ),
+    gestureEnabled: false
   });
 
   return (
@@ -46,6 +49,11 @@ export default function SocietiesStackNavigator() {
         options={{
           headerShown: false
         }}
+      />
+      <Stack.Screen
+        name="Register Society"
+        component={RegisterSocietyScreen}
+        options={{ headerLeft: () => null }} // Don't show back button
       />
       <Stack.Screen
         name="Create Event"

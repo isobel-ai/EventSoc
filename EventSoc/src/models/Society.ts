@@ -1,6 +1,6 @@
 import { DocumentReference } from "firebase/firestore";
 
-interface Society {
+export interface Society {
   name: string;
   description: string;
   pictureUrl: string;
@@ -21,3 +21,12 @@ export interface RetrieveSociety extends Society {
 }
 
 export const defaultRetrieveSociety = Object.assign(defaultSociety, { id: "" });
+
+export interface CreateSociety extends Society {
+  localPictureUrl: string;
+}
+
+export const defaultCreateSociety: CreateSociety = Object.assign(
+  defaultSociety,
+  { localPictureUrl: "" }
+);
