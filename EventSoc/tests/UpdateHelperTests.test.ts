@@ -6,7 +6,7 @@ describe("getEventUpdates", () => {
     const id = "1";
     const event = defaultCreateSocEvent();
 
-    expect(getEventUpdates(id, event, event)).toEqual({ id: id });
+    expect(getEventUpdates(id, event, { ...event })).toEqual({ id: id });
   });
 
   test("it should return updates if there are changes (all changes)", () => {
@@ -35,7 +35,7 @@ describe("getEventUpdates", () => {
     const before: CreateSocEvent = defaultCreateSocEvent();
 
     const after: CreateSocEvent = {
-      ...defaultCreateSocEvent(),
+      ...before,
       name: "name change",
       location: "location change",
       startDate: new Date(3000, 1, 1)

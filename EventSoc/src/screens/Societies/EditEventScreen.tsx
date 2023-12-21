@@ -22,9 +22,7 @@ export default function EditEventScreen(props: Props) {
   });
 
   const [afterSocEvent, setAfterSocEvent] = useState<CreateSocEvent>({
-    ...beforeSocEvent,
-    startDate: new Date(beforeSocEvent.startDate),
-    endDate: new Date(beforeSocEvent.endDate)
+    ...beforeSocEvent
   });
 
   const [inputErrMsg, setInputErrMsg] = useState<string>("");
