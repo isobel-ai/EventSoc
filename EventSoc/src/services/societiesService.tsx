@@ -16,13 +16,9 @@ export function retrieveSocieties(
     .catch((err) => console.log("Error: ", err));
 }
 
-export function retrieveAllAndExecSocieties(
-  setSocieties: React.Dispatch<React.SetStateAction<RetrieveSociety[]>>,
+export function retrieveExecSocieties(
   setExecSocieties: React.Dispatch<React.SetStateAction<RetrieveSociety[]>>
 ) {
-  retrieveSocieties(setSocieties);
-
-  // Retrieve societies user is exec of
   retrieveUser()
     .then((user) => user.name)
     .then((name) =>

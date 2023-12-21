@@ -8,7 +8,10 @@ import {
   Heading,
   VStack
 } from "@gluestack-ui/themed";
-import { retrieveAllAndExecSocieties } from "../../services/societiesService";
+import {
+  retrieveExecSocieties,
+  retrieveSocieties
+} from "../../services/societiesService";
 import SocietyList from "../../components/SocietyList";
 import SideMenu, {
   ReactNativeSideMenuProps
@@ -29,7 +32,10 @@ export default function SocietiesSideMenu(props: Props) {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    isVisible && retrieveAllAndExecSocieties(setSocieties, setExecSocieties);
+    if (isVisible) {
+      retrieveExecSocieties(setExecSocieties);
+      retrieveSocieties(setSocieties);
+    }
   }, [isVisible]);
 
   const MenuHeading = ({ title }: { title: string }) => (
