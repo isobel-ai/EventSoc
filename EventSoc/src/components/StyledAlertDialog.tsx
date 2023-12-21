@@ -24,7 +24,7 @@ interface Props {
   inputErrMsg: string;
 }
 
-export default function CreateEventAlertDialog(props: Props) {
+export default function StyledAlertDialog(props: Props) {
   return (
     <AlertDialog
       isOpen={props.showAlertDialog}

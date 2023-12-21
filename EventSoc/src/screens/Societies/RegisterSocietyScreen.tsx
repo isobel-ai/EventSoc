@@ -3,7 +3,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import { useState } from "react";
-import CreateEventAlertDialog from "../../components/CreateEventAlertDialog";
+import CreateEventAlertDialog from "../../components/StyledAlertDialog";
 import { CreateSociety, defaultCreateSociety } from "../../models/Society";
 import SocietyForm from "../../components/SocietyForm";
 import { validSociety } from "../../helpers/SocietyInputValidationHelper";

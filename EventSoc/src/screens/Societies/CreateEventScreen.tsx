@@ -7,7 +7,7 @@ import { useState } from "react";
 import { validEvent } from "../../helpers/EventInputValidationHelper";
 import { CreateSocEvent, defaultCreateSocEvent } from "../../models/SocEvent";
 import { createEvent } from "../../services/eventsService";
-import CreateEventAlertDialog from "../../components/CreateEventAlertDialog";
+import CreateEventAlertDialog from "../../components/StyledAlertDialog";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Create Event">;
 
