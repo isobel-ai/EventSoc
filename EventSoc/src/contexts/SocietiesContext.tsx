@@ -16,13 +16,13 @@ type SocietiesContent = {
 };
 
 const SocietiesContext = createContext<SocietiesContent>({
-  toEditEvent: defaultRetrieveSocEvent,
+  toEditEvent: defaultRetrieveSocEvent(),
   setToEditEvent: () => {},
 
   eventDeleted: false,
   setEventDeleted: () => {},
 
-  selectedSoc: defaultRetrieveSociety,
+  selectedSoc: defaultRetrieveSociety(),
   setSelectedSoc: () => {},
 
   navigatorRef: { current: null }

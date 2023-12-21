@@ -8,25 +8,26 @@ export interface Society {
   eventRefs: DocumentReference[];
 }
 
-const defaultSociety: Society = {
-  name: "",
-  description: "",
-  pictureUrl: "",
-  exec: [],
-  eventRefs: []
+const defaultSociety: () => Society = () => {
+  return {
+    name: "",
+    description: "",
+    pictureUrl: "",
+    exec: [],
+    eventRefs: []
+  };
 };
 
 export interface RetrieveSociety extends Society {
   id: string;
 }
 
-export const defaultRetrieveSociety = Object.assign(defaultSociety, { id: "" });
+export const defaultRetrieveSociety: () => RetrieveSociety = () =>
+  Object.assign(defaultSociety(), { id: "" });
 
 export interface CreateSociety extends Society {
   localPictureUrl: string;
 }
 
-export const defaultCreateSociety: CreateSociety = Object.assign(
-  defaultSociety,
-  { localPictureUrl: "" }
-);
+export const defaultCreateSociety: () => CreateSociety = () =>
+  Object.assign(defaultSociety(), { localPictureUrl: "" });

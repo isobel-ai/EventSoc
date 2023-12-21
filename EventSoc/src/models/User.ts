@@ -3,4 +3,6 @@ export interface User {
   name: string;
 }
 
-export const defaultUser: User = { id: "", name: "" };
+export const defaultUser: () => User = () => {
+  return { id: "", name: "" };
+};

@@ -4,7 +4,7 @@ import { CreateSocEvent, defaultCreateSocEvent } from "../src/models/SocEvent";
 describe("getEventUpdates", () => {
   test("it should return no updates if there aren't any", () => {
     const id = "1";
-    const event = defaultCreateSocEvent;
+    const event = defaultCreateSocEvent();
 
     expect(getEventUpdates(id, event, event)).toEqual({ id: id });
   });
@@ -12,7 +12,7 @@ describe("getEventUpdates", () => {
   test("it should return updates if there are changes (all changes)", () => {
     const id = "1";
 
-    const before: CreateSocEvent = defaultCreateSocEvent;
+    const before: CreateSocEvent = defaultCreateSocEvent();
 
     const after: CreateSocEvent = {
       name: "name change",
@@ -32,10 +32,10 @@ describe("getEventUpdates", () => {
   test("it should return updates if there are changes (partial changes)", () => {
     const id = "1";
 
-    const before: CreateSocEvent = defaultCreateSocEvent;
+    const before: CreateSocEvent = defaultCreateSocEvent();
 
     const after: CreateSocEvent = {
-      ...defaultCreateSocEvent,
+      ...defaultCreateSocEvent(),
       name: "name change",
       location: "location change",
       startDate: new Date(3000, 1, 1)
