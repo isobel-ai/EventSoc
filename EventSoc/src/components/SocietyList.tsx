@@ -49,7 +49,10 @@ export default function SocietyList(props: Props) {
           renderItem={(soc) => (
             <Button
               key={soc.id}
-              variant={"link"}
+              variant="link"
+              sx={{
+                ":active": { _text: { textDecorationLine: "none" } }
+              }}
               size="lg"
               width="100%"
               marginVertical={5}
