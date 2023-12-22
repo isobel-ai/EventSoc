@@ -1,4 +1,12 @@
-import { doc, getDocs, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import {
+  doc,
+  getDocs,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  orderBy
+} from "firebase/firestore";
 import { eventPicturesRef, eventsCol } from "../config/firebaseConfig";
 import {
   CreateSocEvent,
@@ -10,7 +18,7 @@ import { deleteImage, updateImage, uploadImage } from "./cloudService";
 export function retrieveManagedEvents(
   setManagedEvents: React.Dispatch<React.SetStateAction<RetrieveSocEvent[]>>
 ) {
-  getDocs(eventsCol)
+  getDocs(query(eventsCol, orderBy("startDate")))
     .then((eventsSnapshot) => {
       const eventList = eventsSnapshot.docs.map((doc) => {
         const socEvent = {

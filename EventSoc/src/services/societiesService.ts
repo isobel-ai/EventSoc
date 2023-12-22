@@ -3,6 +3,7 @@ import { societiesCol, societyPicturesRef } from "../config/firebaseConfig";
 import { CreateSociety, RetrieveSociety } from "../models/Society";
 import { retrieveUser } from "./usersService";
 import { uploadImage } from "./cloudService";
+import { sortByString } from "../helpers/SearchSortHelper";
 
 export function retrieveSocieties(
   setSocieties: React.Dispatch<React.SetStateAction<RetrieveSociety[]>>
@@ -12,6 +13,7 @@ export function retrieveSocieties(
       const societyList = societiesSnapshot.docs.map((doc) => {
         return { ...doc.data(), id: doc.id } as RetrieveSociety;
       });
+      societyList.sort((s1, s2) => sortByString(s1, s2, "name"));
       setSocieties(societyList);
     })
     .catch((err) => console.log("Error: ", err));
@@ -28,6 +30,7 @@ export function retrieveExecSocieties(
           const societyList = societiesSnapshot.docs.map((doc) => {
             return { ...doc.data(), id: doc.id } as RetrieveSociety;
           });
+          societyList.sort((s1, s2) => sortByString(s1, s2, "name"));
           setExecSocieties(societyList);
         })
         .catch((err) => console.log("Error: ", err))
