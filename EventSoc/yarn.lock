@@ -10772,11 +10772,6 @@ react-native-gesture-handler@~2.12.0:
     lodash "^4.17.21"
     prop-types "^15.7.2"
 
-react-native-multi-selectbox-typescript@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/react-native-multi-selectbox-typescript/-/react-native-multi-selectbox-typescript-0.1.2.tgz#eaa333f171a173088580cfa15e1d6fe8a7101ab2"
-  integrity sha512-NoApB6YESUwj7jI+ATsMVoqI2nRB7hb78jL9TrSe/m8H2S0zjH/TFKAIDbzqpeBSHq85W4/FL0DIfYF0kAUS3Q==
-
 react-native-reanimated@~3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.3.0.tgz#80f9d58e28fddf62fe4c1bc792337b8ab57936ab"

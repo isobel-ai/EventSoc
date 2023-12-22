@@ -28,7 +28,7 @@ import { CreateSociety } from "../models/Society";
 import { useEffect, useState } from "react";
 import { config } from "../../config/gluestack-ui.config";
 import { xorBy } from "lodash";
-import SelectBox, { Item } from "react-native-multi-selectbox-typescript";
+import SelectBox, { Item } from "../../libs/multi-selectbox";
 import { LogBox } from "react-native";
 
 interface Props {
@@ -52,8 +52,6 @@ export default function EventForm(props: Props) {
   ]);
   const [execItems, setExecItems] = useState<Item[]>([]);
 
-  // remove current user from users in useeffect
-
   const setExec = () => {
     const exec = execItems.map((i) => i.item);
     props.setCreateSociety({ ...props.createSociety, exec: exec });
@@ -63,6 +61,10 @@ export default function EventForm(props: Props) {
   useEffect(() => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
   }, []);
+
+  const handleExecChange = (item: Item) => {
+    setExecItems(xorBy(execItems, [item], "id"));
+  };
 
   return (
     <ScrollView
@@ -139,7 +141,7 @@ export default function EventForm(props: Props) {
               <Icon as={CloseIcon} />
             </ModalCloseButton>
           </ModalHeader>
-          <ModalBody>
+          <ModalBody scrollEnabled={false}>
             <HStack
               gap={5}
               flex={1}
@@ -159,45 +161,11 @@ export default function EventForm(props: Props) {
               isMulti
               options={userItems}
               selectedValues={execItems}
-              onMultiSelect={(item: any) =>
-                setExecItems(xorBy(execItems, [item], "id"))
-              }
-              onTapClose={(item: any) =>
-                setExecItems(xorBy(execItems, [item], "id"))
-              }
-              label=""
+              showAllOptions={false}
+              onMultiSelect={handleExecChange}
+              onTapClose={handleExecChange}
               inputPlaceholder="No exec chosen"
               listEmptyText="No users found"
-              searchInputProps={{
-                placeholder: "Search",
-                placeholderTextColor: config.tokens.colors.placeholderGray
-              }}
-              listOptionProps={{
-                stickyHeaderIndices: [0]
-              }}
-              inputFilterStyle={{
-                fontSize: config.tokens.fontSizes.sm
-              }}
-              inputFilterContainerStyle={{
-                backgroundColor: config.tokens.colors.modalBackgroundLight
-              }}
-              optionsLabelStyle={{
-                fontSize: config.tokens.fontSizes.sm,
-                color: config.tokens.colors.black,
-                paddingLeft: 5
-              }}
-              multiOptionContainerStyle={{
-                backgroundColor: config.tokens.colors.navigationDarkPink
-              }}
-              multiOptionsLabelStyle={{
-                fontSize: config.tokens.fontSizes.sm
-              }}
-              multiListEmptyLabelStyle={{
-                color: config.tokens.colors.placeholderGray
-              }}
-              arrowIconColor={config.tokens.colors.black}
-              searchIconColor={config.tokens.colors.black}
-              toggleIconColor={config.tokens.colors.navigationDarkPink}
             />
           </ModalBody>
           <ModalFooter>
