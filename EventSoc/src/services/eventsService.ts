@@ -5,7 +5,7 @@ import {
   RetrieveSocEvent,
   UpdateSocEvent
 } from "../models/SocEvent";
-import { deleteImage, uploadImage } from "./cloudService";
+import { deleteImage, updateImage, uploadImage } from "./cloudService";
 
 export function retrieveManagedEvents(
   setManagedEvents: React.Dispatch<React.SetStateAction<RetrieveSocEvent[]>>
@@ -45,12 +45,10 @@ export function updateEvent(eventUpdates: UpdateSocEvent) {
   const { id, localPictureUrl, ...updates } = eventUpdates;
   const eventDoc = doc(eventsCol, id);
 
-  if (localPictureUrl) {
-    return uploadImage(eventPicturesRef, localPictureUrl, id).then((url) =>
-      updateDoc(eventDoc, { ...updates, pictureUrl: url }).catch((err) =>
-        console.log(err)
-      )
-    );
+  if (localPictureUrl !== undefined) {
+    return updateImage(eventPicturesRef, id, localPictureUrl)
+      .then((url) => updateDoc(eventDoc, { ...updates, pictureUrl: url }))
+      .catch((err) => console.log(err));
   }
 
   return updateDoc(eventDoc, updates).catch((err) => console.log(err));
