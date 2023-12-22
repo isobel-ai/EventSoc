@@ -10,6 +10,7 @@ import {
 } from "@gluestack-ui/themed";
 import { ComponentType, ReactElement, useEffect, useState } from "react";
 import { DimensionValue } from "react-native";
+import { searchFilter } from "../helpers/SearchHelper";
 
 interface Props<I> {
   data: I[];
@@ -31,12 +32,8 @@ export default function SearchableList<Item extends { name: string }>(
   }, [props.clearSearch]);
 
   const searchFunction = (text: string) => {
-    const formattedText = text.toUpperCase();
-    const newFilteredData = props.data.filter((item) => {
-      const formattedItem = item.name.toUpperCase();
-      return formattedItem.includes(formattedText);
-    });
-    setFilteredData(newFilteredData);
+    setSearchTerm(text);
+    setFilteredData(searchFilter(text, props.data, "name"));
   };
 
   return (
@@ -47,10 +44,7 @@ export default function SearchableList<Item extends { name: string }>(
         <InputField
           value={searchTerm}
           placeholder="Search"
-          onChangeText={(t) => {
-            setSearchTerm(t);
-            searchFunction(t);
-          }}
+          onChangeText={(t) => searchFunction(t)}
         />
         <InputSlot paddingRight={"$1.5"}>
           <InputIcon>
