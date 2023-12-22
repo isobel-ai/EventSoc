@@ -5,12 +5,7 @@ import {
   RetrieveSocEvent,
   UpdateSocEvent
 } from "../models/SocEvent";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytes,
-  deleteObject
-} from "firebase/storage";
+import { deleteImage, uploadImage } from "./cloudService";
 
 export function retrieveManagedEvents(
   setManagedEvents: React.Dispatch<React.SetStateAction<RetrieveSocEvent[]>>
@@ -32,27 +27,13 @@ export function retrieveManagedEvents(
     .catch((err) => console.log("Error: ", err));
 }
 
-function uploadEventImage(srcUrl: string, destUrl: string) {
-  const destRef = ref(eventPicturesRef, destUrl);
-  return fetch(srcUrl)
-    .then((res) => res.blob())
-    .then((blob) => uploadBytes(destRef, blob))
-    .catch((err) => console.log(err));
-}
-
 export function createEvent(createSocEvent: CreateSocEvent) {
   const eventRef = doc(eventsCol);
 
   const { localPictureUrl: localPictureURL, ...socEvent } = createSocEvent;
 
   if (localPictureURL) {
-    return uploadEventImage(localPictureURL, eventRef.id)
-      .then((res) => {
-        if (res) {
-          return getDownloadURL(res.ref);
-        }
-        throw "Error: Unable to upload image";
-      })
+    return uploadImage(eventPicturesRef, localPictureURL, eventRef.id)
       .then((url) => setDoc(eventRef, { ...socEvent, pictureUrl: url }))
       .catch((err) => console.log(err));
   }
@@ -66,13 +47,10 @@ export function updateEvent(eventUpdates: UpdateSocEvent) {
   return updateDoc(eventDoc, updates).catch((err) => console.log(err));
 }
 
-export function deleteEvent(id: string, pictureUrl: string) {
+export async function deleteEvent(id: string, pictureUrl: string) {
   const eventDoc = doc(eventsCol, id);
   if (pictureUrl) {
-    const eventPicRef = ref(eventPicturesRef, id);
-    return deleteObject(eventPicRef)
-      .then(() => deleteDoc(eventDoc))
-      .catch((err) => console.log(err));
+    await deleteImage(eventPicturesRef, id);
   }
 
   return deleteDoc(eventDoc).catch((err) => console.log(err));
