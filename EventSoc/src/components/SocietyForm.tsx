@@ -30,6 +30,7 @@ import { config } from "../../config/gluestack-ui.config";
 import { xorBy } from "lodash";
 import SelectBox, { Item } from "../../libs/multi-selectbox";
 import { LogBox } from "react-native";
+import { retrieveOtherUsers } from "../services/usersService";
 
 interface Props {
   createSociety: CreateSociety;
@@ -39,18 +40,17 @@ interface Props {
 export default function EventForm(props: Props) {
   const [isSelectExecOpen, setIsSelectExecOpen] = useState<boolean>(false);
 
-  const [userItems] = useState<Item[]>([
-    { id: "1", item: "1" },
-    { id: "2", item: "2" },
-    { id: "3", item: "3" },
-    { id: "4", item: "4" },
-    { id: "5", item: "5" },
-    { id: "6", item: "6" },
-    { id: "7", item: "7" },
-    { id: "8", item: "8" },
-    { id: "9", item: "9" }
-  ]);
+  const [userItems, setUserItems] = useState<Item[]>([]);
   const [execItems, setExecItems] = useState<Item[]>([]);
+
+  useEffect(() => {
+    retrieveOtherUsers().then((users) => {
+      const items = users.map((i) => {
+        return { id: i.id, item: i.name };
+      });
+      setUserItems(items);
+    });
+  }, [isSelectExecOpen]);
 
   const setExec = () => {
     const exec = execItems.map((i) => i.item);

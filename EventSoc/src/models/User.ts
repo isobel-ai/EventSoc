@@ -1,8 +1,14 @@
 export interface User {
-  id: string;
   name: string;
 }
 
 export const defaultUser: () => User = () => {
-  return { id: "", name: "" };
+  return { name: "" };
 };
+
+export interface RetrieveUser extends User {
+  id: string;
+}
+
+export const defaultRetrieveUser: () => RetrieveUser = () =>
+  Object.assign(defaultUser(), { id: "" });
