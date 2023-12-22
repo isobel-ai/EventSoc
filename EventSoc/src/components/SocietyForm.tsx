@@ -166,6 +166,7 @@ export default function EventForm(props: Props) {
               onTapClose={handleExecChange}
               inputPlaceholder="No exec chosen"
               listEmptyText="No users found"
+              maxOptionsHeight="60%"
             />
           </ModalBody>
           <ModalFooter>

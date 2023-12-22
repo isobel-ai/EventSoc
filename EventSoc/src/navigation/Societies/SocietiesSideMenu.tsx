@@ -5,6 +5,7 @@ import {
   Button,
   ButtonIcon,
   ButtonText,
+  Divider,
   VStack
 } from "@gluestack-ui/themed";
 import {
@@ -53,13 +54,14 @@ export default function SocietiesSideMenu(props: Props) {
           societies={execSocieties}
           isSideMenuOpen={isVisible}
           setIsSideMenuOpen={setIsVisible}
-          maxHeight="40%"
+          maxHeight="42%"
         />
         <SocietyList
           title="All Societies"
           societies={societies}
           isSideMenuOpen={isVisible}
           setIsSideMenuOpen={setIsVisible}
+          maxHeight="50%"
         />
         <Button
           size={"xl"}
