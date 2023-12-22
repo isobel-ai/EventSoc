@@ -52,19 +52,27 @@ export default function SocietyList(props: Props) {
               variant={"link"}
               size="lg"
               width="100%"
-              style={soc.pictureUrl ? { justifyContent: "flex-start" } : {}}
+              marginVertical={5}
+              justifyContent="flex-start"
               onPress={() => selectSocietyPage(soc)}>
-              {soc.pictureUrl && (
-                <Avatar>
-                  <AvatarFallbackText>{soc.name.charAt(0)}</AvatarFallbackText>
+              <Avatar marginHorizontal={10}>
+                <AvatarFallbackText
+                  color="white"
+                  fontSize="$sm">
+                  {soc.name}
+                </AvatarFallbackText>
+                {soc.pictureUrl && (
                   <AvatarImage
                     source={{ uri: soc.pictureUrl }}
                     alt=""
-                    style={{ left: -10 }}
                   />
-                </Avatar>
-              )}
-              <ButtonText ellipsizeMode="tail">{soc.name}</ButtonText>
+                )}
+              </Avatar>
+              <ButtonText
+                numberOfLines={1}
+                ellipsizeMode="tail">
+                {soc.name}
+              </ButtonText>
             </Button>
           )}
           clearSearch={props.isSideMenuOpen}
