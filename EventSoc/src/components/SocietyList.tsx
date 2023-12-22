@@ -1,18 +1,26 @@
 import {
   VStack,
-  ScrollView,
   Button,
   ButtonText,
   Avatar,
   AvatarFallbackText,
-  AvatarImage
+  AvatarImage,
+  Text,
+  Divider,
+  Heading
 } from "@gluestack-ui/themed";
 import { useSocietiesContext } from "../contexts/SocietiesContext";
 import { RetrieveSociety } from "../models/Society";
+import SearchableList from "./SearchableList";
+import { config } from "../../config/gluestack-ui.config";
+import { DimensionValue } from "react-native";
 
 interface Props {
+  title: string;
   societies: RetrieveSociety[];
+  isSideMenuOpen: boolean;
   setIsSideMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  maxHeight?: DimensionValue;
 }
 
 export default function SocietyList(props: Props) {
@@ -25,10 +33,20 @@ export default function SocietyList(props: Props) {
   };
 
   return (
-    <ScrollView scrollsToTop={false}>
-      <VStack>
-        {props.societies.map((soc) => {
-          return (
+    <VStack
+      width="100%"
+      maxHeight={props.maxHeight}>
+      <Heading
+        backgroundColor={config.tokens.colors.secondary200}
+        width="100%"
+        textAlign="center">
+        {props.title}
+      </Heading>
+      {props.societies.length > 0 ? (
+        <SearchableList
+          curvedSearchBar={false}
+          data={props.societies}
+          renderItem={(soc) => (
             <Button
               key={soc.id}
               variant={"link"}
@@ -48,9 +66,14 @@ export default function SocietyList(props: Props) {
               )}
               <ButtonText ellipsizeMode="tail">{soc.name}</ButtonText>
             </Button>
-          );
-        })}
-      </VStack>
-    </ScrollView>
+          )}
+          clearSearch={props.isSideMenuOpen}
+          itemSeperator={() => <Divider />}
+          maxHeight="90%"
+        />
+      ) : (
+        <Text fontSize={"$lg"}>No societies</Text>
+      )}
+    </VStack>
   );
 }

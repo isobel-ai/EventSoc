@@ -5,7 +5,6 @@ import {
   Button,
   ButtonIcon,
   ButtonText,
-  Heading,
   VStack
 } from "@gluestack-ui/themed";
 import {
@@ -32,20 +31,9 @@ export default function SocietiesSideMenu(props: Props) {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    if (isVisible) {
-      retrieveExecSocieties(setExecSocieties);
-      retrieveSocieties(setSocieties);
-    }
+    retrieveExecSocieties(setExecSocieties);
+    retrieveSocieties(setSocieties);
   }, [isVisible]);
-
-  const MenuHeading = ({ title }: { title: string }) => (
-    <Heading
-      backgroundColor={config.tokens.colors.secondary200}
-      width="100%"
-      textAlign="center">
-      {title}
-    </Heading>
-  );
 
   const goToRegisterSocietyScreen = () => {
     navigatorRef.current.navigate("Register Society");
@@ -58,25 +46,32 @@ export default function SocietiesSideMenu(props: Props) {
         backgroundColor="white"
         flex={1}
         borderRightColor="black"
-        borderRightWidth="$2">
-        <MenuHeading title="Exec Societies" />
+        borderRightWidth="$2"
+        height="100%">
         <SocietyList
+          title="Exec Societies"
           societies={execSocieties}
+          isSideMenuOpen={isVisible}
           setIsSideMenuOpen={setIsVisible}
+          maxHeight="40%"
         />
-        <MenuHeading title="All Societies" />
         <SocietyList
+          title="All Societies"
           societies={societies}
+          isSideMenuOpen={isVisible}
           setIsSideMenuOpen={setIsVisible}
         />
         <Button
           size={"xl"}
-          width="100%"
           borderRadius="$none"
-          onPress={goToRegisterSocietyScreen}>
+          onPress={goToRegisterSocietyScreen}
+          position="absolute"
+          bottom={0}
+          left={0}
+          right={0}>
           <ButtonIcon
             as={AddIcon}
-            size="lg"
+            size="xl"
             style={{ left: -10 }}
           />
           <ButtonText>Register Society</ButtonText>
