@@ -9,7 +9,7 @@ import {
   View
 } from "@gluestack-ui/themed";
 import { ComponentType, ReactElement, useEffect, useState } from "react";
-import { DimensionValue } from "react-native";
+import { DimensionValue, Keyboard } from "react-native";
 import { searchFilter } from "../helpers/SearchHelper";
 
 interface Props<I> {
@@ -28,7 +28,7 @@ export default function SearchableList<Item extends { name: string }>(
   const [filteredData, setFilteredData] = useState<Item[]>(props.data);
 
   useEffect(() => {
-    setSearchTerm(""), setFilteredData(props.data);
+    Keyboard.dismiss(), setSearchTerm(""), setFilteredData(props.data);
   }, [props.clearSearch]);
 
   const searchFunction = (text: string) => {
@@ -57,6 +57,7 @@ export default function SearchableList<Item extends { name: string }>(
         extraData={props.data}
         renderItem={({ item }) => props.renderItem(item as Item)}
         ItemSeparatorComponent={props.itemSeperator}
+        keyboardShouldPersistTaps="always"
       />
     </View>
   );
