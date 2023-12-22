@@ -38,3 +38,4 @@ export const societiesCol = collection(db, "societies");
 
 const storage = getStorage(app);
 export const eventPicturesRef = ref(storage, "eventPictures");
+export const societyPicturesRef = ref(storage, "societyPictures");

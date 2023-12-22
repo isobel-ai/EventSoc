@@ -1,7 +1,8 @@
-import { getDocs, query, where } from "firebase/firestore";
-import { societiesCol } from "../config/firebaseConfig";
-import { RetrieveSociety } from "../models/Society";
+import { doc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { societiesCol, societyPicturesRef } from "../config/firebaseConfig";
+import { CreateSociety, RetrieveSociety } from "../models/Society";
 import { retrieveUser } from "./usersService";
+import { uploadImage } from "./cloudService";
 
 export function retrieveSocieties(
   setSocieties: React.Dispatch<React.SetStateAction<RetrieveSociety[]>>
@@ -31,4 +32,18 @@ export function retrieveExecSocieties(
         })
         .catch((err) => console.log("Error: ", err))
     );
+}
+
+export function createSociety(createSociety: CreateSociety) {
+  const socRef = doc(societiesCol);
+
+  const { localPictureUrl: localPictureURL, ...soc } = createSociety;
+
+  if (localPictureURL) {
+    return uploadImage(societyPicturesRef, localPictureURL, socRef.id)
+      .then((url) => setDoc(socRef, { ...soc, pictureUrl: url }))
+      .catch((err) => console.log(err));
+  }
+
+  return setDoc(socRef, soc).catch((err) => console.log(err));
 }
