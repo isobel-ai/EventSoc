@@ -5,32 +5,28 @@ import {
   updateDoc,
   deleteDoc,
   query,
-  orderBy
+  orderBy,
+  DocumentReference,
+  getDoc
 } from "firebase/firestore";
 import { eventPicturesRef, eventsCol } from "../config/firebaseConfig";
 import {
   CreateSocEvent,
   RetrieveSocEvent,
-  UpdateSocEvent
+  UpdateSocEvent,
+  defaultRetrieveSocEvent
 } from "../models/SocEvent";
 import { deleteImage, updateImage, uploadImage } from "./cloudService";
 
-export function retrieveManagedEvents(
-  setManagedEvents: React.Dispatch<React.SetStateAction<RetrieveSocEvent[]>>
-) {
-  getDocs(query(eventsCol, orderBy("startDate")))
-    .then((eventsSnapshot) => {
-      const eventList = eventsSnapshot.docs.map((doc) => {
-        const socEvent = {
-          ...doc.data(),
-          startDate: doc.data().startDate.toDate(),
-          endDate: doc.data().endDate.toDate()
-        };
-        return Object.assign(socEvent, {
-          id: doc.id
-        }) as RetrieveSocEvent;
-      });
-      setManagedEvents(eventList);
+export function retrieveEvent(eventRef: DocumentReference) {
+  return getDoc(eventRef)
+    .then((eventSnapshot) => {
+      return {
+        ...eventSnapshot.data(),
+        startDate: eventSnapshot.data()?.startDate.toDate(),
+        endDate: eventSnapshot.data()?.endDate.toDate(),
+        id: eventSnapshot.id
+      } as RetrieveSocEvent;
     })
     .catch((err) => console.log("Error: ", err));
 }

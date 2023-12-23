@@ -1,9 +1,11 @@
-import { doc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { societiesCol, societyPicturesRef } from "../config/firebaseConfig";
 import { CreateSociety, RetrieveSociety } from "../models/Society";
 import { retrieveUser } from "./usersService";
 import { uploadImage } from "./cloudService";
 import { sortByString } from "../helpers/SearchSortHelper";
+import { RetrieveSocEvent } from "../models/SocEvent";
+import { retrieveEvent } from "./eventsService";
 
 export function retrieveSocieties(
   setSocieties: React.Dispatch<React.SetStateAction<RetrieveSociety[]>>
@@ -49,4 +51,22 @@ export function createSociety(createSociety: CreateSociety) {
   }
 
   return setDoc(socRef, soc).catch((err) => console.log(err));
+}
+
+export function retrieveSocEvents(
+  socId: string,
+  setEvents: React.Dispatch<React.SetStateAction<RetrieveSocEvent[]>>
+) {
+  setEvents([]);
+
+  getDoc(doc(societiesCol, socId))
+    .then((socSnapshot) => {
+      const { eventRefs } = socSnapshot.data() as RetrieveSociety;
+      const events: RetrieveSocEvent[] = [];
+      eventRefs.forEach((ref) =>
+        retrieveEvent(ref).then((event) => event && events.push(event))
+      );
+      setEvents(events);
+    })
+    .catch((err) => console.log("Error: ", err));
 }
