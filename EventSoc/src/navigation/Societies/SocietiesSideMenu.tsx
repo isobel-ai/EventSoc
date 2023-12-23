@@ -48,20 +48,21 @@ export default function SocietiesSideMenu(props: Props) {
         flex={1}
         borderRightColor="black"
         borderRightWidth="$2"
-        height="100%">
+        height="100%"
+        gap={18}>
         <SocietyList
           title="Exec Societies"
           societies={execSocieties}
           isSideMenuOpen={isVisible}
           setIsSideMenuOpen={setIsVisible}
-          maxHeight="42%"
+          maxHeight="41%"
         />
         <SocietyList
           title="All Societies"
           societies={societies}
           isSideMenuOpen={isVisible}
           setIsSideMenuOpen={setIsVisible}
-          maxHeight="50%"
+          maxHeight="47%"
         />
         <Button
           size={"xl"}
