@@ -30,13 +30,15 @@ import { SocietiesStackParamList } from "../navigation/Societies/SocietiesStackN
 import { useState } from "react";
 import { deleteEvent } from "../services/eventsService";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { deleteSocEvent } from "../services/societiesService";
 
 interface Props {
   retrieveSocEvent: RetrieveSocEvent;
 }
 
 export default function EventListButton(props: Props) {
-  const { setToEditEvent, setEventDeleted } = useSocietiesContext();
+  const { selectedSoc, setToEditEvent, setEventDeleted } =
+    useSocietiesContext();
 
   const { navigate } = useNavigation<NavigationProp<SocietiesStackParamList>>();
 
@@ -57,10 +59,9 @@ export default function EventListButton(props: Props) {
   };
 
   const deleteAndRefresh = () => {
-    deleteEvent(
-      props.retrieveSocEvent.id,
-      props.retrieveSocEvent.pictureUrl
-    ).then(() => setEventDeleted(true)); // Causes the page to refresh
+    deleteEvent(props.retrieveSocEvent.id, props.retrieveSocEvent.pictureUrl)
+      .then(() => deleteSocEvent(selectedSoc.id, props.retrieveSocEvent.id))
+      .then(() => setEventDeleted(true)); // Causes the page to refresh
   };
 
   return (

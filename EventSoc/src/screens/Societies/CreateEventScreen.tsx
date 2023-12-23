@@ -8,10 +8,14 @@ import { validEvent } from "../../helpers/EventInputValidationHelper";
 import { CreateSocEvent, defaultCreateSocEvent } from "../../models/SocEvent";
 import { createEvent } from "../../services/eventsService";
 import CreateEventAlertDialog from "../../components/StyledAlertDialog";
+import { useSocietiesContext } from "../../contexts/SocietiesContext";
+import { addSocEvent } from "../../services/societiesService";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Create Event">;
 
 export default function CreateEventScreen(props: Props) {
+  const { selectedSoc } = useSocietiesContext();
+
   const [createSocEvent, setCreateSocEvent] = useState<CreateSocEvent>(
     defaultCreateSocEvent
   );
@@ -21,7 +25,9 @@ export default function CreateEventScreen(props: Props) {
 
   const postEvent = () => {
     if (validEvent(createSocEvent, setInputErrMsg, setShowAlertDialog)) {
-      createEvent(createSocEvent).then(props.navigation.goBack);
+      createEvent(createSocEvent)
+        .then((eventRef) => eventRef && addSocEvent(selectedSoc.id, eventRef))
+        .then(props.navigation.goBack);
     }
   };
 

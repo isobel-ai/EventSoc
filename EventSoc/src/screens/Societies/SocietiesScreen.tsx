@@ -27,7 +27,7 @@ import { retrieveUser } from "../../services/usersService";
 import { isEqual } from "lodash";
 import { defaultRetrieveSociety } from "../../models/Society";
 import { config } from "../../../config/gluestack-ui.config";
-import { retrieveSocEvents } from "../../services/societiesService";
+import { retrieveEvents } from "../../services/eventsService";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Home">;
 
@@ -49,9 +49,9 @@ export default function SocietiesScreen(props: Props) {
 
   useEffect(() => {
     !isEqual(selectedSoc, defaultRetrieveSociety()) &&
-      retrieveSocEvents(selectedSoc.id, setEvents),
+      retrieveEvents(selectedSoc.eventRefs, setEvents),
       setEventDeleted(false);
-  }, [isFocused, eventDeleted]);
+  }, [selectedSoc, isFocused, eventDeleted]);
 
   return (
     <ScreenView extraStyle={{ height: "107%" }}>

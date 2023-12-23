@@ -1,24 +1,21 @@
 import {
   doc,
-  getDocs,
   setDoc,
   updateDoc,
   deleteDoc,
-  query,
-  orderBy,
   DocumentReference,
-  getDoc
+  getDoc,
+  DocumentData
 } from "firebase/firestore";
 import { eventPicturesRef, eventsCol } from "../config/firebaseConfig";
 import {
   CreateSocEvent,
   RetrieveSocEvent,
-  UpdateSocEvent,
-  defaultRetrieveSocEvent
+  UpdateSocEvent
 } from "../models/SocEvent";
 import { deleteImage, updateImage, uploadImage } from "./cloudService";
 
-export function retrieveEvent(eventRef: DocumentReference) {
+function retrieveEvent(eventRef: DocumentReference) {
   return getDoc(eventRef)
     .then((eventSnapshot) => {
       return {
@@ -31,6 +28,19 @@ export function retrieveEvent(eventRef: DocumentReference) {
     .catch((err) => console.log("Error: ", err));
 }
 
+export function retrieveEvents(
+  eventRefs: DocumentReference[],
+  setEvents: React.Dispatch<React.SetStateAction<RetrieveSocEvent[]>>
+) {
+  setEvents([]);
+
+  const events: RetrieveSocEvent[] = [];
+  eventRefs.forEach((ref) =>
+    retrieveEvent(ref).then((event) => event && events.push(event))
+  );
+  setEvents(events);
+}
+
 export function createEvent(createSocEvent: CreateSocEvent) {
   const eventRef = doc(eventsCol);
 
@@ -39,10 +49,13 @@ export function createEvent(createSocEvent: CreateSocEvent) {
   if (localPictureURL) {
     return uploadImage(eventPicturesRef, localPictureURL, eventRef.id)
       .then((url) => setDoc(eventRef, { ...socEvent, pictureUrl: url }))
+      .then(() => eventRef)
       .catch((err) => console.log(err));
   }
 
-  return setDoc(eventRef, socEvent).catch((err) => console.log(err));
+  return setDoc(eventRef, socEvent)
+    .then(() => eventRef)
+    .catch((err) => console.log(err));
 }
 
 export function updateEvent(eventUpdates: UpdateSocEvent) {
