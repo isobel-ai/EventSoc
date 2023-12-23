@@ -31,3 +31,7 @@ export interface CreateSociety extends Society {
 
 export const defaultCreateSociety: () => CreateSociety = () =>
   Object.assign(defaultSociety(), { localPictureUrl: "" });
+
+export interface UpdateSociety extends Partial<CreateSociety> {
+  id: string;
+}

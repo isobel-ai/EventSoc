@@ -107,7 +107,8 @@ export default function SocietiesScreen(props: Props) {
                   size="xl"
                   variant="link"
                   position="absolute"
-                  right={15}>
+                  right={15}
+                  onPress={() => props.navigation.navigate("Edit Society")}>
                   <ButtonIcon
                     as={EditIcon}
                     size="xl"
@@ -129,7 +130,10 @@ export default function SocietiesScreen(props: Props) {
             <SearchableList
               data={events}
               renderItem={(event) => (
-                <EventListButton retrieveSocEvent={event} />
+                <EventListButton
+                  retrieveSocEvent={event}
+                  isExec={isExec}
+                />
               )}
               itemSeperator={() => <Divider h="$1" />}
               maxHeight={isExec ? "62%" : "69%"}

@@ -34,6 +34,7 @@ import { deleteSocEvent } from "../services/societiesService";
 
 interface Props {
   retrieveSocEvent: RetrieveSocEvent;
+  isExec: boolean;
 }
 
 export default function EventListButton(props: Props) {
@@ -85,44 +86,46 @@ export default function EventListButton(props: Props) {
         lineBreakStrategyIOS="standard">
         {props.retrieveSocEvent.name}
       </ButtonText>
-      <Menu
-        placement="bottom right"
-        selectionMode="single"
-        onSelectionChange={menuSelectionHandler}
-        trigger={({ ...triggerProps }) => {
-          return (
-            <Button
-              style={{ position: "absolute", right: 10, top: -5 }}
-              {...triggerProps}
-              variant="link">
-              <ButtonIcon
-                as={ThreeDotsIcon}
-                size="xl"
-              />
-            </Button>
-          );
-        }}>
-        <MenuItem
-          key="edit"
-          textValue="Edit Event">
-          <Icon
-            as={DownloadIcon}
-            size="xl"
-            mr="$5"
-          />
-          <MenuItemLabel size="sm">Edit Event</MenuItemLabel>
-        </MenuItem>
-        <MenuItem
-          key="delete"
-          textValue="Delete Event">
-          <Icon
-            as={TrashIcon}
-            size="xl"
-            mr="$5"
-          />
-          <MenuItemLabel size="sm">Delete Event</MenuItemLabel>
-        </MenuItem>
-      </Menu>
+      {props.isExec && (
+        <Menu
+          placement="bottom right"
+          selectionMode="single"
+          onSelectionChange={menuSelectionHandler}
+          trigger={({ ...triggerProps }) => {
+            return (
+              <Button
+                style={{ position: "absolute", right: 10, top: -5 }}
+                {...triggerProps}
+                variant="link">
+                <ButtonIcon
+                  as={ThreeDotsIcon}
+                  size="xl"
+                />
+              </Button>
+            );
+          }}>
+          <MenuItem
+            key="edit"
+            textValue="Edit Event">
+            <Icon
+              as={DownloadIcon}
+              size="xl"
+              mr="$5"
+            />
+            <MenuItemLabel size="sm">Edit Event</MenuItemLabel>
+          </MenuItem>
+          <MenuItem
+            key="delete"
+            textValue="Delete Event">
+            <Icon
+              as={TrashIcon}
+              size="xl"
+              mr="$5"
+            />
+            <MenuItemLabel size="sm">Delete Event</MenuItemLabel>
+          </MenuItem>
+        </Menu>
+      )}
       <AlertDialog
         isOpen={showAlertDialog}
         onClose={() => {
