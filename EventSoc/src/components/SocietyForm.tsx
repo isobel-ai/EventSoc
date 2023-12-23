@@ -160,7 +160,7 @@ export default function EventForm(props: Props) {
               isMulti
               options={userItems}
               selectedValues={execItems}
-              //showAllOptions={false}
+              showAllOptions={false}
               onMultiSelect={handleExecChange}
               onTapClose={handleExecChange}
               inputPlaceholder="No exec chosen"
