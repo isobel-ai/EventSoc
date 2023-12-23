@@ -59,7 +59,6 @@ export type SelectBoxProps = {
   onTapClose?: (item: Item) => void;
   listOptionProps?: Partial<FlatListProps<Item>>;
   showAllOptions?: boolean;
-  maxOptionsHeight?: string;
 };
 
 export type Item = {
@@ -82,7 +81,6 @@ function SelectBox({
   listEmptyText = "No results found",
   listOptionProps,
   showAllOptions = true,
-  maxOptionsHeight = "50%",
   ...props
 }: SelectBoxProps) {
   const [inputValue, setInputValue] = useState("");
@@ -199,7 +197,6 @@ function SelectBox({
     }
   }
   const {
-    selectIcon,
     inputPlaceholder = "Select",
     hideInputFilter,
     width = "100%",
@@ -272,7 +269,7 @@ function SelectBox({
   } as ViewStyle;
 
   return (
-    <View style={{ height: "100%", width }}>
+    <View style={{ width: width, maxHeight: "90%" }}>
       <View style={kContainerStyle}>
         <View
           // eslint-disable-next-line react-native/no-inline-styles
@@ -314,7 +311,7 @@ function SelectBox({
         maxToRenderPerBatch={20}
         windowSize={10}
         ListEmptyComponent={optionListEmpty}
-        style={[{ maxHeight: maxOptionsHeight }, listOptionProps?.style]}
+        style={listOptionProps?.style}
         ListHeaderComponent={HeaderComponent()}
         stickyHeaderIndices={[0]}
         {...listOptionProps}
@@ -373,7 +370,7 @@ function SelectBox({
             />
           </View>
         )}
-        <ScrollView keyboardShouldPersistTaps="always" />
+        {/* <ScrollView keyboardShouldPersistTaps="always" /> */}
       </>
     );
 

@@ -144,7 +144,6 @@ export default function EventForm(props: Props) {
           <ModalBody scrollEnabled={false}>
             <HStack
               gap={5}
-              flex={1}
               alignItems="center">
               <Icon
                 as={InfoIcon}
@@ -161,12 +160,11 @@ export default function EventForm(props: Props) {
               isMulti
               options={userItems}
               selectedValues={execItems}
-              showAllOptions={false}
+              //showAllOptions={false}
               onMultiSelect={handleExecChange}
               onTapClose={handleExecChange}
               inputPlaceholder="No exec chosen"
               listEmptyText="No users found"
-              maxOptionsHeight="60%"
             />
           </ModalBody>
           <ModalFooter>
