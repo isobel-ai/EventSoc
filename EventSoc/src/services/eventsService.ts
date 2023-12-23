@@ -31,13 +31,17 @@ export function retrieveEvents(
   eventRefs: DocumentReference[],
   setEvents: React.Dispatch<React.SetStateAction<RetrieveSocEvent[]>>
 ) {
-  setEvents([]);
-
-  const events: RetrieveSocEvent[] = [];
-  eventRefs.forEach((ref) =>
-    retrieveEvent(ref).then((event) => event && events.push(event))
-  );
-  setEvents(events);
+  const eventPromises = eventRefs.map((ref) => retrieveEvent(ref));
+  Promise.all(eventPromises)
+    .then(
+      (events) =>
+        events.filter(
+          (event) => typeof event !== "undefined"
+        ) as RetrieveSocEvent[]
+    )
+    .then((events) => {
+      setEvents(events);
+    });
 }
 
 export function createEvent(createSocEvent: CreateSocEvent) {

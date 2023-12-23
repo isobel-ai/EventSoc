@@ -133,7 +133,7 @@ export default function SocietiesScreen(props: Props) {
               )}
               itemSeperator={() => <Divider h="$1" />}
               maxHeight={isExec ? "62%" : "69%"}
-              clearSearch={[selectedSoc, isFocused]}
+              clearSearch={[selectedSoc, isFocused, events]}
             />
           </View>
           {isExec && (
