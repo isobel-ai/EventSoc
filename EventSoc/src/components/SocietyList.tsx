@@ -78,7 +78,7 @@ export default function SocietyList(props: Props) {
               </ButtonText>
             </Button>
           )}
-          clearSearch={props.isSideMenuOpen}
+          clearSearch={[props.isSideMenuOpen]}
           itemSeperator={() => <Divider />}
           maxHeight="90%"
         />

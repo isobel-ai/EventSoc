@@ -3,8 +3,6 @@ import {
   ButtonText,
   ButtonIcon,
   AddIcon,
-  ScrollView,
-  VStack,
   HStack,
   Avatar,
   AvatarFallbackText,
@@ -13,12 +11,13 @@ import {
   Icon,
   ArrowLeftIcon,
   EditIcon,
-  Text
+  Text,
+  View,
+  Divider
 } from "@gluestack-ui/themed";
 import React, { useEffect, useState } from "react";
 import ScreenView from "../../components/ScreenView";
 import { RetrieveSocEvent } from "../../models/SocEvent";
-import EventList from "../../components/EventList";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { useIsFocused } from "@react-navigation/native";
@@ -28,6 +27,8 @@ import { isEqual } from "lodash";
 import { defaultRetrieveSociety } from "../../models/Society";
 import { config } from "../../../config/gluestack-ui.config";
 import { retrieveEvents } from "../../services/eventsService";
+import SearchableList from "../../components/SearchableList";
+import EventListButton from "../../components/EventListButton";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Home">;
 
@@ -54,13 +55,13 @@ export default function SocietiesScreen(props: Props) {
   }, [selectedSoc, isFocused, eventDeleted]);
 
   return (
-    <ScreenView extraStyle={{ height: "107%" }}>
-      {/*remove style above if manange to stick create to button - set flatlist size? */}
+    <ScreenView extraStyle={{ height: "100%" }}>
       {isEqual(selectedSoc, defaultRetrieveSociety()) ? (
         <HStack
           gap={15}
           flex={1}
           width="80%"
+          marginTop={20}
           alignSelf="center">
           <Icon
             as={ArrowLeftIcon}
@@ -73,61 +74,72 @@ export default function SocietiesScreen(props: Props) {
         </HStack>
       ) : (
         <>
-          <ScrollView
-            top={-20}
-            contentContainerStyle={{ gap: 10 }}>
-            <VStack
+          <View
+            height="100%"
+            top={-20}>
+            <HStack
               backgroundColor={config.tokens.colors.coolGray200}
-              gap={10}
-              paddingBottom={10}>
-              <HStack
-                gap={10}
-                width="90%"
-                marginTop={10}
-                flex={1}
-                alignItems="center">
-                <Avatar size="lg">
-                  <AvatarFallbackText
-                    color="white"
-                    fontSize="$lg">
-                    {selectedSoc.name}
-                  </AvatarFallbackText>
-                  {selectedSoc.pictureUrl && (
-                    <AvatarImage
-                      source={{ uri: selectedSoc.pictureUrl }}
-                      alt=""
-                    />
-                  )}
-                </Avatar>
-                <Heading
-                  fontSize="$2xl"
-                  numberOfLines={1}>
+              gap={15}
+              width="100%"
+              height="15%"
+              paddingHorizontal={15}
+              alignItems="center">
+              <Avatar size="lg">
+                <AvatarFallbackText
+                  color="white"
+                  fontSize="$lg">
                   {selectedSoc.name}
-                </Heading>
-                {isExec && (
-                  <Button
-                    size="xl"
-                    variant="link"
-                    position="absolute"
-                    right={10}>
-                    <ButtonIcon
-                      as={EditIcon}
-                      size="xl"
-                      color="black"
-                    />
-                  </Button>
+                </AvatarFallbackText>
+                {selectedSoc.pictureUrl && (
+                  <AvatarImage
+                    source={{ uri: selectedSoc.pictureUrl }}
+                    alt=""
+                  />
                 )}
-              </HStack>
-              <Text width="90%">{selectedSoc.description}</Text>
-            </VStack>
+              </Avatar>
+              <Heading
+                fontSize="$2xl"
+                numberOfLines={1}>
+                {selectedSoc.name}
+              </Heading>
+              {isExec && (
+                <Button
+                  size="xl"
+                  variant="link"
+                  position="absolute"
+                  right={15}>
+                  <ButtonIcon
+                    as={EditIcon}
+                    size="xl"
+                    color="black"
+                  />
+                </Button>
+              )}
+            </HStack>
+            <Text
+              fontSize="$sm"
+              backgroundColor={config.tokens.colors.coolGray200}
+              width="100%"
+              height="20%"
+              paddingHorizontal={10}
+              numberOfLines={4}>
+              {selectedSoc.description}
+            </Text>
             <Heading marginLeft={10}>Events:</Heading>
-            <EventList eventList={events} />
-          </ScrollView>
+            <SearchableList
+              data={events}
+              renderItem={(event) => (
+                <EventListButton retrieveSocEvent={event} />
+              )}
+              itemSeperator={() => <Divider h="$1" />}
+              maxHeight={isExec ? "62%" : "69%"}
+              clearSearch={[selectedSoc, isFocused]}
+            />
+          </View>
           {isExec && (
             <Button
               size={"xl"}
               borderRadius="$none"
-              bottom={0}
               onPress={() => props.navigation.navigate("Create Event")}>
               <ButtonIcon
                 as={AddIcon}

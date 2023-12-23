@@ -68,18 +68,15 @@ export default function EventListButton(props: Props) {
     <Button
       backgroundColor={config.tokens.colors.eventButtonGray}
       height={100}
-      width={325}
-      style={
-        props.retrieveSocEvent.pictureUrl
-          ? { justifyContent: "flex-start" }
-          : {}
-      }>
+      width="100%"
+      alignSelf="center"
+      borderRadius="$none">
       {props.retrieveSocEvent.pictureUrl && (
         <Image
           size="md"
           source={props.retrieveSocEvent.pictureUrl}
           alt=""
-          style={{ left: -10 }}
+          style={{ position: "absolute", left: 10 }}
         />
       )}
       <ButtonText

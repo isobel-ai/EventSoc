@@ -4,8 +4,7 @@ import {
   updateDoc,
   deleteDoc,
   DocumentReference,
-  getDoc,
-  DocumentData
+  getDoc
 } from "firebase/firestore";
 import { eventPicturesRef, eventsCol } from "../config/firebaseConfig";
 import {

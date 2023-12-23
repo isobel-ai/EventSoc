@@ -15,7 +15,7 @@ import { searchFilter } from "../helpers/SearchSortHelper";
 interface Props<I> {
   data: I[];
   renderItem: (item: I) => ReactElement;
-  clearSearch: boolean;
+  clearSearch: any[];
   curvedSearchBar?: boolean;
   itemSeperator?: ComponentType;
   maxHeight?: DimensionValue;
@@ -28,8 +28,8 @@ export default function SearchableList<Item extends { name: string }>(
   const [filteredData, setFilteredData] = useState<Item[]>(props.data);
 
   useEffect(() => {
-    Keyboard.dismiss(), setSearchTerm(""), setFilteredData(props.data);
-  }, [props.clearSearch]);
+    Keyboard.dismiss(), searchFunction("");
+  }, props.clearSearch);
 
   const searchFunction = (text: string) => {
     setSearchTerm(text);
