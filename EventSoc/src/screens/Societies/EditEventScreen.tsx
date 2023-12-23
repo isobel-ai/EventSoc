@@ -6,7 +6,7 @@ import { useState } from "react";
 import { validEvent } from "../../helpers/EventInputValidationHelper";
 import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
-import CreateEventAlertDialog from "../../components/StyledAlertDialog";
+import StyledAlertDialog from "../../components/StyledAlertDialog";
 import { useSocietiesContext } from "../../contexts/SocietiesContext";
 import { getEventUpdates } from "../../helpers/UpdateHelper";
 import { updateEvent } from "../../services/eventsService";
@@ -47,7 +47,7 @@ export default function EditEventScreen(props: Props) {
         onPress={editEvent}>
         <ButtonText>Update</ButtonText>
       </Button>
-      <CreateEventAlertDialog
+      <StyledAlertDialog
         {...{ showAlertDialog, setShowAlertDialog, inputErrMsg }}
       />
     </ScreenView>

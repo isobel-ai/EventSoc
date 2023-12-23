@@ -7,7 +7,7 @@ import { useState } from "react";
 import { validEvent } from "../../helpers/EventInputValidationHelper";
 import { CreateSocEvent, defaultCreateSocEvent } from "../../models/SocEvent";
 import { createEvent } from "../../services/eventsService";
-import CreateEventAlertDialog from "../../components/StyledAlertDialog";
+import StyledAlertDialog from "../../components/StyledAlertDialog";
 import { useSocietiesContext } from "../../contexts/SocietiesContext";
 import { addSocEvent } from "../../services/societiesService";
 
@@ -43,7 +43,7 @@ export default function CreateEventScreen(props: Props) {
         onPress={postEvent}>
         <ButtonText>Post</ButtonText>
       </Button>
-      <CreateEventAlertDialog
+      <StyledAlertDialog
         {...{ showAlertDialog, setShowAlertDialog, inputErrMsg }}
       />
     </ScreenView>
