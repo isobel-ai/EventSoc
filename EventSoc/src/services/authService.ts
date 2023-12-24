@@ -3,7 +3,7 @@ import {
   signInWithEmailAndPassword
 } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
-import { createUser, usernameTaken } from "./usersService";
+import { createUser, resetUser, usernameTaken } from "./usersService";
 
 export function login(
   email: string,
@@ -45,5 +45,8 @@ export function register(
 }
 
 export function signOut() {
-  auth.signOut().catch((err) => console.log(err));
+  auth
+    .signOut()
+    .then(resetUser)
+    .catch((err) => console.log(err));
 }

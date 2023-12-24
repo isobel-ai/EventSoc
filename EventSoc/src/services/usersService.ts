@@ -8,16 +8,15 @@ import {
   getDocs
 } from "firebase/firestore";
 import { auth, usersCol } from "../config/firebaseConfig";
-import {
-  RetrieveUser,
-  User,
-  defaultRetrieveUser,
-  defaultUser
-} from "../models/User";
+import { RetrieveUser, defaultRetrieveUser, defaultUser } from "../models/User";
 import { isEqual } from "lodash";
 import { sortByString } from "../helpers/SearchSortHelper";
 
-const user: RetrieveUser = defaultRetrieveUser();
+let user: RetrieveUser = defaultRetrieveUser();
+
+export function resetUser() {
+  user = defaultRetrieveUser();
+}
 
 export async function retrieveUser() {
   // Retrieve user if the function hasn't been called before
