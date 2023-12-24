@@ -3,6 +3,7 @@ import {
   arrayRemove,
   arrayUnion,
   doc,
+  getDoc,
   getDocs,
   query,
   setDoc,
@@ -14,10 +15,22 @@ import {
   societiesCol,
   societyPicturesRef
 } from "../config/firebaseConfig";
-import { CreateSociety, RetrieveSociety } from "../models/Society";
+import {
+  CreateSociety,
+  RetrieveSociety,
+  UpdateSociety
+} from "../models/Society";
 import { retrieveUser } from "./usersService";
-import { uploadImage } from "./cloudService";
+import { updateImage, uploadImage } from "./cloudService";
 import { sortByString } from "../helpers/SearchSortHelper";
+
+export function retrieveSociety(socId: string) {
+  return getDoc(doc(societiesCol, socId))
+    .then((socSnapshot) => {
+      return { ...socSnapshot.data(), id: socSnapshot.id } as RetrieveSociety;
+    })
+    .catch((err) => console.log("Error: ", err));
+}
 
 export function retrieveSocieties(
   setSocieties: React.Dispatch<React.SetStateAction<RetrieveSociety[]>>
@@ -75,4 +88,17 @@ export function deleteSocEvent(socId: string, eventId: string) {
   updateDoc(doc(societiesCol, socId), {
     eventRefs: arrayRemove(doc(eventsCol, eventId))
   }).catch((err) => console.log(err));
+}
+
+export function updateSociety(socUpdates: UpdateSociety) {
+  const { id, localPictureUrl, ...updates } = socUpdates;
+  const socDoc = doc(societiesCol, id);
+
+  if (localPictureUrl !== undefined) {
+    return updateImage(societyPicturesRef, id, localPictureUrl)
+      .then((url) => updateDoc(socDoc, { ...updates, pictureUrl: url }))
+      .catch((err) => console.log(err));
+  }
+
+  return updateDoc(socDoc, updates).catch((err) => console.log(err));
 }

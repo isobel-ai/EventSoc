@@ -8,11 +8,16 @@ import { useSocietiesContext } from "../../contexts/SocietiesContext";
 import { CreateSociety } from "../../models/Society";
 import SocietyForm from "../../components/SocietyForm";
 import { validSociety } from "../../helpers/SocietyInputValidationHelper";
+import { getSocietyUpdates } from "../../helpers/UpdateHelper";
+import {
+  retrieveSociety,
+  updateSociety
+} from "../../services/societiesService";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Edit Society">;
 
 export default function EditSocietyScreen(props: Props) {
-  const { selectedSoc } = useSocietiesContext();
+  const { selectedSoc, setSelectedSoc } = useSocietiesContext();
 
   const { id, ...soc } = selectedSoc;
   const beforeSoc = Object.assign(soc, {
@@ -28,8 +33,11 @@ export default function EditSocietyScreen(props: Props) {
 
   const editSociety = () => {
     if (validSociety(afterSoc, setInputErrMsg, setShowAlertDialog)) {
-      //done - const updateSoc = getSocietyUpdates(id, beforeSoc, afterSoc);
-      //todo - updateSociety(updateSoc).then(props.navigation.goBack);
+      const updateSoc = getSocietyUpdates(id, beforeSoc, afterSoc);
+      updateSociety(updateSoc)
+        .then(() => retrieveSociety(selectedSoc.id))
+        .then((updatedSoc) => updatedSoc && setSelectedSoc(updatedSoc))
+        .then(props.navigation.goBack);
     }
   };
 
