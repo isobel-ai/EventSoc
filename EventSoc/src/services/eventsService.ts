@@ -40,7 +40,9 @@ export function retrieveEvents(
         ) as RetrieveSocEvent[]
     )
     .then((events) => {
-      setEvents(events);
+      setEvents(
+        events.sort((s1, s2) => s1.startDate.valueOf() - s2.startDate.valueOf())
+      );
     });
 }
 
