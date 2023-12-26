@@ -46,6 +46,7 @@ export default function EditSocietyScreen(props: Props) {
       <SocietyForm
         createSociety={afterSoc}
         setCreateSociety={setAfterSoc}
+        editingForm
       />
       <Button
         size="xl"

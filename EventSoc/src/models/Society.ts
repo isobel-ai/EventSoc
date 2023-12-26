@@ -8,7 +8,7 @@ export interface Society {
   eventRefs: DocumentReference[];
 }
 
-const defaultSociety: () => Society = () => {
+export const defaultSociety: () => Society = () => {
   return {
     name: "",
     description: "",

@@ -32,7 +32,7 @@ function getSocietyErrMsg(name: string, exec: string[]) {
   }
 
   if (exec.length === 0) {
-    errMsg += "Your event must have at least one exec member.\n";
+    errMsg += "Your society must have at least one exec member.\n";
   }
 
   // If there's a trailing newline character, remove it

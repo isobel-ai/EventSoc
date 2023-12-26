@@ -40,6 +40,17 @@ export async function retrieveUser() {
   return user;
 }
 
+export function retrieveUsers() {
+  return getDocs(usersCol)
+    .then((usersSnapshot) => {
+      const userList = usersSnapshot.docs.map((doc) => {
+        return { ...doc.data(), id: doc.id } as RetrieveUser;
+      });
+      return userList.sort((s1, s2) => sortByString(s1, s2, "name"));
+    })
+    .catch((err) => console.log("Error: ", err));
+}
+
 export function retrieveOtherUsers() {
   retrieveUser(); // Set user if not already set
 

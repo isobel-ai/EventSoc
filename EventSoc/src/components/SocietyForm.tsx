@@ -30,41 +30,67 @@ import { config } from "../../config/gluestack-ui.config";
 import { xorBy } from "lodash";
 import SelectBox, { Item } from "../../libs/multi-selectbox";
 import { LogBox } from "react-native";
-import { retrieveOtherUsers } from "../services/usersService";
+import { retrieveOtherUsers, retrieveUsers } from "../services/usersService";
+import { useSocietiesContext } from "../contexts/SocietiesContext";
+import { useIsFocused } from "@react-navigation/native";
 
 interface Props {
   createSociety: CreateSociety;
   setCreateSociety: React.Dispatch<React.SetStateAction<CreateSociety>>;
+  editingForm?: boolean;
 }
 
-export default function EventForm(props: Props) {
+export default function SocietyForm(props: Props) {
+  const { selectedSoc } = useSocietiesContext();
+
   const [isSelectExecOpen, setIsSelectExecOpen] = useState<boolean>(false);
 
   const [userItems, setUserItems] = useState<Item[]>([]);
   const [execItems, setExecItems] = useState<Item[]>([]);
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    retrieveOtherUsers().then((users) => {
-      const items = users.map((i) => {
-        return { id: i.id, item: i.name };
+    if (props.editingForm) {
+      retrieveUsers().then((users) => {
+        if (users) {
+          const items = users.map((i) => {
+            return { id: i.id, item: i.name };
+          });
+          setUserItems(items);
+        }
       });
-      setUserItems(items);
-    });
-  }, [isSelectExecOpen]);
+    } else {
+      retrieveOtherUsers().then((users) => {
+        const items = users.map((i) => {
+          return { id: i.id, item: i.name };
+        });
+        setUserItems(items);
+      });
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
+    props.editingForm &&
+      setExecItems(
+        userItems.filter((item) => selectedSoc.exec.includes(item.item))
+      );
+  }, [userItems]);
+
+  const handleExecItemsChange = (item: Item) => {
+    setExecItems(xorBy(execItems, [item], "id"));
+  };
 
   const setExec = () => {
     const exec = execItems.map((i) => i.item);
     props.setCreateSociety({ ...props.createSociety, exec: exec });
+    setIsSelectExecOpen(false);
   };
 
   // Suppress error for scrollable modal within scrollview
   useEffect(() => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
   }, []);
-
-  const handleExecChange = (item: Item) => {
-    setExecItems(xorBy(execItems, [item], "id"));
-  };
 
   return (
     <ScrollView
@@ -127,10 +153,7 @@ export default function EventForm(props: Props) {
       </Button>
       <Modal
         isOpen={isSelectExecOpen}
-        onClose={() => {
-          setIsSelectExecOpen(false);
-          setExec();
-        }}>
+        onClose={setExec}>
         <ModalBackdrop />
         <ModalContent
           height="55%"
@@ -148,12 +171,16 @@ export default function EventForm(props: Props) {
               <Icon
                 as={InfoIcon}
                 size="xl"
-                color={config.tokens.colors.infoBlue}
+                color={
+                  props.editingForm
+                    ? "transparent"
+                    : config.tokens.colors.infoBlue
+                }
               />
               <Text
                 fontSize={"$sm"}
                 color={config.tokens.colors.infoBlue}>
-                You are already on the exec.
+                {props.editingForm ? "" : "You are already on the exec."}
               </Text>
             </HStack>
             <SelectBox
@@ -161,8 +188,8 @@ export default function EventForm(props: Props) {
               options={userItems}
               selectedValues={execItems}
               showAllOptions={false}
-              onMultiSelect={handleExecChange}
-              onTapClose={handleExecChange}
+              onMultiSelect={handleExecItemsChange}
+              onTapClose={handleExecItemsChange}
               inputPlaceholder="No exec chosen"
               listEmptyText="No users found"
             />
@@ -170,7 +197,7 @@ export default function EventForm(props: Props) {
           <ModalFooter>
             <Button
               size="lg"
-              onPress={() => setIsSelectExecOpen(false)}>
+              onPress={setExec}>
               <ButtonText>Continue</ButtonText>
             </Button>
           </ModalFooter>
