@@ -43,7 +43,7 @@ describe("setTime", () => {
 });
 
 describe("defaultDate", () => {
-  test("returns a date with 0 seconds and milliseconds", () => {
+  test("it should return a date with 0 seconds and milliseconds", () => {
     const date = defaultDate();
 
     expect(date.getSeconds()).toBe(0);
