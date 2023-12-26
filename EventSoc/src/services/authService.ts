@@ -2,14 +2,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword
 } from "firebase/auth";
-import { auth, usersCol } from "../config/firebaseConfig";
-import {
-  doc,
-  getCountFromServer,
-  query,
-  setDoc,
-  where
-} from "firebase/firestore";
+import { auth } from "../config/firebaseConfig";
+import { createUser, resetUser, usernameTaken } from "./usersService";
 
 export function login(
   email: string,
@@ -25,13 +19,6 @@ export function login(
   });
 }
 
-async function usernameTaken(name: string) {
-  const users = await getCountFromServer(
-    query(usersCol, where("name", "==", name))
-  );
-  return Boolean(users.data().count);
-}
-
 export function register(
   name: string,
   email: string,
@@ -44,9 +31,7 @@ export function register(
         setErrMsg("Username taken.");
       } else {
         createUserWithEmailAndPassword(auth, email, password)
-          .then((userCreds) => {
-            setDoc(doc(usersCol, userCreds.user.uid), { name: name });
-          })
+          .then((userCreds) => createUser(userCreds.user.uid, name))
           .catch((e) => {
             if (e.code === "auth/email-already-in-use") {
               setErrMsg("Email already linked to an account.");
@@ -60,5 +45,8 @@ export function register(
 }
 
 export function signOut() {
-  auth.signOut().catch((err) => console.log(err));
+  auth
+    .signOut()
+    .then(resetUser)
+    .catch((err) => console.log(err));
 }

@@ -8,7 +8,7 @@ import MyEventsScreen from "../screens/MyEventsScreen";
 import NotificationScreen from "../screens/NotificationScreen";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { config } from "../../config/gluestack-ui.config";
-import ManageEventsStackNavigator from "./ManageEventsStackNavigator";
+import SocietiesNavigator from "./Societies/SocietiesNavigator";
 
 export default function MainTabNavigator() {
   const Tab = createBottomTabNavigator();
@@ -71,8 +71,8 @@ export default function MainTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Manage Events"
-        component={ManageEventsStackNavigator}
+        name="Societies"
+        component={SocietiesNavigator}
         options={{
           tabBarIcon: ({ size }) => (
             <MaterialCommunityIcons

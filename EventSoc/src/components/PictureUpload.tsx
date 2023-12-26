@@ -1,6 +1,6 @@
 import * as ImagePicker from "expo-image-picker";
-import { TouchableOpacity } from "react-native";
-import { Image, View } from "@gluestack-ui/themed";
+import { ImageBackground, TouchableOpacity } from "react-native";
+import { Button, ButtonIcon, Icon, TrashIcon } from "@gluestack-ui/themed";
 
 import uploadPictureImage = require("../assets/images/photoUpload.png");
 
@@ -22,16 +22,32 @@ export default function PictureUpload(props: Props) {
   };
 
   return (
-    <View>
+    <>
       <TouchableOpacity
         onPress={pickImage}
-        style={{ alignSelf: "center" }}>
-        <Image
-          size="2xl"
-          source={props.image || uploadPictureImage}
-          alt=""
-        />
+        style={{
+          alignSelf: "center",
+          height: 250,
+          width: 250
+        }}>
+        <ImageBackground
+          style={{ height: "100%", width: "100%" }}
+          source={props.image ? { uri: props.image } : uploadPictureImage}>
+          <Button
+            action="negative"
+            size="xl"
+            width="10%"
+            margin={5}
+            onPress={() => props.setImage("")}>
+            <ButtonIcon>
+              <Icon
+                as={TrashIcon}
+                size="lg"
+              />
+            </ButtonIcon>
+          </Button>
+        </ImageBackground>
       </TouchableOpacity>
-    </View>
+    </>
   );
 }

@@ -1,18 +1,26 @@
-import { getEventUpdates } from "../src/helpers/UpdateHelper";
+import {
+  getEventUpdates,
+  getSocietyUpdates
+} from "../src/helpers/UpdateHelper";
 import { CreateSocEvent, defaultCreateSocEvent } from "../src/models/SocEvent";
+import {
+  CreateSociety,
+  UpdateSociety,
+  defaultCreateSociety
+} from "../src/models/Society";
 
 describe("getEventUpdates", () => {
   test("it should return no updates if there aren't any", () => {
     const id = "1";
-    const event = defaultCreateSocEvent;
+    const event = defaultCreateSocEvent();
 
-    expect(getEventUpdates(id, event, event)).toEqual({ id: id });
+    expect(getEventUpdates(id, event, { ...event })).toEqual({ id: id });
   });
 
   test("it should return updates if there are changes (all changes)", () => {
     const id = "1";
 
-    const before: CreateSocEvent = defaultCreateSocEvent;
+    const before: CreateSocEvent = defaultCreateSocEvent();
 
     const after: CreateSocEvent = {
       name: "name change",
@@ -32,10 +40,10 @@ describe("getEventUpdates", () => {
   test("it should return updates if there are changes (partial changes)", () => {
     const id = "1";
 
-    const before: CreateSocEvent = defaultCreateSocEvent;
+    const before: CreateSocEvent = defaultCreateSocEvent();
 
     const after: CreateSocEvent = {
-      ...defaultCreateSocEvent,
+      ...before,
       name: "name change",
       location: "location change",
       startDate: new Date(3000, 1, 1)
@@ -49,5 +57,55 @@ describe("getEventUpdates", () => {
     };
 
     expect(getEventUpdates(id, before, after)).toEqual(updates);
+  });
+});
+
+describe("getSocietyUpdates", () => {
+  test("it should return no updates if there aren't any", () => {
+    const id = "1";
+    const soc = defaultCreateSociety();
+
+    expect(getSocietyUpdates(id, soc, { ...soc })).toEqual({ id: id });
+  });
+
+  test("it should return updates if there are changes (all changes - not eventRefs)", () => {
+    const id = "1";
+
+    const before: CreateSociety = defaultCreateSociety();
+
+    const after: CreateSociety = {
+      ...before,
+      name: "name change",
+      description: "desc change",
+      pictureUrl: "picURL change",
+      localPictureUrl: "localURL change",
+      exec: ["a"]
+    };
+
+    const { eventRefs, ...expectedUpdates } = after;
+
+    expect(getSocietyUpdates(id, before, after)).toEqual(
+      Object.assign(expectedUpdates, { id: id })
+    );
+  });
+
+  test("it should return updates if there are changes (partial changes)", () => {
+    const id = "1";
+
+    const before: CreateSociety = defaultCreateSociety();
+
+    const after: CreateSociety = {
+      ...before,
+      name: "name change",
+      exec: ["a"]
+    };
+
+    const updates = {
+      id: id,
+      name: after.name,
+      exec: after.exec
+    };
+
+    expect(getSocietyUpdates(id, before, after)).toEqual(updates);
   });
 });

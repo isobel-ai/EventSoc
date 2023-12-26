@@ -44,7 +44,7 @@ function getEventErrMsg(
   }
 
   if (!location) {
-    errMsg = "Your event must have a location.\n";
+    errMsg += "Your event must have a location.\n";
   }
 
   if (!validDate) {

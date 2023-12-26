@@ -1,43 +1,49 @@
-import { doc, getDocs, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  DocumentReference,
+  getDoc
+} from "firebase/firestore";
 import { eventPicturesRef, eventsCol } from "../config/firebaseConfig";
 import {
   CreateSocEvent,
   RetrieveSocEvent,
   UpdateSocEvent
 } from "../models/SocEvent";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytes,
-  deleteObject
-} from "firebase/storage";
+import { deleteImage, updateImage, uploadImage } from "./cloudService";
 
-export function retrieveManagedEvents(
-  setManagedEvents: React.Dispatch<React.SetStateAction<RetrieveSocEvent[]>>
-) {
-  getDocs(eventsCol)
-    .then((eventsSnapshot) => {
-      const eventList = eventsSnapshot.docs.map((doc) => {
-        const socEvent = {
-          ...doc.data(),
-          startDate: doc.data().startDate.toDate(),
-          endDate: doc.data().endDate.toDate()
-        };
-        return Object.assign(socEvent, {
-          id: doc.id
-        }) as RetrieveSocEvent;
-      });
-      setManagedEvents(eventList);
+function retrieveEvent(eventRef: DocumentReference) {
+  return getDoc(eventRef)
+    .then((eventSnapshot) => {
+      return {
+        ...eventSnapshot.data(),
+        startDate: eventSnapshot.data()?.startDate.toDate(),
+        endDate: eventSnapshot.data()?.endDate.toDate(),
+        id: eventSnapshot.id
+      } as RetrieveSocEvent;
     })
     .catch((err) => console.log("Error: ", err));
 }
 
-function uploadEventImage(srcUrl: string, destUrl: string) {
-  const destRef = ref(eventPicturesRef, destUrl);
-  return fetch(srcUrl)
-    .then((res) => res.blob())
-    .then((blob) => uploadBytes(destRef, blob))
-    .catch((err) => console.log(err));
+export function retrieveEvents(
+  eventRefs: DocumentReference[],
+  setEvents: React.Dispatch<React.SetStateAction<RetrieveSocEvent[]>>
+) {
+  const eventPromises = eventRefs.map((ref) => retrieveEvent(ref));
+  Promise.all(eventPromises)
+    .then(
+      (events) =>
+        events.filter(
+          (event) => typeof event !== "undefined"
+        ) as RetrieveSocEvent[]
+    )
+    .then((events) => {
+      setEvents(
+        events.sort((s1, s2) => s1.startDate.valueOf() - s2.startDate.valueOf())
+      );
+    });
 }
 
 export function createEvent(createSocEvent: CreateSocEvent) {
@@ -46,33 +52,34 @@ export function createEvent(createSocEvent: CreateSocEvent) {
   const { localPictureUrl: localPictureURL, ...socEvent } = createSocEvent;
 
   if (localPictureURL) {
-    return uploadEventImage(localPictureURL, eventRef.id)
-      .then((res) => {
-        if (res) {
-          return getDownloadURL(res.ref);
-        }
-        throw "Error: Unable to upload image";
-      })
+    return uploadImage(eventPicturesRef, localPictureURL, eventRef.id)
       .then((url) => setDoc(eventRef, { ...socEvent, pictureUrl: url }))
+      .then(() => eventRef)
       .catch((err) => console.log(err));
   }
 
-  return setDoc(eventRef, socEvent).catch((err) => console.log(err));
+  return setDoc(eventRef, socEvent)
+    .then(() => eventRef)
+    .catch((err) => console.log(err));
 }
 
 export function updateEvent(eventUpdates: UpdateSocEvent) {
-  const { id, ...updates } = eventUpdates;
+  const { id, localPictureUrl, ...updates } = eventUpdates;
   const eventDoc = doc(eventsCol, id);
+
+  if (localPictureUrl !== undefined) {
+    return updateImage(eventPicturesRef, id, localPictureUrl)
+      .then((url) => updateDoc(eventDoc, { ...updates, pictureUrl: url }))
+      .catch((err) => console.log(err));
+  }
+
   return updateDoc(eventDoc, updates).catch((err) => console.log(err));
 }
 
-export function deleteEvent(id: string, pictureUrl: string) {
+export async function deleteEvent(id: string, pictureUrl: string) {
   const eventDoc = doc(eventsCol, id);
   if (pictureUrl) {
-    const eventPicRef = ref(eventPicturesRef, id);
-    return deleteObject(eventPicRef)
-      .then(() => deleteDoc(eventDoc))
-      .catch((err) => console.log(err));
+    await deleteImage(eventPicturesRef, id);
   }
 
   return deleteDoc(eventDoc).catch((err) => console.log(err));

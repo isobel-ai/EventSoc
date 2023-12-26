@@ -1,17 +1,21 @@
 import ScreenView from "../../components/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
-import { ManageEventsStackParamList } from "../../navigation/ManageEventsStackNavigator";
+import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import { useState } from "react";
 import { validEvent } from "../../helpers/EventInputValidationHelper";
 import { CreateSocEvent, defaultCreateSocEvent } from "../../models/SocEvent";
 import { createEvent } from "../../services/eventsService";
-import CreateEventAlertDialog from "../../components/CreateEventAlertDialog";
+import StyledAlertDialog from "../../components/StyledAlertDialog";
+import { useSocietiesContext } from "../../contexts/SocietiesContext";
+import { addSocEvent } from "../../services/societiesService";
 
-type Props = StackScreenProps<ManageEventsStackParamList, "Create Event">;
+type Props = StackScreenProps<SocietiesStackParamList, "Create Event">;
 
 export default function CreateEventScreen(props: Props) {
+  const { selectedSoc } = useSocietiesContext();
+
   const [createSocEvent, setCreateSocEvent] = useState<CreateSocEvent>(
     defaultCreateSocEvent
   );
@@ -21,7 +25,9 @@ export default function CreateEventScreen(props: Props) {
 
   const postEvent = () => {
     if (validEvent(createSocEvent, setInputErrMsg, setShowAlertDialog)) {
-      createEvent(createSocEvent).then(props.navigation.goBack);
+      createEvent(createSocEvent)
+        .then((eventRef) => eventRef && addSocEvent(selectedSoc.id, eventRef))
+        .then(props.navigation.goBack);
     }
   };
 
@@ -37,7 +43,7 @@ export default function CreateEventScreen(props: Props) {
         onPress={postEvent}>
         <ButtonText>Post</ButtonText>
       </Button>
-      <CreateEventAlertDialog
+      <StyledAlertDialog
         {...{ showAlertDialog, setShowAlertDialog, inputErrMsg }}
       />
     </ScreenView>

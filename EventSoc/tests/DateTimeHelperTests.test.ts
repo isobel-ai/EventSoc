@@ -1,9 +1,4 @@
-import {
-  defaultDate,
-  equalDate,
-  setDate,
-  setTime
-} from "../src/helpers/DateTimeHelper";
+import { defaultDate, setDate, setTime } from "../src/helpers/DateTimeHelper";
 
 describe("setDate", () => {
   test("it should set the date", () => {
@@ -47,38 +42,8 @@ describe("setTime", () => {
   });
 });
 
-describe("equalDate", () => {
-  test("it should return true for equal dates", () => {
-    const d1 = new Date(2023, 1, 1, 1, 1);
-    const d2 = new Date(d1);
-
-    expect(equalDate(d1, d2)).toBe(true);
-  });
-
-  test("it should return false for unequal dates (different date and time)", () => {
-    const d1 = new Date(2023, 1, 1, 1, 1);
-    const d2 = new Date(2022, 1, 1, 2, 1);
-
-    expect(equalDate(d1, d2)).toBe(false);
-  });
-
-  test("it should return false for unequal dates (different date)", () => {
-    const d1 = new Date(2023, 1, 1, 1, 1);
-    const d2 = new Date(2022, 1, 1, 1, 1);
-
-    expect(equalDate(d1, d2)).toBe(false);
-  });
-
-  test("it should return false for unequal dates (different time)", () => {
-    const d1 = new Date(2023, 1, 1, 1, 1);
-    const d2 = new Date(2023, 1, 1, 2, 1);
-
-    expect(equalDate(d1, d2)).toBe(false);
-  });
-});
-
 describe("defaultDate", () => {
-  test("returns a date with 0 seconds and milliseconds", () => {
+  test("it should return a date with 0 seconds and milliseconds", () => {
     const date = defaultDate();
 
     expect(date.getSeconds()).toBe(0);

@@ -20,13 +20,6 @@ export function setTime(date: Date, time: Date) {
   return newDate;
 }
 
-export function equalDate(d1: Date, d2: Date) {
-  return (
-    d1.toDateString() === d2.toDateString() &&
-    d1.toTimeString() === d2.toTimeString()
-  );
-}
-
 export const defaultDate = () => {
   const date = new Date();
   date.setSeconds(0, 0);

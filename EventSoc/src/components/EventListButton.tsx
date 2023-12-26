@@ -24,22 +24,24 @@ import {
 } from "@gluestack-ui/themed";
 import { RetrieveSocEvent } from "../models/SocEvent";
 import { config } from "../../config/gluestack-ui.config";
-import { useManageSocEventContext } from "../contexts/ManageSocEventContext";
+import { useSocietiesContext } from "../contexts/SocietiesContext";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { ManageEventsStackParamList } from "../navigation/ManageEventsStackNavigator";
+import { SocietiesStackParamList } from "../navigation/Societies/SocietiesStackNavigator";
 import { useState } from "react";
 import { deleteEvent } from "../services/eventsService";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { deleteSocEvent } from "../services/societiesService";
 
 interface Props {
   retrieveSocEvent: RetrieveSocEvent;
+  isExec: boolean;
 }
 
 export default function EventListButton(props: Props) {
-  const { setToEditEvent, setEventDeleted } = useManageSocEventContext();
+  const { selectedSoc, setToEditEvent, setEventDeleted } =
+    useSocietiesContext();
 
-  const { navigate } =
-    useNavigation<NavigationProp<ManageEventsStackParamList>>();
+  const { navigate } = useNavigation<NavigationProp<SocietiesStackParamList>>();
 
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
 
@@ -58,28 +60,24 @@ export default function EventListButton(props: Props) {
   };
 
   const deleteAndRefresh = () => {
-    deleteEvent(
-      props.retrieveSocEvent.id,
-      props.retrieveSocEvent.pictureUrl
-    ).then(() => setEventDeleted(true)); // Causes the page to refresh
+    deleteEvent(props.retrieveSocEvent.id, props.retrieveSocEvent.pictureUrl)
+      .then(() => deleteSocEvent(selectedSoc.id, props.retrieveSocEvent.id))
+      .then(() => setEventDeleted(true)); // Causes the page to refresh
   };
 
   return (
     <Button
       backgroundColor={config.tokens.colors.eventButtonGray}
       height={100}
-      width={325}
-      style={
-        props.retrieveSocEvent.pictureUrl
-          ? { justifyContent: "flex-start" }
-          : {}
-      }>
+      width="100%"
+      alignSelf="center"
+      borderRadius="$none">
       {props.retrieveSocEvent.pictureUrl && (
         <Image
           size="md"
           source={props.retrieveSocEvent.pictureUrl}
           alt=""
-          style={{ left: -10 }}
+          style={{ position: "absolute", left: 10 }}
         />
       )}
       <ButtonText
@@ -88,44 +86,46 @@ export default function EventListButton(props: Props) {
         lineBreakStrategyIOS="standard">
         {props.retrieveSocEvent.name}
       </ButtonText>
-      <Menu
-        placement="bottom right"
-        selectionMode="single"
-        onSelectionChange={menuSelectionHandler}
-        trigger={({ ...triggerProps }) => {
-          return (
-            <Button
-              style={{ position: "absolute", right: 10, top: -5 }}
-              {...triggerProps}
-              variant="link">
-              <ButtonIcon
-                as={ThreeDotsIcon}
-                size="xl"
-              />
-            </Button>
-          );
-        }}>
-        <MenuItem
-          key="edit"
-          textValue="Edit Event">
-          <Icon
-            as={DownloadIcon}
-            size="xl"
-            mr="$5"
-          />
-          <MenuItemLabel size="sm">Edit Event</MenuItemLabel>
-        </MenuItem>
-        <MenuItem
-          key="delete"
-          textValue="Delete Event">
-          <Icon
-            as={TrashIcon}
-            size="xl"
-            mr="$5"
-          />
-          <MenuItemLabel size="sm">Delete Event</MenuItemLabel>
-        </MenuItem>
-      </Menu>
+      {props.isExec && (
+        <Menu
+          placement="bottom right"
+          selectionMode="single"
+          onSelectionChange={menuSelectionHandler}
+          trigger={({ ...triggerProps }) => {
+            return (
+              <Button
+                style={{ position: "absolute", right: 10, top: -5 }}
+                {...triggerProps}
+                variant="link">
+                <ButtonIcon
+                  as={ThreeDotsIcon}
+                  size="xl"
+                />
+              </Button>
+            );
+          }}>
+          <MenuItem
+            key="edit"
+            textValue="Edit Event">
+            <Icon
+              as={DownloadIcon}
+              size="xl"
+              mr="$5"
+            />
+            <MenuItemLabel size="sm">Edit Event</MenuItemLabel>
+          </MenuItem>
+          <MenuItem
+            key="delete"
+            textValue="Delete Event">
+            <Icon
+              as={TrashIcon}
+              size="xl"
+              mr="$5"
+            />
+            <MenuItemLabel size="sm">Delete Event</MenuItemLabel>
+          </MenuItem>
+        </Menu>
+      )}
       <AlertDialog
         isOpen={showAlertDialog}
         onClose={() => {
