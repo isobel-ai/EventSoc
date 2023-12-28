@@ -1,19 +1,19 @@
 import { isEqual } from "lodash";
-import { CreateSocEvent, UpdateSocEvent } from "../models/SocEvent";
+import { CreateEvent, UpdateEvent } from "../models/Event";
 import { CreateSociety, UpdateSociety } from "../models/Society";
 
 export function getEventUpdates(
   eventId: string,
-  before: CreateSocEvent,
-  after: CreateSocEvent
+  before: CreateEvent,
+  after: CreateEvent
 ) {
-  const updateSocEvent: UpdateSocEvent = { id: eventId };
+  const updateEvent: UpdateEvent = { id: eventId };
   for (const [key, value] of Object.entries(after)) {
-    if (!isEqual(value, before[key as keyof CreateSocEvent])) {
-      updateSocEvent[key as keyof CreateSocEvent] = value;
+    if (!isEqual(value, before[key as keyof CreateEvent])) {
+      updateEvent[key as keyof CreateEvent] = value;
     }
   }
-  return updateSocEvent;
+  return updateEvent;
 }
 
 export function getSocietyUpdates(

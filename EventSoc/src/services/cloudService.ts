@@ -15,13 +15,8 @@ export function uploadImage(
   return fetch(srcUrl)
     .then((res) => res.blob())
     .then((blob) => uploadBytes(destRef, blob))
-    .then((res) => {
-      if (res) {
-        return getDownloadURL(res.ref);
-      }
-      throw "Error: Unable to upload image";
-    })
-    .catch((err) => console.log(err));
+    .then((res) => getDownloadURL(res.ref))
+    .catch(() => Error("Unable to upload image. Try again later."));
 }
 
 export function updateImage(
@@ -40,5 +35,5 @@ export function deleteImage(storage: StorageReference, id: string) {
   const picRef = ref(storage, id);
   return deleteObject(picRef)
     .then(() => "")
-    .catch((err) => console.log(err));
+    .catch((err) => Error("Unable to delete image. Try again later."));
 }

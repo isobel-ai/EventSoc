@@ -1,34 +1,44 @@
-import { validSociety } from "../src/helpers/SocietyInputValidationHelper";
+import { getSocietyErrMsg } from "../src/helpers/SocietyInputValidationHelper";
 import { Society, defaultSociety } from "../src/models/Society";
 
-describe("validSociety", () => {
+describe("getSocietyErrMsg", () => {
   const mockSetState = () => {};
 
-  test("it should return true if society is valid", () => {
+  test("it should return an empty string if the society is valid", () => {
     const soc: Society = {
       ...defaultSociety(),
       name: "name",
       exec: ["a"]
     };
 
-    expect(validSociety(soc, mockSetState, mockSetState)).toBe(true);
+    expect(getSocietyErrMsg(soc)).toBe("");
   });
 
-  test("it should return false if the society's name is empty", () => {
+  test("it should return an appropriate error message if the society's name is empty", () => {
     const soc: Society = {
       ...defaultSociety(),
       exec: ["a"]
     };
 
-    expect(validSociety(soc, mockSetState, mockSetState)).toBe(false);
+    expect(getSocietyErrMsg(soc)).toBe("Your society must have a name.");
   });
 
-  test("it should return false if society has no exec members", () => {
+  test("it should return an appropriate error message if society has no exec members", () => {
     const soc: Society = {
       ...defaultSociety(),
       name: "name"
     };
 
-    expect(validSociety(soc, mockSetState, mockSetState)).toBe(false);
+    expect(getSocietyErrMsg(soc)).toBe(
+      "Your society must have at least one exec member."
+    );
+  });
+
+  test("it should return an appropriate message if the society is invalid for multiple reasons", () => {
+    const soc: Society = defaultSociety();
+
+    expect(getSocietyErrMsg(soc)).toBe(
+      "Your society must have a name.\nYour society must have at least one exec member."
+    );
   });
 });

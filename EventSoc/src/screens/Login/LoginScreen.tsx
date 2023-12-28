@@ -40,6 +40,7 @@ export default function LoginScreen(props: Props) {
     props.navigation.navigate("Register");
     setEmail("");
     setPassword("");
+    setErrMsg("");
   };
 
   return (
@@ -65,7 +66,7 @@ export default function LoginScreen(props: Props) {
         <FormControl width="80%">
           <Input>
             <InputField
-              placeholder="Email"
+              placeholder="Warwick Email"
               backgroundColor="white"
               value={email}
               onChangeText={(t) => setEmail(t)}
@@ -88,7 +89,11 @@ export default function LoginScreen(props: Props) {
           action={"positive"}
           width="80%"
           isDisabled={!validEntries}
-          onPress={() => login(email, password, setErrMsg)}>
+          onPress={() =>
+            login(email, password).then(
+              (result) => result instanceof Error && setErrMsg(result.message)
+            )
+          }>
           <ButtonText>Login</ButtonText>
         </Button>
       </VStack>

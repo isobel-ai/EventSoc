@@ -20,30 +20,34 @@ import {
   Text,
   AlertDialogCloseButton,
   AlertDialogFooter,
-  CloseIcon
+  CloseIcon,
+  Alert,
+  AlertText,
+  VStack
 } from "@gluestack-ui/themed";
-import { RetrieveSocEvent } from "../models/SocEvent";
+import { RetrieveEvent } from "../models/Event";
 import { config } from "../../config/gluestack-ui.config";
 import { useSocietiesContext } from "../contexts/SocietiesContext";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { SocietiesStackParamList } from "../navigation/Societies/SocietiesStackNavigator";
 import { useState } from "react";
-import { deleteEvent } from "../services/eventsService";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { deleteSocEvent } from "../services/societiesService";
+import { deleteSocEvent } from "../services/socEventsService";
 
 interface Props {
-  retrieveSocEvent: RetrieveSocEvent;
+  retrieveEvent: RetrieveEvent;
   isExec: boolean;
 }
 
 export default function EventListButton(props: Props) {
-  const { selectedSoc, setToEditEvent, setEventDeleted } =
+  const { selectedSoc, updateSelectedSoc, setToEditEvent, setEventDeleted } =
     useSocietiesContext();
 
   const { navigate } = useNavigation<NavigationProp<SocietiesStackParamList>>();
 
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
+
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
   const menuSelectionHandler = (keys: Iterable<React.Key> | string) => {
     const keySet = new Set<React.Key>(keys);
@@ -55,14 +59,30 @@ export default function EventListButton(props: Props) {
   };
 
   const goToEditEventPage = () => {
-    setToEditEvent(props.retrieveSocEvent);
+    setToEditEvent(props.retrieveEvent);
     navigate("Edit Event");
   };
 
+  const handleAlertDialogClose = () => {
+    setShowAlertDialog(false);
+    setErrorMsg("");
+  };
+
   const deleteAndRefresh = () => {
-    deleteEvent(props.retrieveSocEvent.id, props.retrieveSocEvent.pictureUrl)
-      .then(() => deleteSocEvent(selectedSoc.id, props.retrieveSocEvent.id))
-      .then(() => setEventDeleted(true)); // Causes the page to refresh
+    deleteSocEvent(
+      props.retrieveEvent.id,
+      props.retrieveEvent.pictureUrl,
+      selectedSoc.id
+    ).then((result) => {
+      if (result instanceof Error) {
+        setErrorMsg(result.message);
+      } else {
+        updateSelectedSoc().then(() => {
+          setEventDeleted(true); // Causes the page to refresh
+          handleAlertDialogClose();
+        });
+      }
+    });
   };
 
   return (
@@ -72,10 +92,10 @@ export default function EventListButton(props: Props) {
       width="100%"
       alignSelf="center"
       borderRadius="$none">
-      {props.retrieveSocEvent.pictureUrl && (
+      {props.retrieveEvent.pictureUrl && (
         <Image
           size="md"
-          source={props.retrieveSocEvent.pictureUrl}
+          source={props.retrieveEvent.pictureUrl}
           alt=""
           style={{ position: "absolute", left: 10 }}
         />
@@ -84,7 +104,7 @@ export default function EventListButton(props: Props) {
         numberOfLines={2}
         ellipsizeMode="tail"
         lineBreakStrategyIOS="standard">
-        {props.retrieveSocEvent.name}
+        {props.retrieveEvent.name}
       </ButtonText>
       {props.isExec && (
         <Menu
@@ -128,9 +148,7 @@ export default function EventListButton(props: Props) {
       )}
       <AlertDialog
         isOpen={showAlertDialog}
-        onClose={() => {
-          setShowAlertDialog(false);
-        }}>
+        onClose={handleAlertDialogClose}>
         <AlertDialogBackdrop />
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -153,24 +171,37 @@ export default function EventListButton(props: Props) {
             <Text size="md">Deleting an event cannot be undone.</Text>
           </AlertDialogBody>
           <AlertDialogFooter>
-            <HStack style={{ flex: 1, justifyContent: "space-between" }}>
-              <Button
-                variant="outline"
-                action="secondary"
-                onPress={() => {
-                  setShowAlertDialog(false);
-                }}>
-                <ButtonText>Cancel</ButtonText>
-              </Button>
-              <Button
-                action="negative"
-                onPress={() => {
-                  setShowAlertDialog(false);
-                  deleteAndRefresh();
-                }}>
-                <ButtonText>Delete</ButtonText>
-              </Button>
-            </HStack>
+            <VStack
+              width="100%"
+              gap={15}>
+              <HStack gap={55}>
+                <Button
+                  variant="outline"
+                  action="secondary"
+                  onPress={handleAlertDialogClose}>
+                  <ButtonText>Cancel</ButtonText>
+                </Button>
+                <Button
+                  action="negative"
+                  onPress={deleteAndRefresh}>
+                  <ButtonText>Delete</ButtonText>
+                </Button>
+              </HStack>
+              {errorMsg && (
+                <Alert
+                  action="error"
+                  variant="outline"
+                  width="95%">
+                  <MaterialIcons
+                    name="error-outline"
+                    size={40}
+                    color={config.tokens.colors.error}
+                    style={{ paddingRight: 15 }}
+                  />
+                  <AlertText>{errorMsg}</AlertText>
+                </Alert>
+              )}
+            </VStack>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

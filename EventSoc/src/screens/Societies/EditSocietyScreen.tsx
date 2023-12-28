@@ -3,21 +3,18 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { useState } from "react";
 import { Button, ButtonText } from "@gluestack-ui/themed";
-import StyledAlertDialog from "../../components/StyledAlertDialog";
+import ErrorAlertDialog from "../../components/ErrorAlertDialog";
 import { useSocietiesContext } from "../../contexts/SocietiesContext";
 import { CreateSociety } from "../../models/Society";
 import SocietyForm from "../../components/SocietyForm";
-import { validSociety } from "../../helpers/SocietyInputValidationHelper";
+import { getSocietyErrMsg } from "../../helpers/SocietyInputValidationHelper";
 import { getSocietyUpdates } from "../../helpers/UpdateHelper";
-import {
-  retrieveSociety,
-  updateSociety
-} from "../../services/societiesService";
+import { updateSociety } from "../../services/societiesService";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Edit Society">;
 
 export default function EditSocietyScreen(props: Props) {
-  const { selectedSoc, setSelectedSoc } = useSocietiesContext();
+  const { selectedSoc, updateSelectedSoc } = useSocietiesContext();
 
   const { id, ...soc } = selectedSoc;
   const beforeSoc = Object.assign(soc, {
@@ -28,16 +25,24 @@ export default function EditSocietyScreen(props: Props) {
     ...beforeSoc
   });
 
-  const [inputErrMsg, setInputErrMsg] = useState<string>("");
+  const [errMsg, setErrMsg] = useState<string>("");
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
 
   const editSociety = () => {
-    if (validSociety(afterSoc, setInputErrMsg, setShowAlertDialog)) {
+    const invalidErrMsg = getSocietyErrMsg(afterSoc);
+    if (invalidErrMsg) {
+      setErrMsg(invalidErrMsg);
+      setShowAlertDialog(true);
+    } else {
       const updateSoc = getSocietyUpdates(id, beforeSoc, afterSoc);
-      updateSociety(updateSoc)
-        .then(() => retrieveSociety(selectedSoc.id))
-        .then((updatedSoc) => updatedSoc && setSelectedSoc(updatedSoc))
-        .then(props.navigation.goBack);
+      updateSociety(updateSoc).then((result) => {
+        if (result instanceof Error) {
+          setErrMsg(result.message);
+          setShowAlertDialog(true);
+        } else {
+          updateSelectedSoc().then(props.navigation.goBack);
+        }
+      });
     }
   };
 
@@ -54,9 +59,7 @@ export default function EditSocietyScreen(props: Props) {
         onPress={editSociety}>
         <ButtonText>Update</ButtonText>
       </Button>
-      <StyledAlertDialog
-        {...{ showAlertDialog, setShowAlertDialog, inputErrMsg }}
-      />
+      <ErrorAlertDialog {...{ showAlertDialog, setShowAlertDialog, errMsg }} />
     </ScreenView>
   );
 }

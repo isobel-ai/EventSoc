@@ -3,10 +3,10 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import { useState } from "react";
-import StyledAlertDialog from "../../components/StyledAlertDialog";
+import ErrorAlertDialog from "../../components/ErrorAlertDialog";
 import { CreateSociety, defaultCreateSociety } from "../../models/Society";
 import SocietyForm from "../../components/SocietyForm";
-import { validSociety } from "../../helpers/SocietyInputValidationHelper";
+import { getSocietyErrMsg } from "../../helpers/SocietyInputValidationHelper";
 import { createSociety } from "../../services/societiesService";
 import { retrieveUser } from "../../services/usersService";
 
@@ -16,18 +16,31 @@ export default function RegisterScreen(props: Props) {
   const [createSoc, setCreateSoc] =
     useState<CreateSociety>(defaultCreateSociety);
 
-  const [inputErrMsg, setInputErrMsg] = useState<string>("");
+  const [errMsg, setErrMsg] = useState<string>("");
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
 
   const registerSociety = () => {
     // Add user to exec
     retrieveUser().then((user) => {
       const fullExec = createSoc.exec.slice();
-      fullExec.push(user.name);
+      if (user.name) {
+        fullExec.push(user.name);
+      }
       const fullCreateSoc = { ...createSoc, exec: fullExec };
 
-      if (validSociety(fullCreateSoc, setInputErrMsg, setShowAlertDialog)) {
-        createSociety(fullCreateSoc).then(props.navigation.goBack);
+      const invalidErrMsg = getSocietyErrMsg(fullCreateSoc);
+      if (invalidErrMsg) {
+        setErrMsg(invalidErrMsg);
+        setShowAlertDialog(true);
+      } else {
+        createSociety(fullCreateSoc).then((result) => {
+          if (result instanceof Error) {
+            setErrMsg(result.message);
+            setShowAlertDialog(true);
+          } else {
+            props.navigation.goBack();
+          }
+        });
       }
     });
   };
@@ -44,9 +57,7 @@ export default function RegisterScreen(props: Props) {
         onPress={registerSociety}>
         <ButtonText>Register</ButtonText>
       </Button>
-      <StyledAlertDialog
-        {...{ showAlertDialog, setShowAlertDialog, inputErrMsg }}
-      />
+      <ErrorAlertDialog {...{ showAlertDialog, setShowAlertDialog, errMsg }} />
     </ScreenView>
   );
 }

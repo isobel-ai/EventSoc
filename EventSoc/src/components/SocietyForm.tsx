@@ -22,7 +22,9 @@ import {
   ButtonText,
   Text,
   HStack,
-  InfoIcon
+  InfoIcon,
+  Alert,
+  AlertText
 } from "@gluestack-ui/themed";
 import { CreateSociety } from "../models/Society";
 import { useEffect, useState } from "react";
@@ -33,6 +35,7 @@ import { LogBox } from "react-native";
 import { retrieveOtherUsers, retrieveUsers } from "../services/usersService";
 import { useSocietiesContext } from "../contexts/SocietiesContext";
 import { useIsFocused } from "@react-navigation/native";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 interface Props {
   createSociety: CreateSociety;
@@ -45,29 +48,29 @@ export default function SocietyForm(props: Props) {
 
   const [isSelectExecOpen, setIsSelectExecOpen] = useState<boolean>(false);
 
+  const [errMsg, setErrMsg] = useState<string>("");
+
   const [userItems, setUserItems] = useState<Item[]>([]);
   const [execItems, setExecItems] = useState<Item[]>([]);
 
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (props.editingForm) {
-      retrieveUsers().then((users) => {
-        if (users) {
-          const items = users.map((i) => {
-            return { id: i.id, item: i.name };
-          });
-          setUserItems(items);
-        }
-      });
-    } else {
-      retrieveOtherUsers().then((users) => {
-        const items = users.map((i) => {
-          return { id: i.id, item: i.name };
+    const retrieveUsersAttempt = props.editingForm
+      ? retrieveUsers()
+      : retrieveOtherUsers();
+
+    retrieveUsersAttempt.then((result) => {
+      if (result instanceof Error) {
+        setErrMsg(result.message);
+      } else {
+        const items = result.map((user) => {
+          return { id: user.id, item: user.name };
         });
         setUserItems(items);
-      });
-    }
+        setErrMsg("");
+      }
+    });
   }, [isFocused]);
 
   useEffect(() => {
@@ -82,8 +85,10 @@ export default function SocietyForm(props: Props) {
   };
 
   const setExec = () => {
-    const exec = execItems.map((i) => i.item);
-    props.setCreateSociety({ ...props.createSociety, exec: exec });
+    if (!errMsg) {
+      const exec = execItems.map((i) => i.item);
+      props.setCreateSociety({ ...props.createSociety, exec: exec });
+    }
     setIsSelectExecOpen(false);
   };
 
@@ -156,7 +161,7 @@ export default function SocietyForm(props: Props) {
         onClose={setExec}>
         <ModalBackdrop />
         <ModalContent
-          height="55%"
+          height={errMsg ? "35%" : "55%"}
           top={-45}>
           <ModalHeader>
             <Heading>Select Exec</Heading>
@@ -165,34 +170,53 @@ export default function SocietyForm(props: Props) {
             </ModalCloseButton>
           </ModalHeader>
           <ModalBody scrollEnabled={false}>
-            <HStack
-              gap={5}
-              alignItems="center">
-              <Icon
-                as={InfoIcon}
-                size="xl"
-                color={
-                  props.editingForm
-                    ? "transparent"
-                    : config.tokens.colors.infoBlue
-                }
-              />
-              <Text
-                fontSize={"$sm"}
-                color={config.tokens.colors.infoBlue}>
-                {props.editingForm ? "" : "You are already on the exec."}
-              </Text>
-            </HStack>
-            <SelectBox
-              isMulti
-              options={userItems}
-              selectedValues={execItems}
-              showAllOptions={false}
-              onMultiSelect={handleExecItemsChange}
-              onTapClose={handleExecItemsChange}
-              inputPlaceholder="No exec chosen"
-              listEmptyText="No users found"
-            />
+            {errMsg ? (
+              <Alert
+                action="error"
+                variant="outline"
+                width="90%"
+                alignSelf="center"
+                marginTop={15}>
+                <MaterialIcons
+                  name="error-outline"
+                  size={40}
+                  color={config.tokens.colors.error}
+                  style={{ paddingRight: 15 }}
+                />
+                <AlertText>{errMsg}</AlertText>
+              </Alert>
+            ) : (
+              <>
+                <HStack
+                  gap={5}
+                  alignItems="center">
+                  <Icon
+                    as={InfoIcon}
+                    size="xl"
+                    color={
+                      props.editingForm
+                        ? "transparent"
+                        : config.tokens.colors.infoBlue
+                    }
+                  />
+                  <Text
+                    fontSize={"$sm"}
+                    color={config.tokens.colors.infoBlue}>
+                    {props.editingForm ? "" : "You are already on the exec."}
+                  </Text>
+                </HStack>
+                <SelectBox
+                  isMulti
+                  options={userItems}
+                  selectedValues={execItems}
+                  showAllOptions={false}
+                  onMultiSelect={handleExecItemsChange}
+                  onTapClose={handleExecItemsChange}
+                  inputPlaceholder="No exec chosen"
+                  listEmptyText="No users found"
+                />
+              </>
+            )}
           </ModalBody>
           <ModalFooter>
             <Button

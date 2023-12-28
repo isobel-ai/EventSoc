@@ -13,11 +13,13 @@ import {
   EditIcon,
   Text,
   View,
-  Divider
+  Divider,
+  Alert,
+  AlertText
 } from "@gluestack-ui/themed";
 import React, { useEffect, useState } from "react";
 import ScreenView from "../../components/ScreenView";
-import { RetrieveSocEvent } from "../../models/SocEvent";
+import { RetrieveEvent } from "../../models/Event";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { useIsFocused } from "@react-navigation/native";
@@ -29,6 +31,7 @@ import { config } from "../../../config/gluestack-ui.config";
 import { retrieveEvents } from "../../services/eventsService";
 import SearchableList from "../../components/SearchableList";
 import EventListButton from "../../components/EventListButton";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Home">;
 
@@ -37,7 +40,9 @@ export default function SocietiesScreen(props: Props) {
 
   const [isExec, setIsExec] = useState<boolean>(false);
 
-  const [events, setEvents] = useState<RetrieveSocEvent[]>([]);
+  const [events, setEvents] = useState<RetrieveEvent[]>([]);
+
+  const [errMsg, setErrMsg] = useState<string>("");
 
   const isFocused = useIsFocused();
 
@@ -49,8 +54,15 @@ export default function SocietiesScreen(props: Props) {
   }, [selectedSoc]);
 
   useEffect(() => {
-    !isEqual(selectedSoc, defaultRetrieveSociety()) &&
-      retrieveEvents(selectedSoc.eventRefs, setEvents),
+    !isEqual(selectedSoc, defaultRetrieveSociety());
+    retrieveEvents(selectedSoc.eventRefs).then((result) => {
+      if (result instanceof Error) {
+        setErrMsg(result.message);
+      } else {
+        setErrMsg("");
+        setEvents(result);
+      }
+    }),
       setEventDeleted(false);
   }, [selectedSoc, isFocused, eventDeleted]);
 
@@ -127,18 +139,34 @@ export default function SocietiesScreen(props: Props) {
               {selectedSoc.description}
             </Text>
             <Heading marginLeft={10}>Events:</Heading>
-            <SearchableList
-              data={events}
-              renderItem={(event) => (
-                <EventListButton
-                  retrieveSocEvent={event}
-                  isExec={isExec}
+            {errMsg ? (
+              <Alert
+                action="error"
+                variant="outline"
+                width="80%"
+                alignSelf="center">
+                <MaterialIcons
+                  name="error-outline"
+                  size={40}
+                  color={config.tokens.colors.error}
+                  style={{ paddingRight: 10 }}
                 />
-              )}
-              itemSeperator={() => <Divider h="$1" />}
-              maxHeight={isExec ? "62%" : "69%"}
-              clearSearch={[selectedSoc, isFocused, events]}
-            />
+                <AlertText>{errMsg}</AlertText>
+              </Alert>
+            ) : (
+              <SearchableList
+                data={events}
+                renderItem={(event) => (
+                  <EventListButton
+                    retrieveEvent={event}
+                    isExec={isExec}
+                  />
+                )}
+                itemSeperator={() => <Divider h="$1" />}
+                maxHeight={isExec ? "62%" : "69%"}
+                clearSearch={[selectedSoc, isFocused, events]}
+              />
+            )}
           </View>
           {isExec && (
             <Button

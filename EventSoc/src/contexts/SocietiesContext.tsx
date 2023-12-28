@@ -1,10 +1,10 @@
 import { createContext, useContext } from "react";
-import { RetrieveSocEvent, defaultRetrieveSocEvent } from "../models/SocEvent";
+import { RetrieveEvent, defaultRetrieveEvent } from "../models/Event";
 import { RetrieveSociety, defaultRetrieveSociety } from "../models/Society";
 
 type SocietiesContent = {
-  toEditEvent: RetrieveSocEvent;
-  setToEditEvent: React.Dispatch<React.SetStateAction<RetrieveSocEvent>>;
+  toEditEvent: RetrieveEvent;
+  setToEditEvent: React.Dispatch<React.SetStateAction<RetrieveEvent>>;
 
   eventDeleted: boolean;
   setEventDeleted: React.Dispatch<React.SetStateAction<boolean>>;
@@ -12,11 +12,13 @@ type SocietiesContent = {
   selectedSoc: RetrieveSociety;
   setSelectedSoc: React.Dispatch<React.SetStateAction<RetrieveSociety>>;
 
+  updateSelectedSoc: () => Promise<void | Error>;
+
   navigatorRef: React.MutableRefObject<any>;
 };
 
 const SocietiesContext = createContext<SocietiesContent>({
-  toEditEvent: defaultRetrieveSocEvent(),
+  toEditEvent: defaultRetrieveEvent(),
   setToEditEvent: () => {},
 
   eventDeleted: false,
@@ -24,6 +26,8 @@ const SocietiesContext = createContext<SocietiesContent>({
 
   selectedSoc: defaultRetrieveSociety(),
   setSelectedSoc: () => {},
+
+  updateSelectedSoc: () => Promise.resolve(),
 
   navigatorRef: { current: null }
 });

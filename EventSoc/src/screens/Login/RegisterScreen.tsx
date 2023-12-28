@@ -179,7 +179,9 @@ export default function RegisterScreen(props: Props) {
             name.error || email.error || password.error || confirmPswd.error
           }
           onPress={() =>
-            register(name.value, email.value, password.value, setErrMsg)
+            register(name.value, email.value, password.value).then(
+              (result) => result instanceof Error && setErrMsg(result.message)
+            )
           }>
           <ButtonText>Register</ButtonText>
         </Button>

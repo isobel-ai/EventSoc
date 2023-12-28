@@ -1,12 +1,12 @@
 import ScreenView from "../../components/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
-import { CreateSocEvent } from "../../models/SocEvent";
+import { CreateEvent } from "../../models/Event";
 import { useState } from "react";
-import { validEvent } from "../../helpers/EventInputValidationHelper";
+import { getEventErrMsg } from "../../helpers/EventInputValidationHelper";
 import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
-import StyledAlertDialog from "../../components/StyledAlertDialog";
+import ErrorAlertDialog from "../../components/ErrorAlertDialog";
 import { useSocietiesContext } from "../../contexts/SocietiesContext";
 import { getEventUpdates } from "../../helpers/UpdateHelper";
 import { updateEvent } from "../../services/eventsService";
@@ -16,30 +16,41 @@ type Props = StackScreenProps<SocietiesStackParamList, "Edit Event">;
 export default function EditEventScreen(props: Props) {
   const { toEditEvent } = useSocietiesContext();
 
-  const { id, ...socEvent } = toEditEvent;
-  const beforeSocEvent = Object.assign(socEvent, {
-    localPictureUrl: socEvent.pictureUrl
+  const { id, ...event } = toEditEvent;
+  const beforeEvent = Object.assign(event, {
+    localPictureUrl: event.pictureUrl
   });
 
-  const [afterSocEvent, setAfterSocEvent] = useState<CreateSocEvent>({
-    ...beforeSocEvent
+  const [afterEvent, setAfterEvent] = useState<CreateEvent>({
+    ...beforeEvent
   });
 
-  const [inputErrMsg, setInputErrMsg] = useState<string>("");
+  const [errMsg, setErrMsg] = useState<string>("");
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
 
   const editEvent = () => {
-    if (validEvent(afterSocEvent, setInputErrMsg, setShowAlertDialog)) {
-      const updateSocEvent = getEventUpdates(id, beforeSocEvent, afterSocEvent);
-      updateEvent(updateSocEvent).then(props.navigation.goBack);
+    const invalidErrMsg = getEventErrMsg(afterEvent);
+    if (invalidErrMsg) {
+      setErrMsg(invalidErrMsg);
+      setShowAlertDialog(true);
+    } else {
+      const eventUpdates = getEventUpdates(id, beforeEvent, afterEvent);
+      updateEvent(eventUpdates).then((result) => {
+        if (result instanceof Error) {
+          setErrMsg(result.message);
+          setShowAlertDialog(true);
+        } else {
+          props.navigation.goBack();
+        }
+      });
     }
   };
 
   return (
     <ScreenView>
       <EventForm
-        createSocEvent={afterSocEvent}
-        setCreateSocEvent={setAfterSocEvent}
+        createEvent={afterEvent}
+        setCreateEvent={setAfterEvent}
       />
       <Button
         size="xl"
@@ -47,9 +58,7 @@ export default function EditEventScreen(props: Props) {
         onPress={editEvent}>
         <ButtonText>Update</ButtonText>
       </Button>
-      <StyledAlertDialog
-        {...{ showAlertDialog, setShowAlertDialog, inputErrMsg }}
-      />
+      <ErrorAlertDialog {...{ showAlertDialog, setShowAlertDialog, errMsg }} />
     </ScreenView>
   );
 }
