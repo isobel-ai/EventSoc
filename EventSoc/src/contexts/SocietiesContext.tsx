@@ -12,6 +12,8 @@ type SocietiesContent = {
   selectedSoc: RetrieveSociety;
   setSelectedSoc: React.Dispatch<React.SetStateAction<RetrieveSociety>>;
 
+  updateSelectedSoc: () => Promise<void | Error>;
+
   navigatorRef: React.MutableRefObject<any>;
 };
 
@@ -24,6 +26,8 @@ const SocietiesContext = createContext<SocietiesContent>({
 
   selectedSoc: defaultRetrieveSociety(),
   setSelectedSoc: () => {},
+
+  updateSelectedSoc: () => Promise.resolve(),
 
   navigatorRef: { current: null }
 });
