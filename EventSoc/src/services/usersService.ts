@@ -30,8 +30,7 @@ export async function retrieveUser() {
             ? ({ ...userSnapshot.data(), id: id } as RetrieveUser)
             : user;
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
           return user;
         })
     );
@@ -48,7 +47,7 @@ export function retrieveUsers() {
       });
       return userList.sort((s1, s2) => sortByString(s1, s2, "name"));
     })
-    .catch((err) => console.log("Error: ", err));
+    .catch(() => Error("Unable to retrieve users. Try again later."));
 }
 
 export function retrieveOtherUsers() {
@@ -61,10 +60,7 @@ export function retrieveOtherUsers() {
       });
       return userList.sort((s1, s2) => sortByString(s1, s2, "name"));
     })
-    .catch((err) => {
-      console.log("Error: ", err);
-      return <RetrieveUser[]>[];
-    });
+    .catch(() => Error("Unable to retrieve users. Try again later."));
 }
 
 export function createUser(id: string, name: string) {
@@ -73,9 +69,8 @@ export function createUser(id: string, name: string) {
   );
 }
 
-export async function usernameTaken(name: string) {
-  const users = await getCountFromServer(
-    query(usersCol, where("name", "==", name))
-  );
-  return Boolean(users.data().count);
+export function usernameTaken(name: string) {
+  return getCountFromServer(query(usersCol, where("name", "==", name)))
+    .then((result) => Boolean(result.data().count))
+    .catch(() => Error("Something went wrong. Try again later."));
 }

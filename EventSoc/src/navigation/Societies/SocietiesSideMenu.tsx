@@ -5,7 +5,6 @@ import {
   Button,
   ButtonIcon,
   ButtonText,
-  Divider,
   VStack
 } from "@gluestack-ui/themed";
 import {
@@ -27,13 +26,30 @@ export default function SocietiesSideMenu(props: Props) {
   const { navigatorRef } = useSocietiesContext();
 
   const [execSocieties, setExecSocieties] = useState<RetrieveSociety[]>([]);
+  const [execSocErrMsg, setExecSocErrMsg] = useState<string>("");
+
   const [societies, setSocieties] = useState<RetrieveSociety[]>([]);
+  const [socErrMsg, setSocErrMsg] = useState<string>("");
 
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    retrieveExecSocieties(setExecSocieties);
-    retrieveSocieties(setSocieties);
+    retrieveExecSocieties().then((result) => {
+      if (result instanceof Error) {
+        setExecSocErrMsg(result.message);
+      } else {
+        setExecSocieties(result);
+        setExecSocErrMsg("");
+      }
+    });
+    retrieveSocieties().then((result) => {
+      if (result instanceof Error) {
+        setSocErrMsg(result.message);
+      } else {
+        setSocieties(result);
+        setSocErrMsg("");
+      }
+    });
   }, [isVisible]);
 
   const goToRegisterSocietyScreen = () => {
@@ -55,6 +71,7 @@ export default function SocietiesSideMenu(props: Props) {
           societies={execSocieties}
           isSideMenuOpen={isVisible}
           setIsSideMenuOpen={setIsVisible}
+          errMsg={execSocErrMsg}
           maxHeight="41%"
         />
         <SocietyList
@@ -62,6 +79,7 @@ export default function SocietiesSideMenu(props: Props) {
           societies={societies}
           isSideMenuOpen={isVisible}
           setIsSideMenuOpen={setIsVisible}
+          errMsg={socErrMsg}
           maxHeight="47%"
         />
         <Button

@@ -89,7 +89,11 @@ export default function LoginScreen(props: Props) {
           action={"positive"}
           width="80%"
           isDisabled={!validEntries}
-          onPress={() => login(email, password, setErrMsg)}>
+          onPress={() =>
+            login(email, password).then(
+              (result) => result instanceof Error && setErrMsg(result.message)
+            )
+          }>
           <ButtonText>Login</ButtonText>
         </Button>
       </VStack>

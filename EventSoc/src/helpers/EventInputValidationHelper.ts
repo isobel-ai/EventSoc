@@ -1,49 +1,23 @@
-import { SocEvent } from "../models/SocEvent";
-
-/**
- * Returns whether the event is valid
- * If the event is invalid, sets the error message and alert dialog states
- */
-export function validEvent(
-  socEvent: SocEvent,
-  setInputErrMsg: React.Dispatch<React.SetStateAction<string>>,
-  setShowAlertDialog: React.Dispatch<React.SetStateAction<boolean>>
-) {
-  const errMsg = getEventErrMsg(
-    socEvent.name,
-    socEvent.location,
-    socEvent.startDate,
-    socEvent.endDate
-  );
-  setInputErrMsg(errMsg);
-
-  const valid = errMsg ? false : true;
-  setShowAlertDialog(!valid);
-  return valid;
-}
+import { Event } from "../models/Event";
 
 /**
  * Returns an empty string if the event is valid, and an appropriate error message otherwise
  */
-function getEventErrMsg(
-  name: string,
-  location: string,
-  startDate: Date,
-  endDate: Date
-) {
+export function getEventErrMsg(event: Event) {
   let errMsg = "";
 
-  const validDate = startDate >= new Date() && startDate <= endDate;
+  const validDate =
+    event.startDate >= new Date() && event.startDate <= event.endDate;
 
-  if (name && location && validDate) {
+  if (event.name && event.location && validDate) {
     return errMsg;
   }
 
-  if (!name) {
+  if (!event.name) {
     errMsg = "Your event must have a name.\n";
   }
 
-  if (!location) {
+  if (!event.location) {
     errMsg += "Your event must have a location.\n";
   }
 

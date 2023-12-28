@@ -1,86 +1,62 @@
-import {
-  doc,
-  setDoc,
-  updateDoc,
-  deleteDoc,
-  DocumentReference,
-  getDoc
-} from "firebase/firestore";
+import { doc, updateDoc, DocumentReference, getDoc } from "firebase/firestore";
 import { eventPicturesRef, eventsCol } from "../config/firebaseConfig";
-import {
-  CreateSocEvent,
-  RetrieveSocEvent,
-  UpdateSocEvent
-} from "../models/SocEvent";
-import { deleteImage, updateImage, uploadImage } from "./cloudService";
+import { RetrieveEvent, UpdateEvent } from "../models/Event";
+import { updateImage } from "./cloudService";
 
 function retrieveEvent(eventRef: DocumentReference) {
   return getDoc(eventRef)
     .then((eventSnapshot) => {
+      if (!eventSnapshot.exists()) {
+        throw Error;
+      }
       return {
         ...eventSnapshot.data(),
-        startDate: eventSnapshot.data()?.startDate.toDate(),
-        endDate: eventSnapshot.data()?.endDate.toDate(),
+        startDate: eventSnapshot.data().startDate.toDate(),
+        endDate: eventSnapshot.data().endDate.toDate(),
         id: eventSnapshot.id
-      } as RetrieveSocEvent;
+      } as RetrieveEvent;
     })
-    .catch((err) => console.log("Error: ", err));
+    .catch(() => Error("Event couldn't be retrieved. Try again later."));
 }
 
-export function retrieveEvents(
-  eventRefs: DocumentReference[],
-  setEvents: React.Dispatch<React.SetStateAction<RetrieveSocEvent[]>>
-) {
+export function retrieveEvents(eventRefs: DocumentReference[]) {
   const eventPromises = eventRefs.map((ref) => retrieveEvent(ref));
-  Promise.all(eventPromises)
-    .then(
-      (events) =>
-        events.filter(
-          (event) => typeof event !== "undefined"
-        ) as RetrieveSocEvent[]
-    )
+  return Promise.all(eventPromises)
     .then((events) => {
-      setEvents(
-        events.sort((s1, s2) => s1.startDate.valueOf() - s2.startDate.valueOf())
-      );
-    });
+      const resolvedEvents = events.filter(
+        (event) => !(event instanceof Error)
+      ) as RetrieveEvent[];
+      if (resolvedEvents.length == 0 && eventPromises.length > 0) {
+        console.log("yer");
+        throw Error;
+      }
+      return resolvedEvents;
+    })
+    .then((events) =>
+      events.sort((s1, s2) => s1.startDate.valueOf() - s2.startDate.valueOf())
+    )
+    .catch((err) => Error("Events couldn't be retrieved. Try again later."));
 }
 
-export function createEvent(createSocEvent: CreateSocEvent) {
-  const eventRef = doc(eventsCol);
-
-  const { localPictureUrl: localPictureURL, ...socEvent } = createSocEvent;
-
-  if (localPictureURL) {
-    return uploadImage(eventPicturesRef, localPictureURL, eventRef.id)
-      .then((url) => setDoc(eventRef, { ...socEvent, pictureUrl: url }))
-      .then(() => eventRef)
-      .catch((err) => console.log(err));
-  }
-
-  return setDoc(eventRef, socEvent)
-    .then(() => eventRef)
-    .catch((err) => console.log(err));
-}
-
-export function updateEvent(eventUpdates: UpdateSocEvent) {
+export function updateEvent(eventUpdates: UpdateEvent) {
   const { id, localPictureUrl, ...updates } = eventUpdates;
   const eventDoc = doc(eventsCol, id);
 
+  let updateAttempt;
   if (localPictureUrl !== undefined) {
-    return updateImage(eventPicturesRef, id, localPictureUrl)
-      .then((url) => updateDoc(eventDoc, { ...updates, pictureUrl: url }))
-      .catch((err) => console.log(err));
+    updateAttempt = updateImage(eventPicturesRef, id, localPictureUrl).then(
+      (url) => {
+        if (url instanceof Error) {
+          return url;
+        }
+        updateDoc(eventDoc, { ...updates, pictureUrl: url });
+      }
+    );
+  } else {
+    updateAttempt = updateDoc(eventDoc, updates);
   }
 
-  return updateDoc(eventDoc, updates).catch((err) => console.log(err));
-}
-
-export async function deleteEvent(id: string, pictureUrl: string) {
-  const eventDoc = doc(eventsCol, id);
-  if (pictureUrl) {
-    await deleteImage(eventPicturesRef, id);
-  }
-
-  return deleteDoc(eventDoc).catch((err) => console.log(err));
+  return updateAttempt.catch(() =>
+    Error("Unable to update event. Try again later.")
+  );
 }

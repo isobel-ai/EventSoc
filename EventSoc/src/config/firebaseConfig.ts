@@ -31,7 +31,7 @@ if (!getApps().length) {
   auth = getAuth(app);
 }
 
-const db = getFirestore(app);
+export const db = getFirestore(app);
 export const eventsCol = collection(db, "events");
 export const usersCol = collection(db, "users");
 export const societiesCol = collection(db, "societies");

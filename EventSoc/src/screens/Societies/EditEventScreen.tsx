@@ -3,7 +3,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { CreateEvent } from "../../models/Event";
 import { useState } from "react";
-import { validEvent } from "../../helpers/EventInputValidationHelper";
+import { getEventErrMsg } from "../../helpers/EventInputValidationHelper";
 import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import ErrorAlertDialog from "../../components/ErrorAlertDialog";
@@ -25,13 +25,24 @@ export default function EditEventScreen(props: Props) {
     ...beforeEvent
   });
 
-  const [inputErrMsg, setInputErrMsg] = useState<string>("");
+  const [errMsg, setErrMsg] = useState<string>("");
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
 
   const editEvent = () => {
-    if (validEvent(afterSocEvent, setInputErrMsg, setShowAlertDialog)) {
-      const updateSocEvent = getEventUpdates(id, beforeSocEvent, afterSocEvent);
-      updateEvent(updateSocEvent).then(props.navigation.goBack);
+    const invalidErrMsg = getEventErrMsg(afterEvent);
+    if (invalidErrMsg) {
+      setErrMsg(invalidErrMsg);
+      setShowAlertDialog(true);
+    } else {
+      const eventUpdates = getEventUpdates(id, beforeEvent, afterEvent);
+      updateEvent(eventUpdates).then((result) => {
+        if (result instanceof Error) {
+          setErrMsg(result.message);
+          setShowAlertDialog(true);
+        } else {
+          props.navigation.goBack();
+        }
+      });
     }
   };
 

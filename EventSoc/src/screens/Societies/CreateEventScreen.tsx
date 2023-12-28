@@ -4,28 +4,38 @@ import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesSta
 import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import { useState } from "react";
+import { getEventErrMsg } from "../../helpers/EventInputValidationHelper";
 import { CreateEvent, defaultCreateEvent } from "../../models/Event";
 import ErrorAlertDialog from "../../components/ErrorAlertDialog";
 import { useSocietiesContext } from "../../contexts/SocietiesContext";
-import { addSocEvent } from "../../services/societiesService";
+import { createSocEvent } from "../../services/socEventsService";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Create Event">;
 
 export default function CreateEventScreen(props: Props) {
-  const { selectedSoc } = useSocietiesContext();
+  const { selectedSoc, updateSelectedSoc } = useSocietiesContext();
 
   const [createEvent, setCreateEvent] = useState<CreateEvent>(
     defaultCreateEvent()
   );
 
-  const [inputErrMsg, setInputErrMsg] = useState<string>("");
+  const [errMsg, setErrMsg] = useState<string>("");
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
 
   const postEvent = () => {
-    if (validEvent(createSocEvent, setInputErrMsg, setShowAlertDialog)) {
-      createEvent(createSocEvent)
-        .then((eventRef) => eventRef && addSocEvent(selectedSoc.id, eventRef))
-        .then(props.navigation.goBack);
+    const invalidErrMsg = getEventErrMsg(createEvent);
+    if (invalidErrMsg) {
+      setErrMsg(invalidErrMsg);
+      setShowAlertDialog(true);
+    } else {
+      createSocEvent(createEvent, selectedSoc.id).then((result) => {
+        if (result instanceof Error) {
+          setErrMsg(result.message);
+          setShowAlertDialog(true);
+        } else {
+          updateSelectedSoc().then(props.navigation.goBack);
+        }
+      });
     }
   };
 
@@ -38,6 +48,7 @@ export default function CreateEventScreen(props: Props) {
       <Button
         size="xl"
         action={"positive"}
+        borderRadius="$none"
         onPress={postEvent}>
         <ButtonText>Post</ButtonText>
       </Button>
