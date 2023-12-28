@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { retrieveUser } from "../services/usersService";
 import { useIsFocused } from "@react-navigation/native";
 import { signOut } from "../services/authService";
+import ErrorAlertDialog from "../components/ErrorAlertDialog";
 
 export default function MyAccountScreen() {
   const [user, setUser] = useState<RetrieveUser>(defaultRetrieveUser());
@@ -23,6 +24,7 @@ export default function MyAccountScreen() {
         onPress={signOut}>
         <ButtonText>Logout</ButtonText>
       </Button>
+      <ErrorAlertDialog {...{ showAlertDialog, setShowAlertDialog, errMsg }} />
     </ScreenView>
   );
 }

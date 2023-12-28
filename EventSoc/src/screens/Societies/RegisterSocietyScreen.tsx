@@ -3,7 +3,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import { useState } from "react";
-import StyledAlertDialog from "../../components/StyledAlertDialog";
+import ErrorAlertDialog from "../../components/ErrorAlertDialog";
 import { CreateSociety, defaultCreateSociety } from "../../models/Society";
 import SocietyForm from "../../components/SocietyForm";
 import { validSociety } from "../../helpers/SocietyInputValidationHelper";
@@ -44,9 +44,7 @@ export default function RegisterScreen(props: Props) {
         onPress={registerSociety}>
         <ButtonText>Register</ButtonText>
       </Button>
-      <StyledAlertDialog
-        {...{ showAlertDialog, setShowAlertDialog, inputErrMsg }}
-      />
+      <ErrorAlertDialog {...{ showAlertDialog, setShowAlertDialog, errMsg }} />
     </ScreenView>
   );
 }

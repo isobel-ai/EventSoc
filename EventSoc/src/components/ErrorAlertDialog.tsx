@@ -21,10 +21,10 @@ interface Props {
   showAlertDialog: boolean;
   setShowAlertDialog: React.Dispatch<React.SetStateAction<boolean>>;
 
-  inputErrMsg: string;
+  errMsg: string;
 }
 
-export default function StyledAlertDialog(props: Props) {
+export default function ErrorAlertDialog(props: Props) {
   return (
     <AlertDialog
       isOpen={props.showAlertDialog}
@@ -51,7 +51,7 @@ export default function StyledAlertDialog(props: Props) {
           </AlertDialogCloseButton>
         </AlertDialogHeader>
         <AlertDialogBody>
-          <Text size="md">{props.inputErrMsg}</Text>
+          <Text size="md">{props.errMsg}</Text>
         </AlertDialogBody>
         <AlertDialogFooter>
           <Button

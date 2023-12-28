@@ -3,7 +3,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { useState } from "react";
 import { Button, ButtonText } from "@gluestack-ui/themed";
-import StyledAlertDialog from "../../components/StyledAlertDialog";
+import ErrorAlertDialog from "../../components/ErrorAlertDialog";
 import { useSocietiesContext } from "../../contexts/SocietiesContext";
 import { CreateSociety } from "../../models/Society";
 import SocietyForm from "../../components/SocietyForm";
@@ -54,9 +54,7 @@ export default function EditSocietyScreen(props: Props) {
         onPress={editSociety}>
         <ButtonText>Update</ButtonText>
       </Button>
-      <StyledAlertDialog
-        {...{ showAlertDialog, setShowAlertDialog, inputErrMsg }}
-      />
+      <ErrorAlertDialog {...{ showAlertDialog, setShowAlertDialog, errMsg }} />
     </ScreenView>
   );
 }

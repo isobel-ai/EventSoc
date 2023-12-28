@@ -5,6 +5,7 @@ import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import { useState } from "react";
 import { CreateEvent, defaultCreateEvent } from "../../models/Event";
+import ErrorAlertDialog from "../../components/ErrorAlertDialog";
 import { useSocietiesContext } from "../../contexts/SocietiesContext";
 import { addSocEvent } from "../../services/societiesService";
 
@@ -40,9 +41,7 @@ export default function CreateEventScreen(props: Props) {
         onPress={postEvent}>
         <ButtonText>Post</ButtonText>
       </Button>
-      <StyledAlertDialog
-        {...{ showAlertDialog, setShowAlertDialog, inputErrMsg }}
-      />
+      <ErrorAlertDialog {...{ showAlertDialog, setShowAlertDialog, errMsg }} />
     </ScreenView>
   );
 }
