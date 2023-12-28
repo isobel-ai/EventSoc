@@ -22,7 +22,7 @@ import {
   AlertDialogFooter,
   CloseIcon
 } from "@gluestack-ui/themed";
-import { RetrieveSocEvent } from "../models/SocEvent";
+import { RetrieveEvent } from "../models/Event";
 import { config } from "../../config/gluestack-ui.config";
 import { useSocietiesContext } from "../contexts/SocietiesContext";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
@@ -33,7 +33,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { deleteSocEvent } from "../services/societiesService";
 
 interface Props {
-  retrieveSocEvent: RetrieveSocEvent;
+  retrieveEvent: RetrieveEvent;
   isExec: boolean;
 }
 
@@ -55,7 +55,7 @@ export default function EventListButton(props: Props) {
   };
 
   const goToEditEventPage = () => {
-    setToEditEvent(props.retrieveSocEvent);
+    setToEditEvent(props.retrieveEvent);
     navigate("Edit Event");
   };
 
@@ -72,10 +72,10 @@ export default function EventListButton(props: Props) {
       width="100%"
       alignSelf="center"
       borderRadius="$none">
-      {props.retrieveSocEvent.pictureUrl && (
+      {props.retrieveEvent.pictureUrl && (
         <Image
           size="md"
-          source={props.retrieveSocEvent.pictureUrl}
+          source={props.retrieveEvent.pictureUrl}
           alt=""
           style={{ position: "absolute", left: 10 }}
         />
@@ -84,7 +84,7 @@ export default function EventListButton(props: Props) {
         numberOfLines={2}
         ellipsizeMode="tail"
         lineBreakStrategyIOS="standard">
-        {props.retrieveSocEvent.name}
+        {props.retrieveEvent.name}
       </ButtonText>
       {props.isExec && (
         <Menu

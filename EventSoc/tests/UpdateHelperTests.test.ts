@@ -2,7 +2,7 @@ import {
   getEventUpdates,
   getSocietyUpdates
 } from "../src/helpers/UpdateHelper";
-import { CreateSocEvent, defaultCreateSocEvent } from "../src/models/SocEvent";
+import { CreateEvent, defaultCreateEvent } from "../src/models/Event";
 import {
   CreateSociety,
   UpdateSociety,
@@ -12,7 +12,7 @@ import {
 describe("getEventUpdates", () => {
   test("it should return no updates if there aren't any", () => {
     const id = "1";
-    const event = defaultCreateSocEvent();
+    const event = defaultCreateEvent();
 
     expect(getEventUpdates(id, event, { ...event })).toEqual({ id: id });
   });
@@ -20,9 +20,9 @@ describe("getEventUpdates", () => {
   test("it should return updates if there are changes (all changes)", () => {
     const id = "1";
 
-    const before: CreateSocEvent = defaultCreateSocEvent();
+    const before: CreateEvent = defaultCreateEvent();
 
-    const after: CreateSocEvent = {
+    const after: CreateEvent = {
       name: "name change",
       location: "location change",
       description: "desc change",
@@ -40,9 +40,9 @@ describe("getEventUpdates", () => {
   test("it should return updates if there are changes (partial changes)", () => {
     const id = "1";
 
-    const before: CreateSocEvent = defaultCreateSocEvent();
+    const before: CreateEvent = defaultCreateEvent();
 
-    const after: CreateSocEvent = {
+    const after: CreateEvent = {
       ...before,
       name: "name change",
       location: "location change",

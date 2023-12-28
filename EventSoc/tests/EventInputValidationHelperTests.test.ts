@@ -1,5 +1,5 @@
 import { validEvent } from "../src/helpers/EventInputValidationHelper";
-import { SocEvent, defaultSocEvent } from "../src/models/SocEvent";
+import { Event, defaultEvent } from "../src/models/Event";
 
 describe("validEvent", () => {
   const mockSetState = () => {};

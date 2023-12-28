@@ -17,7 +17,7 @@ import {
 } from "@gluestack-ui/themed";
 import React, { useEffect, useState } from "react";
 import ScreenView from "../../components/ScreenView";
-import { RetrieveSocEvent } from "../../models/SocEvent";
+import { RetrieveEvent } from "../../models/Event";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { useIsFocused } from "@react-navigation/native";
@@ -37,7 +37,7 @@ export default function SocietiesScreen(props: Props) {
 
   const [isExec, setIsExec] = useState<boolean>(false);
 
-  const [events, setEvents] = useState<RetrieveSocEvent[]>([]);
+  const [events, setEvents] = useState<RetrieveEvent[]>([]);
 
   const isFocused = useIsFocused();
 
@@ -131,7 +131,7 @@ export default function SocietiesScreen(props: Props) {
               data={events}
               renderItem={(event) => (
                 <EventListButton
-                  retrieveSocEvent={event}
+                    retrieveEvent={event}
                   isExec={isExec}
                 />
               )}

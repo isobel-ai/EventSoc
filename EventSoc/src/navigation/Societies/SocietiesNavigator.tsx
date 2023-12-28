@@ -1,18 +1,16 @@
 import { useRef, useState } from "react";
 import SocietiesStackNavigator from "./SocietiesStackNavigator";
 import SocietiesContext from "../../contexts/SocietiesContext";
-import {
-  RetrieveSocEvent,
-  defaultRetrieveSocEvent
-} from "../../models/SocEvent";
+import { RetrieveEvent, defaultRetrieveEvent } from "../../models/Event";
 import { RetrieveSociety, defaultRetrieveSociety } from "../../models/Society";
 import SocietiesSideMenu from "./SocietiesSideMenu";
 
 export default function SocietiesNavigator() {
-  const [toEditEvent, setToEditEvent] = useState<RetrieveSocEvent>(
-    defaultRetrieveSocEvent
-  );
+  const [toEditEvent, setToEditEvent] =
+    useState<RetrieveEvent>(defaultRetrieveEvent);
+
   const [eventDeleted, setEventDeleted] = useState<boolean>(false);
+
   const [selectedSoc, setSelectedSoc] = useState<RetrieveSociety>(
     defaultRetrieveSociety
   );

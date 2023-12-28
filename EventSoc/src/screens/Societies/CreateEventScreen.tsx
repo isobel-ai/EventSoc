@@ -4,10 +4,7 @@ import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesSta
 import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import { useState } from "react";
-import { validEvent } from "../../helpers/EventInputValidationHelper";
-import { CreateSocEvent, defaultCreateSocEvent } from "../../models/SocEvent";
-import { createEvent } from "../../services/eventsService";
-import StyledAlertDialog from "../../components/StyledAlertDialog";
+import { CreateEvent, defaultCreateEvent } from "../../models/Event";
 import { useSocietiesContext } from "../../contexts/SocietiesContext";
 import { addSocEvent } from "../../services/societiesService";
 
@@ -16,8 +13,8 @@ type Props = StackScreenProps<SocietiesStackParamList, "Create Event">;
 export default function CreateEventScreen(props: Props) {
   const { selectedSoc } = useSocietiesContext();
 
-  const [createSocEvent, setCreateSocEvent] = useState<CreateSocEvent>(
-    defaultCreateSocEvent
+  const [createEvent, setCreateEvent] = useState<CreateEvent>(
+    defaultCreateEvent()
   );
 
   const [inputErrMsg, setInputErrMsg] = useState<string>("");
@@ -34,8 +31,8 @@ export default function CreateEventScreen(props: Props) {
   return (
     <ScreenView>
       <EventForm
-        createSocEvent={createSocEvent}
-        setCreateSocEvent={setCreateSocEvent}
+        createEvent={createEvent}
+        setCreateEvent={setCreateEvent}
       />
       <Button
         size="xl"

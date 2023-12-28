@@ -1,7 +1,7 @@
 import ScreenView from "../../components/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
-import { CreateSocEvent } from "../../models/SocEvent";
+import { CreateEvent } from "../../models/Event";
 import { useState } from "react";
 import { validEvent } from "../../helpers/EventInputValidationHelper";
 import EventForm from "../../components/EventForm";
@@ -16,13 +16,13 @@ type Props = StackScreenProps<SocietiesStackParamList, "Edit Event">;
 export default function EditEventScreen(props: Props) {
   const { toEditEvent } = useSocietiesContext();
 
-  const { id, ...socEvent } = toEditEvent;
-  const beforeSocEvent = Object.assign(socEvent, {
-    localPictureUrl: socEvent.pictureUrl
+  const { id, ...event } = toEditEvent;
+  const beforeEvent = Object.assign(event, {
+    localPictureUrl: event.pictureUrl
   });
 
-  const [afterSocEvent, setAfterSocEvent] = useState<CreateSocEvent>({
-    ...beforeSocEvent
+  const [afterEvent, setAfterEvent] = useState<CreateEvent>({
+    ...beforeEvent
   });
 
   const [inputErrMsg, setInputErrMsg] = useState<string>("");
@@ -38,8 +38,8 @@ export default function EditEventScreen(props: Props) {
   return (
     <ScreenView>
       <EventForm
-        createSocEvent={afterSocEvent}
-        setCreateSocEvent={setAfterSocEvent}
+        createEvent={afterEvent}
+        setCreateEvent={setAfterEvent}
       />
       <Button
         size="xl"
