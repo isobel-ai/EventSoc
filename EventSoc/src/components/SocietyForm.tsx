@@ -101,7 +101,7 @@ export default function SocietyForm(props: Props) {
     <ScrollView
       automaticallyAdjustKeyboardInsets={true}
       style={{ paddingHorizontal: 20 }}
-      contentContainerStyle={{ gap: 20 }}>
+      contentContainerStyle={{ gap: 20, paddingBottom: 20 }}>
       <PictureUpload
         image={props.createSociety.localPictureUrl}
         setImage={(u) =>
