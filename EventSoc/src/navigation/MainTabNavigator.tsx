@@ -2,7 +2,7 @@ import {
   BottomTabNavigationOptions,
   createBottomTabNavigator
 } from "@react-navigation/bottom-tabs";
-import EventsScreen from "../screens/EventsScreen";
+import EventsScreen from "../screens/Events/EventsScreen";
 import MyAccountScreen from "../screens/MyAccountScreen";
 import MyEventsScreen from "../screens/MyEventsScreen";
 import NotificationScreen from "../screens/NotificationScreen";
