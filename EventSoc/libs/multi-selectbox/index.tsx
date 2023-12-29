@@ -6,17 +6,16 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  ScrollView,
   TextStyle,
   ViewStyle,
   TextInputProps,
   FlatListProps,
-  GestureResponderEvent
+  GestureResponderEvent,
+  DimensionValue,
+  ColorValue
 } from "react-native";
-import Colors from "./src/components/constants/Colors";
 import Icon from "./src/components/Icon";
 import Toggle from "./src/components/Toggle";
-import { Color } from "react-native-svg";
 import { config } from "../../config/gluestack-ui.config";
 
 const hitSlop = { top: 14, bottom: 14, left: 14, right: 14 };
@@ -50,8 +49,8 @@ export type SelectBoxProps = {
   options?: Item[];
   value?: Item;
   selectedValues?: Item[];
-  searchIconColor?: Color;
-  toggleIconColor?: Color;
+  searchIconColor?: ColorValue;
+  toggleIconColor?: ColorValue;
   searchInputProps?: TextInputProps;
   multiSelectInputFieldProps?: Partial<FlatListProps<Item>>;
   onChange?: (item: Item) => void;
@@ -87,8 +86,6 @@ function SelectBox({
 
   function renderLabel(item: string) {
     const kOptionsLabelStyle = {
-      fontSize: 17,
-      color: "rgba(60, 60, 67, 0.6)",
       fontSize: config.tokens.fontSizes.sm,
       color: config.tokens.colors.black,
       paddingLeft: 5,
@@ -165,7 +162,7 @@ function SelectBox({
       marginRight: 4,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: Colors.primary,
+      backgroundColor: config.tokens.colors.navigationDarkPink,
       flexGrow: 1,
       ...multiOptionContainerStyle
     } as ViewStyle;
@@ -204,8 +201,8 @@ function SelectBox({
     options,
     value,
     selectedValues,
-    searchIconColor = "black" as Color,
-    toggleIconColor = config.tokens.colors.navigationDarkPink as Color,
+    searchIconColor = "black" as ColorValue,
+    toggleIconColor = config.tokens.colors.navigationDarkPink as ColorValue,
     searchInputProps,
     multiSelectInputFieldProps
   } = props;
@@ -269,7 +266,7 @@ function SelectBox({
   } as ViewStyle;
 
   return (
-    <View style={{ width: width, maxHeight: "90%" }}>
+    <View style={{ width: width as DimensionValue, maxHeight: "90%" }}>
       <View style={kContainerStyle}>
         <View
           // eslint-disable-next-line react-native/no-inline-styles
@@ -347,7 +344,6 @@ function SelectBox({
       paddingVertical: 14,
       paddingRight: 8,
       color: "#000",
-      fontSize: 12,
       flexGrow: 1,
       fontSize: config.tokens.fontSizes.sm,
       ...inputFilterStyle
@@ -379,90 +375,5 @@ function SelectBox({
     }
   }
 }
-
-SelectBox.defaultProps = {
-  options: [
-    {
-      item: "Aston Villa FC",
-      id: "AVL"
-    },
-    {
-      item: "West Ham United FC",
-      id: "WHU"
-    },
-    {
-      item: "Stoke City FC",
-      id: "STK"
-    },
-    {
-      item: "Sunderland AFC",
-      id: "SUN"
-    },
-    {
-      item: "Everton FC",
-      id: "EVE"
-    },
-    {
-      item: "Tottenham Hotspur FC",
-      id: "TOT"
-    },
-    {
-      item: "Manchester City FC",
-      id: "MCI"
-    },
-    {
-      item: "Chelsea FC",
-      id: "CHE"
-    },
-    {
-      item: "West Bromwich Albion FC",
-      id: "WBA"
-    },
-    {
-      item: "Liverpool FC",
-      id: "LIV"
-    },
-    {
-      item: "Arsenal FC",
-      id: "ARS"
-    },
-    {
-      item: "Manchester United FC",
-      id: "MUN"
-    },
-    {
-      item: "Newcastle United FC",
-      id: "NEW"
-    },
-    {
-      item: "Norwich City FC",
-      id: "NOR"
-    },
-    {
-      item: "Watford FC",
-      id: "WAT"
-    },
-    {
-      item: "Swansea City FC",
-      id: "SWA"
-    },
-    {
-      item: "Crystal Palace FC",
-      id: "CRY"
-    },
-    {
-      item: "Leicester City FC",
-      id: "LEI"
-    },
-    {
-      item: "Southampton FC",
-      id: "SOU"
-    },
-    {
-      item: "AFC Bournemouth",
-      id: "BOU"
-    }
-  ]
-};
 
 export default memo(SelectBox);
