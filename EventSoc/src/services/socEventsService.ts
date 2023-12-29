@@ -16,6 +16,7 @@ import { deleteImage, uploadImage } from "./cloudService";
 export function createSocEvent(createEvent: CreateEvent, socId: string) {
   return runTransaction(db, (transaction) => {
     const eventRef = doc(eventsCol);
+    const socRef = doc(societiesCol, socId);
 
     const { localPictureUrl: localPictureURL, ...event } = createEvent;
 
@@ -28,13 +29,17 @@ export function createSocEvent(createEvent: CreateEvent, socId: string) {
         if (result instanceof Error) {
           return result;
         }
-        transaction.set(eventRef, { ...event, pictureUrl: result });
+        transaction.set(eventRef, {
+          ...event,
+          pictureUrl: result,
+          organiserRef: socRef
+        });
       })
       .then((createResult) => {
         if (createResult instanceof Error) {
           return createResult;
         }
-        transaction.update(doc(societiesCol, socId), {
+        transaction.update(socRef, {
           eventRefs: arrayUnion(eventRef)
         });
       })

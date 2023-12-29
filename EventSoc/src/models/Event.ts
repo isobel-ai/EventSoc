@@ -9,6 +9,7 @@ export interface Event {
   endDate: Date;
   pictureUrl: string;
   tags: string[];
+  organiserRef: DocumentReference;
 }
 
 export const defaultEvent: () => Event = () => {
@@ -19,7 +20,8 @@ export const defaultEvent: () => Event = () => {
     startDate: defaultDate(),
     endDate: defaultDate(),
     pictureUrl: "",
-    tags: <string[]>[]
+    tags: <string[]>[],
+    organiserRef: <DocumentReference>(<unknown>null)
   };
 };
 
