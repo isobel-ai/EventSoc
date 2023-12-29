@@ -13,7 +13,7 @@ import {
 } from "@gluestack-ui/themed";
 import { useSocietiesContext } from "../contexts/SocietiesContext";
 import { RetrieveSociety } from "../models/Society";
-import SearchableList from "./SearchableList";
+import SearchableList from "./SearchFilterList";
 import { config } from "../../config/gluestack-ui.config";
 import { DimensionValue } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
