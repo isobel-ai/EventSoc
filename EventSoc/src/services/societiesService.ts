@@ -1,4 +1,5 @@
 import {
+  DocumentReference,
   doc,
   getDoc,
   getDocs,
@@ -17,8 +18,12 @@ import { retrieveUser } from "./usersService";
 import { updateImage, uploadImage } from "./cloudService";
 import { sortByString } from "../helpers/SearchSortHelper";
 
-export function retrieveSociety(socId: string) {
-  return getDoc(doc(societiesCol, socId))
+/**
+ * Retrieve society by Id or reference
+ */
+export function retrieveSociety(soc: string | DocumentReference) {
+  const socDoc = typeof soc === "string" ? doc(societiesCol, soc) : soc;
+  return getDoc(socDoc)
     .then((socSnapshot) => {
       return { ...socSnapshot.data(), id: socSnapshot.id } as RetrieveSociety;
     })
