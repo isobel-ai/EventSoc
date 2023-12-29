@@ -27,7 +27,6 @@ export function retrieveEvents(eventRefs: DocumentReference[]) {
         (event) => !(event instanceof Error)
       ) as RetrieveEvent[];
       if (resolvedEvents.length == 0 && eventPromises.length > 0) {
-        console.log("yer");
         throw Error;
       }
       return resolvedEvents;
