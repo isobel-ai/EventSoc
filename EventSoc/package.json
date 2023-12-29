@@ -9,7 +9,7 @@
     "web": "expo start --web",
     "test": "jest --passWithNoTests",
     "prepare": "cd ../ && husky install ./EventSoc/.husky",
-    "lint": "eslint --fix --ext .ts,.tsx src App.tsx"
+    "lint": "eslint --fix --ext .ts,.tsx src App.tsx tests"
   },
   "dependencies": {
     "@expo/webpack-config": "^19.0.0",
