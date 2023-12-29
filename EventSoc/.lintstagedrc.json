@@ -6,5 +6,9 @@
   "App.tsx": [
     "prettier --write",
     "eslint --fix"
+  ],
+  "tests/*.{ts,tsx}": [
+    "prettier --write",
+    "eslint --fix"
   ]
 }
