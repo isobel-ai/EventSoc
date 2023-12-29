@@ -2,7 +2,12 @@ import {
   doc,
   arrayUnion,
   runTransaction,
-  arrayRemove
+  arrayRemove,
+  query,
+  getDocs,
+  orderBy,
+  where,
+  Timestamp
 } from "firebase/firestore";
 import {
   eventsCol,
@@ -10,8 +15,49 @@ import {
   societiesCol,
   db
 } from "../config/firebaseConfig";
-import { CreateEvent } from "../models/Event";
+import { CreateEvent, RetrieveEvent } from "../models/Event";
 import { deleteImage, uploadImage } from "./cloudService";
+import { retrieveSociety } from "./societiesService";
+import { RetrieveSocEvent } from "../models/SocEvent";
+
+export function retrieveSocEvents() {
+  return getDocs(
+    query(eventsCol, where("endDate", ">=", new Date()), orderBy("startDate"))
+  )
+    .then((eventsSnapshot) => {
+      const socEventPromises = eventsSnapshot.docs.map(async (event) => {
+        const retrieveEvent = {
+          ...event.data(),
+          startDate: event.data().startDate.toDate(),
+          endDate: event.data().endDate.toDate(),
+          id: event.id
+        } as RetrieveEvent;
+
+        const retrieveSocietyAttempt = await retrieveSociety(
+          retrieveEvent.organiserRef
+        );
+
+        if (retrieveSocietyAttempt instanceof Error) {
+          return retrieveSocietyAttempt;
+        }
+        return {
+          event: retrieveEvent,
+          society: retrieveSocietyAttempt
+        } as RetrieveSocEvent;
+      });
+
+      return Promise.all(socEventPromises).then((socEvents) => {
+        const resolvedSocEvents = socEvents.filter(
+          (socEvent) => !(socEvent instanceof Error)
+        ) as RetrieveSocEvent[];
+        if (resolvedSocEvents.length == 0 && socEventPromises.length > 0) {
+          throw Error;
+        }
+        return resolvedSocEvents;
+      });
+    })
+    .catch(() => Error("Could not retrieve society events. Try again later."));
+}
 
 export function createSocEvent(createEvent: CreateEvent, socId: string) {
   return runTransaction(db, (transaction) => {
