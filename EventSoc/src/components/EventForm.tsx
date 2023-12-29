@@ -6,14 +6,16 @@ import {
   HStack,
   Input,
   InputField,
-  ScrollView,
   Textarea,
   TextareaInput
 } from "@gluestack-ui/themed";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { StyleProp, ViewStyle } from "react-native";
+import { ScrollView, StyleProp, ViewStyle } from "react-native";
 import { setDate, setTime } from "../helpers/DateTimeHelper";
 import { CreateEvent } from "../models/Event";
+import { useRef } from "react";
+import TagInput from "./TagInput";
+import { xor } from "lodash";
 
 interface Props {
   createEvent: CreateEvent;
@@ -21,6 +23,8 @@ interface Props {
 }
 
 export default function EventForm(props: Props) {
+  const scrollViewRef = useRef<ScrollView>(null);
+
   const dateTimePickerStyle: StyleProp<ViewStyle> = { left: -10 };
 
   const setPictureURL = (url: string) => {
@@ -32,10 +36,16 @@ export default function EventForm(props: Props) {
 
   return (
     <ScrollView
+      ref={scrollViewRef}
+      onContentSizeChange={() => {
+        props.createEvent.tags.length > 0 &&
+          scrollViewRef.current?.scrollToEnd();
+      }}
       automaticallyAdjustKeyboardInsets={true}
       style={{ paddingHorizontal: 20 }}
       contentContainerStyle={{
-        gap: 20
+        gap: 20,
+        paddingBottom: 20
       }}>
       <PictureUpload
         image={props.createEvent.localPictureUrl}
@@ -167,6 +177,20 @@ export default function EventForm(props: Props) {
             }
           />
         </HStack>
+      </FormControl>
+      <FormControl>
+        <FormControlLabel>
+          <FormControlLabelText>Event Tags</FormControlLabelText>
+        </FormControlLabel>
+        <TagInput
+          tags={props.createEvent.tags}
+          onChangeTags={(tag) =>
+            props.setCreateEvent({
+              ...props.createEvent,
+              tags: xor(props.createEvent.tags, [tag])
+            })
+          }
+        />
       </FormControl>
     </ScrollView>
   );
