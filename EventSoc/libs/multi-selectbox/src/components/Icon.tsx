@@ -1,12 +1,11 @@
 import React, { memo, PropsWithoutRef } from "react";
-import { View } from "react-native";
+import { ColorValue, View } from "react-native";
 import Svg, {
   Path,
   G,
   Ellipse,
   Polygon,
   Circle,
-  Color,
   SvgProps
 } from "react-native-svg";
 
@@ -18,7 +17,7 @@ type IconProps = PropsWithoutRef<{
     | "searchBoxIcon"
     | "addCircle"
     | "closeCircle";
-  fill: Color;
+  fill: ColorValue;
 }> &
   SvgProps;
 
