@@ -13,7 +13,7 @@ import {
 } from "@gluestack-ui/themed";
 import { useSocietiesContext } from "../contexts/SocietiesContext";
 import { RetrieveSociety } from "../models/Society";
-import SearchableList from "./SearchFilterList";
+import SearchFilterList from "./SearchFilterList";
 import { config } from "../../config/gluestack-ui.config";
 import { DimensionValue } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -48,7 +48,7 @@ export default function SocietyList(props: Props) {
       </Heading>
       {!props.errMsg ? (
         props.societies.length > 0 ? (
-          <SearchableList
+          <SearchFilterList
             curvedSearchBar={false}
             data={props.societies}
             renderItem={(soc) => (

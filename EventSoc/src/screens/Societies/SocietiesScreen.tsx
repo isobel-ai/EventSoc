@@ -29,7 +29,7 @@ import { isEqual } from "lodash";
 import { defaultRetrieveSociety } from "../../models/Society";
 import { config } from "../../../config/gluestack-ui.config";
 import { retrieveEvents } from "../../services/eventsService";
-import SearchableList from "../../components/SearchFilterList";
+import SearchFilterList from "../../components/SearchFilterList";
 import EventListButton from "../../components/EventListButton";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
@@ -154,7 +154,7 @@ export default function SocietiesScreen(props: Props) {
                 <AlertText>{errMsg}</AlertText>
               </Alert>
             ) : (
-              <SearchableList
+              <SearchFilterList
                 data={events}
                 renderItem={(event) => (
                   <EventListButton
