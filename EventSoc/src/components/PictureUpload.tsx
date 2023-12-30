@@ -12,7 +12,7 @@ export default function PictureUpload(props: Props) {
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
+      allowsEditing: false,
       aspect: [1, 1],
       quality: 1
     });
