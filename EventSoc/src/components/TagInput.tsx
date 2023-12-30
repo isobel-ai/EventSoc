@@ -76,7 +76,7 @@ export default function TagInput(props: Props) {
       />
       <Input>
         <InputField
-          placeholder="Event Tag"
+          placeholder="Press enter to create a tag"
           value={tag}
           onChangeText={(t) => setTag(t)}
           onSubmitEditing={addTag}
