@@ -22,7 +22,12 @@ import { RetrieveSocEvent } from "../models/SocEvent";
 
 export function retrieveSocEvents() {
   return getDocs(
-    query(eventsCol, where("endDate", ">=", new Date()), orderBy("startDate"))
+    query(
+      eventsCol,
+      where("endDate", ">=", new Date()),
+      orderBy("endDate"), // Firebase requires first ordering to use same field as filter
+      orderBy("startDate")
+    )
   )
     .then((eventsSnapshot) => {
       const socEventPromises = eventsSnapshot.docs.map(async (event) => {
