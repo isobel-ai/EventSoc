@@ -21,6 +21,9 @@ interface Props<I> {
   maxHeight?: DimensionValue;
 }
 
+/**
+ * Searches data by name
+ */
 export default function SearchList<Item extends { name: string }>(
   props: Props<Item>
 ) {
