@@ -46,7 +46,7 @@ export default function RegisterScreen(props: Props) {
   };
 
   return (
-    <ScreenView>
+    <ScreenView hasNavHeader>
       <SocietyForm
         createSociety={createSoc}
         setCreateSociety={setCreateSoc}

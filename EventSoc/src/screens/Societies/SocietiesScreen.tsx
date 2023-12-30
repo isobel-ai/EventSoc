@@ -70,13 +70,12 @@ export default function SocietiesScreen(props: Props) {
   }, [society, isFocused, eventDeleted]);
 
   return (
-    <ScreenView extraStyle={{ height: "100%" }}>
+    <ScreenView>
       {!society ? (
         <HStack
           gap={15}
-          flex={1}
           width="80%"
-          marginTop={20}
+          marginTop={40}
           alignSelf="center">
           <Icon
             as={ArrowLeftIcon}
@@ -89,9 +88,7 @@ export default function SocietiesScreen(props: Props) {
         </HStack>
       ) : (
         <>
-          <View
-            height="100%"
-            top={-20}>
+          <View height="96%">
             <HStack
               backgroundColor={config.tokens.colors.coolGray200}
               gap={15}
@@ -172,7 +169,7 @@ export default function SocietiesScreen(props: Props) {
                 )}
                 searchKeys={["name"]}
                 itemSeperator={() => <Divider h="$1" />}
-                maxHeight={isExec ? "62%" : "69%"}
+                maxHeight={isExec ? "58%" : "74%"}
                 clearSearch={[society, isFocused, societyEvents]}
               />
             )}

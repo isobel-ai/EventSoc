@@ -61,7 +61,7 @@ export default function EditEventScreen(props: Props) {
   };
 
   return (
-    <ScreenView>
+    <ScreenView hasNavHeader>
       <EventForm
         createEvent={afterEvent}
         setCreateEvent={setAfterEvent}
