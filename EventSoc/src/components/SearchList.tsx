@@ -15,18 +15,14 @@ import { searchFilter } from "../helpers/SearchSortHelper";
 interface Props<I> {
   data: I[];
   renderItem: (item: I) => ReactElement;
+  searchKeys: string[];
   clearSearch: any[];
   curvedSearchBar?: boolean;
   itemSeperator?: ComponentType;
   maxHeight?: DimensionValue;
 }
 
-/**
- * Searches data by name
- */
-export default function SearchList<Item extends { name: string }>(
-  props: Props<Item>
-) {
+export default function SearchList<Item>(props: Props<Item>) {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [filteredData, setFilteredData] = useState<Item[]>(props.data);
 
@@ -36,7 +32,7 @@ export default function SearchList<Item extends { name: string }>(
 
   const searchFunction = (text: string) => {
     setSearchTerm(text);
-    setFilteredData(searchFilter(text, props.data, "name"));
+    setFilteredData(searchFilter(text, props.data, props.searchKeys));
   };
 
   return (

@@ -15,7 +15,7 @@ describe("searchFilter", () => {
     ];
     const searchKey = "name";
 
-    expect(searchFilter(searchFor, searchIn, searchKey)).toEqual(
+    expect(searchFilter(searchFor, searchIn, [searchKey])).toEqual(
       <TestObject[]>[]
     );
   });
@@ -29,7 +29,7 @@ describe("searchFilter", () => {
     ];
     const searchKey = "name";
 
-    expect(searchFilter(searchFor, searchIn, searchKey)).toEqual(searchIn);
+    expect(searchFilter(searchFor, searchIn, [searchKey])).toEqual(searchIn);
   });
 
   test("it should return an array of the matching elements if any exist", () => {
@@ -41,7 +41,9 @@ describe("searchFilter", () => {
     ];
     const searchKey = "name";
 
-    expect(searchFilter(searchFor, searchIn, searchKey)).toEqual(<TestObject[]>[
+    expect(searchFilter(searchFor, searchIn, [searchKey])).toEqual(<
+      TestObject[]
+    >[
       { id: 1, name: "ab" },
       { id: 3, name: "cA" }
     ]);

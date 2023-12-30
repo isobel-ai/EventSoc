@@ -162,6 +162,7 @@ export default function SocietiesScreen(props: Props) {
                     isExec={isExec}
                   />
                 )}
+                searchKeys={["name"]}
                 itemSeperator={() => <Divider h="$1" />}
                 maxHeight={isExec ? "62%" : "69%"}
                 clearSearch={[selectedSoc, isFocused, events]}

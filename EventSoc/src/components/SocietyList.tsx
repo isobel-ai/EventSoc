@@ -85,6 +85,7 @@ export default function SocietyList(props: Props) {
             curvedSearchBar={false}
             data={props.societies}
             renderItem={renderSocietyButton}
+            searchKeys={["name"]}
             clearSearch={[props.isSideMenuOpen]}
             itemSeperator={() => <Divider />}
             maxHeight="90%"
