@@ -21,7 +21,7 @@ interface Props<I> {
   maxHeight?: DimensionValue;
 }
 
-export default function SearchFilterList<Item extends { name: string }>(
+export default function SearchList<Item extends { name: string }>(
   props: Props<Item>
 ) {
   const [searchTerm, setSearchTerm] = useState<string>("");
