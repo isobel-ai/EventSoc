@@ -1,13 +1,15 @@
 export function searchFilter<O>(
   searchFor: string,
   searchIn: O[],
-  searchKey: string
+  searchKeys: string[]
 ) {
   const formattedSearchFor = searchFor.toUpperCase();
-  const filteredSearchIn = searchIn.filter((item) => {
-    const formattedItem = (item[searchKey as keyof O] as string).toUpperCase();
-    return formattedItem.includes(formattedSearchFor);
-  });
+  const filteredSearchIn = searchIn.filter((item) =>
+    searchKeys.some((key) => {
+      const formattedItem = (item[key as keyof O] as string).toUpperCase();
+      return formattedItem.includes(formattedSearchFor);
+    })
+  );
   return filteredSearchIn;
 }
 

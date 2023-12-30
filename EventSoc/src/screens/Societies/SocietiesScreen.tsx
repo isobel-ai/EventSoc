@@ -170,6 +170,7 @@ export default function SocietiesScreen(props: Props) {
                     setEventDeleted={setEventDeleted}
                   />
                 )}
+                searchKeys={["name"]}
                 itemSeperator={() => <Divider h="$1" />}
                 maxHeight={isExec ? "62%" : "69%"}
                 clearSearch={[society, isFocused, societyEvents]}
