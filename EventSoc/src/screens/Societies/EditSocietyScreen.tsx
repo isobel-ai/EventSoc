@@ -47,7 +47,7 @@ export default function EditSocietyScreen(props: Props) {
   };
 
   return (
-    <ScreenView>
+    <ScreenView hasNavHeader>
       <SocietyForm
         createSociety={afterSoc}
         setCreateSociety={setAfterSoc}

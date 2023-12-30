@@ -40,7 +40,7 @@ export default function CreateEventScreen(props: Props) {
   };
 
   return (
-    <ScreenView>
+    <ScreenView hasNavHeader>
       <EventForm
         createEvent={createEvent}
         setCreateEvent={setCreateEvent}
