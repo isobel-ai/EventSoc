@@ -1,8 +1,7 @@
 import * as ImagePicker from "expo-image-picker";
 import { ImageBackground, TouchableOpacity } from "react-native";
 import { Button, ButtonIcon, Icon, TrashIcon } from "@gluestack-ui/themed";
-
-import uploadPictureImage = require("../assets/images/photoUpload.png");
+import uploadPictureImage from "../assets/images/photoUpload.png";
 
 interface Props {
   image: string;
