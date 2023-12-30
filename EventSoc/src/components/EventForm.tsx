@@ -13,7 +13,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { ScrollView, StyleProp, ViewStyle } from "react-native";
 import { setDate, setTime } from "../helpers/DateTimeHelper";
 import { CreateEvent } from "../models/Event";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import TagInput from "./TagInput";
 import { xor } from "lodash";
 
@@ -23,6 +23,9 @@ interface Props {
 }
 
 export default function EventForm(props: Props) {
+  const [isFirstScrollSizeChange, setIsFirstScrollSizeChange] =
+    useState<boolean>(true);
+
   const scrollViewRef = useRef<ScrollView>(null);
 
   const dateTimePickerStyle: StyleProp<ViewStyle> = { left: -10 };
@@ -38,8 +41,11 @@ export default function EventForm(props: Props) {
     <ScrollView
       ref={scrollViewRef}
       onContentSizeChange={() => {
-        props.createEvent.tags.length > 0 &&
+        if (isFirstScrollSizeChange) {
+          setIsFirstScrollSizeChange(false);
+        } else {
           scrollViewRef.current?.scrollToEnd();
+        }
       }}
       automaticallyAdjustKeyboardInsets={true}
       style={{ paddingHorizontal: 20 }}
