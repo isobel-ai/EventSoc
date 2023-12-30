@@ -14,7 +14,7 @@ export default function PictureUpload(props: Props) {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
       aspect: [1, 1],
-      quality: 1
+      quality: 0
     });
     const source = result.assets ? result.assets[0].uri : props.image;
     props.setImage(source);
