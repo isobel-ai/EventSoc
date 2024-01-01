@@ -79,19 +79,16 @@ export default function SocietyList(props: Props) {
         {props.title}
       </Heading>
       {!props.errMsg ? (
-        props.societies.length > 0 ? (
-          <SearchList
-            curvedSearchBar={false}
-            data={props.societies}
-            renderItem={renderSocietyButton}
-            searchKeys={["name"]}
-            clearSearch={[props.isSideMenuOpen]}
-            itemSeperator={() => <Divider />}
-            maxHeight="90%"
-          />
-        ) : (
-          <Text fontSize={"$lg"}>No societies</Text>
-        )
+        <SearchList
+          curvedSearchBar={false}
+          data={props.societies}
+          renderItem={renderSocietyButton}
+          searchKeys={["name"]}
+          clearSearch={[props.isSideMenuOpen]}
+          itemSeperator={() => <Divider />}
+          maxHeight="90%"
+          listEmptyText="No societies"
+        />
       ) : (
         <Alert
           action="error"

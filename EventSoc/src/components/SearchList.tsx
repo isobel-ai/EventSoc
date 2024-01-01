@@ -6,7 +6,8 @@ import {
   InputIcon,
   InputSlot,
   SearchIcon,
-  View
+  View,
+  Text
 } from "@gluestack-ui/themed";
 import { ComponentType, ReactElement, useEffect, useState } from "react";
 import { DimensionValue, Keyboard } from "react-native";
@@ -20,6 +21,7 @@ interface Props<I> {
   curvedSearchBar?: boolean;
   itemSeperator?: ComponentType;
   maxHeight?: DimensionValue;
+  listEmptyText?: string;
 }
 
 export default function SearchList<Item>(props: Props<Item>) {
@@ -59,6 +61,14 @@ export default function SearchList<Item>(props: Props<Item>) {
         renderItem={({ item }) => props.renderItem(item as Item)}
         ItemSeparatorComponent={props.itemSeperator}
         keyboardShouldPersistTaps="always"
+        ListEmptyComponent={
+          <Text
+            fontSize={"$lg"}
+            alignSelf="center"
+            paddingTop={10}>
+            {props.listEmptyText || ""}
+          </Text>
+        }
       />
     </View>
   );
