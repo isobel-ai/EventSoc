@@ -6,8 +6,7 @@ import {
   query,
   getDocs,
   orderBy,
-  where,
-  Timestamp
+  where
 } from "firebase/firestore";
 import {
   eventsCol,
