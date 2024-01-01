@@ -34,6 +34,8 @@ export default function SearchList<Item>(props: Props<Item>) {
     }, props.clearSearch);
   }
 
+  useEffect(() => searchFunction(searchTerm), [props.data]); // Reload list
+
   const searchFunction = (text: string) => {
     setSearchTerm(text);
     setFilteredData(searchFilter(text, props.data, props.searchKeys));
