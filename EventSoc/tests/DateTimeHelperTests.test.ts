@@ -1,4 +1,9 @@
-import { defaultDate, setDate, setTime } from "../src/helpers/DateTimeHelper";
+import {
+  defaultDate,
+  setDate,
+  setTime,
+  toDateRangeString
+} from "../src/helpers/DateTimeHelper";
 
 describe("setDate", () => {
   test("it should set the date", () => {
@@ -48,5 +53,41 @@ describe("defaultDate", () => {
 
     expect(date.getSeconds()).toBe(0);
     expect(date.getMilliseconds()).toBe(0);
+  });
+});
+
+describe("toDateRangeString", () => {
+  test("it should return date range strings with appropriate ordinal suffixes", () => {
+    const st = new Date(2023, 0, 1);
+    const nd = new Date(2023, 0, 2);
+    const rd = new Date(2023, 0, 3);
+    const th1 = new Date(2023, 0, 4);
+    const th2 = new Date(2023, 0, 25);
+
+    expect(toDateRangeString(st, nd)).toBe(
+      "1st January 00:00 - 2nd January 00:00"
+    );
+    expect(toDateRangeString(rd, th1)).toBe(
+      "3rd January 00:00 - 4th January 00:00"
+    );
+    expect(toDateRangeString(th1, th2)).toBe(
+      "4th January 00:00 - 25th January 00:00"
+    );
+  });
+
+  test("it should return an appropriate date range string (range within one day)", () => {
+    const start = new Date(2023, 0, 1, 1, 0);
+    const end = new Date(2023, 0, 1, 12, 15);
+
+    expect(toDateRangeString(start, end)).toBe("1st January 01:00 - 12:15");
+  });
+
+  test("it should return an appropriate date range string (range without one day)", () => {
+    const start = new Date(2023, 0, 1, 1, 0);
+    const end = new Date(2023, 0, 2, 2, 5);
+
+    expect(toDateRangeString(start, end)).toBe(
+      "1st January 01:00 - 2nd January 02:05"
+    );
   });
 });
