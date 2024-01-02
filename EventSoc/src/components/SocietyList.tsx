@@ -17,6 +17,7 @@ import SearchList from "./SearchList";
 import { config } from "../../config/gluestack-ui.config";
 import { DimensionValue } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import SideMenuHeading from "./SideMenuHeading";
 
 interface Props {
   title: string;
@@ -72,12 +73,7 @@ export default function SocietyList(props: Props) {
     <VStack
       width="100%"
       maxHeight={props.maxHeight}>
-      <Heading
-        backgroundColor={config.tokens.colors.secondary200}
-        width="100%"
-        textAlign="center">
-        {props.title}
-      </Heading>
+      <SideMenuHeading heading={props.title} />
       {!props.errMsg ? (
         <SearchList
           curvedSearchBar={false}
