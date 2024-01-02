@@ -65,3 +65,14 @@ function getTimeString(date: Date) {
     minute: "2-digit"
   });
 }
+
+/**
+ * @returns the date of the next July 31st
+ */
+export function endOfUniYear() {
+  const thisYear = new Date().getFullYear();
+  const thisMonth = new Date().getMonth();
+  return thisMonth > 6
+    ? new Date(thisYear + 1, 6, 31)
+    : new Date(thisYear, 6, 31);
+}

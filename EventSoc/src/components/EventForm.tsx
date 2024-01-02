@@ -11,7 +11,7 @@ import {
 } from "@gluestack-ui/themed";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { ScrollView, StyleProp, ViewStyle } from "react-native";
-import { setDate, setTime } from "../helpers/DateTimeHelper";
+import { endOfUniYear, setDate, setTime } from "../helpers/DateTimeHelper";
 import { CreateEvent } from "../models/Event";
 import { useRef, useState } from "react";
 import TagInput from "./TagInput";
@@ -126,6 +126,7 @@ export default function EventForm(props: Props) {
             value={props.createEvent.startDate}
             mode={"date"}
             minimumDate={new Date()}
+            maximumDate={endOfUniYear()}
             onChange={(_, date) =>
               date &&
               props.setCreateEvent({
@@ -160,6 +161,7 @@ export default function EventForm(props: Props) {
             value={props.createEvent.endDate}
             mode={"date"}
             minimumDate={new Date()}
+            maximumDate={endOfUniYear()}
             onChange={(_, date) =>
               date &&
               props.setCreateEvent({
