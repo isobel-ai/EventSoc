@@ -2,7 +2,7 @@ import ScreenView from "../../components/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { CreateEvent, defaultCreateEvent } from "../../models/Event";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getEventErrMsg } from "../../helpers/EventInputValidationHelper";
 import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
