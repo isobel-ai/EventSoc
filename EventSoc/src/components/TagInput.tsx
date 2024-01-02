@@ -10,6 +10,7 @@ import {
 import { useState } from "react";
 import { config } from "../../config/gluestack-ui.config";
 import { TextStyle, TouchableOpacity, ViewStyle } from "react-native";
+import Tag from "./Tag";
 
 interface Props {
   tags: string[];
@@ -70,7 +71,12 @@ export default function TagInput(props: Props) {
         data={props.tags}
         extraData={props.tags}
         keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item }) => renderTag(String(item))}
+        renderItem={({ item }) => (
+          <Tag
+            label={String(item)}
+            onCancel={() => props.onChangeTags(String(item))}
+          />
+        )}
         horizontal={true}
         marginBottom={props.tags.length > 0 ? 10 : 0}
       />
