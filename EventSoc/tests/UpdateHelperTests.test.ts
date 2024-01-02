@@ -3,11 +3,7 @@ import {
   getSocietyUpdates
 } from "../src/helpers/UpdateHelper";
 import { CreateEvent, defaultCreateEvent } from "../src/models/Event";
-import {
-  CreateSociety,
-  UpdateSociety,
-  defaultCreateSociety
-} from "../src/models/Society";
+import { CreateSociety, defaultCreateSociety } from "../src/models/Society";
 
 describe("getEventUpdates", () => {
   test("it should return no updates if there aren't any", () => {
@@ -22,18 +18,24 @@ describe("getEventUpdates", () => {
 
     const before: CreateEvent = defaultCreateEvent();
 
-    const after: CreateEvent = {
+    const changes = {
       name: "name change",
       location: "location change",
       description: "desc change",
       startDate: new Date(4000, 1, 1),
       endDate: new Date(4000, 1, 2),
       pictureUrl: "picURL change",
-      localPictureUrl: "localURL change"
+      localPictureUrl: "localURL change",
+      tags: ["a"]
+    };
+
+    const after: CreateEvent = {
+      ...defaultCreateEvent(),
+      ...changes
     };
 
     expect(getEventUpdates(id, before, after)).toEqual(
-      Object.assign(after, { id: id })
+      Object.assign(changes, { id: id })
     );
   });
 
@@ -82,6 +84,7 @@ describe("getSocietyUpdates", () => {
       exec: ["a"]
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { eventRefs, ...expectedUpdates } = after;
 
     expect(getSocietyUpdates(id, before, after)).toEqual(
