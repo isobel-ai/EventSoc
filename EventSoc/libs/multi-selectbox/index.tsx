@@ -12,7 +12,8 @@ import {
   FlatListProps,
   GestureResponderEvent,
   DimensionValue,
-  ColorValue
+  ColorValue,
+  ScrollView
 } from "react-native";
 import Icon from "./src/components/Icon";
 import Toggle from "./src/components/Toggle";
@@ -58,6 +59,7 @@ export type SelectBoxProps = {
   onTapClose?: (item: Item) => void;
   listOptionProps?: Partial<FlatListProps<Item>>;
   showAllOptions?: boolean;
+  maxHeight?: DimensionValue;
 };
 
 export type Item = {
@@ -265,8 +267,11 @@ function SelectBox({
     ...containerStyle
   } as ViewStyle;
 
+  const selectBoxMaxHeight = props.maxHeight ? props.maxHeight : "100%";
+
   return (
-    <View style={{ width: width as DimensionValue, maxHeight: "90%" }}>
+    <View
+      style={{ width: width as DimensionValue, maxHeight: selectBoxMaxHeight }}>
       <View style={kContainerStyle}>
         <View
           // eslint-disable-next-line react-native/no-inline-styles
@@ -366,7 +371,7 @@ function SelectBox({
             />
           </View>
         )}
-        {/* <ScrollView keyboardShouldPersistTaps="always" /> */}
+        <ScrollView keyboardShouldPersistTaps="handled" />
       </>
     );
 
