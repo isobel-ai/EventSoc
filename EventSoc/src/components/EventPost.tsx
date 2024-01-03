@@ -10,7 +10,7 @@ import {
 import { RetrieveSocEvent } from "../models/SocEvent";
 import SocietyLabel from "./SocietyLabel";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { toDateRangeString } from "../helpers/DateTimeHelper";
+import { toDateTimeRangeString } from "../helpers/DateTimeHelper";
 import { StyleProp, ViewStyle } from "react-native";
 
 interface Props {
@@ -41,7 +41,7 @@ export default function EventPost(props: Props) {
             size="lg"
           />
           <Text>
-            {toDateRangeString(
+            {toDateTimeRangeString(
               props.socEvent.event.startDate,
               props.socEvent.event.endDate
             )}
