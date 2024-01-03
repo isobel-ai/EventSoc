@@ -161,8 +161,8 @@ export default function SocietyForm(props: Props) {
         onClose={setExec}>
         <ModalBackdrop />
         <ModalContent
-          height={errMsg ? "35%" : "55%"}
-          top={-45}>
+          height={errMsg ? "35%" : "45%"}
+          top={-85}>
           <ModalHeader>
             <Heading>Select Exec</Heading>
             <ModalCloseButton>
@@ -187,24 +187,22 @@ export default function SocietyForm(props: Props) {
               </Alert>
             ) : (
               <>
-                <HStack
-                  gap={5}
-                  alignItems="center">
-                  <Icon
-                    as={InfoIcon}
-                    size="xl"
-                    color={
-                      props.editingForm
-                        ? "transparent"
-                        : config.tokens.colors.infoBlue
-                    }
-                  />
-                  <Text
-                    fontSize={"$sm"}
-                    color={config.tokens.colors.infoBlue}>
-                    {props.editingForm ? "" : "You are already on the exec."}
-                  </Text>
-                </HStack>
+                {!props.editingForm && (
+                  <HStack
+                    gap={5}
+                    alignItems="center">
+                    <Icon
+                      as={InfoIcon}
+                      size="xl"
+                      color={config.tokens.colors.infoBlue}
+                    />
+                    <Text
+                      fontSize={"$sm"}
+                      color={config.tokens.colors.infoBlue}>
+                      {"You are already on the exec."}
+                    </Text>
+                  </HStack>
+                )}
                 <SelectBox
                   isMulti
                   options={userItems}
@@ -214,6 +212,7 @@ export default function SocietyForm(props: Props) {
                   onTapClose={handleExecItemsChange}
                   inputPlaceholder="No exec chosen"
                   listEmptyText="No users found"
+                  maxHeight={props.editingForm ? "100%" : "90%"}
                 />
               </>
             )}
