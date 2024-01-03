@@ -26,7 +26,7 @@ export const defaultDate = () => {
   return date;
 };
 
-export function toDateRangeString(startDate: Date, endDate: Date) {
+export function toDateTimeRangeString(startDate: Date, endDate: Date) {
   const startString = `${getDateString(startDate)} ${getTimeString(startDate)}`;
 
   const endString =

@@ -3,7 +3,7 @@ import {
   endOfUniYear,
   setDate,
   setTime,
-  toDateRangeString
+  toDateTimeRangeString
 } from "../src/helpers/DateTimeHelper";
 
 describe("setDate", () => {
@@ -65,13 +65,13 @@ describe("toDateRangeString", () => {
     const th1 = new Date(2023, 0, 4);
     const th2 = new Date(2023, 0, 25);
 
-    expect(toDateRangeString(st, nd)).toBe(
+    expect(toDateTimeRangeString(st, nd)).toBe(
       "1st January 00:00 - 2nd January 00:00"
     );
-    expect(toDateRangeString(rd, th1)).toBe(
+    expect(toDateTimeRangeString(rd, th1)).toBe(
       "3rd January 00:00 - 4th January 00:00"
     );
-    expect(toDateRangeString(th1, th2)).toBe(
+    expect(toDateTimeRangeString(th1, th2)).toBe(
       "4th January 00:00 - 25th January 00:00"
     );
   });
@@ -80,14 +80,14 @@ describe("toDateRangeString", () => {
     const start = new Date(2023, 0, 1, 1, 0);
     const end = new Date(2023, 0, 1, 12, 15);
 
-    expect(toDateRangeString(start, end)).toBe("1st January 01:00 - 12:15");
+    expect(toDateTimeRangeString(start, end)).toBe("1st January 01:00 - 12:15");
   });
 
   test("it should return an appropriate date range string (range without one day)", () => {
     const start = new Date(2023, 0, 1, 1, 0);
     const end = new Date(2023, 0, 2, 2, 5);
 
-    expect(toDateRangeString(start, end)).toBe(
+    expect(toDateTimeRangeString(start, end)).toBe(
       "1st January 01:00 - 2nd January 02:05"
     );
   });
