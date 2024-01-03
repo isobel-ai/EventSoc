@@ -3,6 +3,7 @@ import {
   endOfUniYear,
   setDate,
   setTime,
+  toDateRangeString,
   toDateTimeRangeString
 } from "../src/helpers/DateTimeHelper";
 
@@ -57,7 +58,7 @@ describe("defaultDate", () => {
   });
 });
 
-describe("toDateRangeString", () => {
+describe("toDateTimeRangeString", () => {
   test("it should return date range strings with appropriate ordinal suffixes", () => {
     const st = new Date(2023, 0, 1);
     const nd = new Date(2023, 0, 2);
@@ -90,6 +91,36 @@ describe("toDateRangeString", () => {
     expect(toDateTimeRangeString(start, end)).toBe(
       "1st January 01:00 - 2nd January 02:05"
     );
+  });
+});
+
+describe("toDateRangeString", () => {
+  test("it should return an empty string if start date is undefined", () => {
+    const start: Date | undefined = undefined;
+    const end = new Date(2023, 0, 1, 12, 15);
+
+    expect(toDateRangeString(start, end)).toBe("");
+  });
+
+  test("it should return the start date's string if end date is undefined", () => {
+    const start = new Date(2023, 0, 1, 12, 15);
+    const end: Date | undefined = undefined;
+
+    expect(toDateRangeString(start, end)).toBe("1st January");
+  });
+
+  test("it should return the start date's string if the start and end date are the same", () => {
+    const start = new Date(2023, 0, 1, 12, 15);
+    const end = new Date(2023, 0, 1, 19, 8);
+
+    expect(toDateRangeString(start, end)).toBe("1st January");
+  });
+
+  test("it should return an appropriate date range string if the start and end dates are different", () => {
+    const start = new Date(2023, 0, 1, 1, 0);
+    const end = new Date(2023, 0, 2, 2, 5);
+
+    expect(toDateRangeString(start, end)).toBe("1st January - 2nd January");
   });
 });
 
