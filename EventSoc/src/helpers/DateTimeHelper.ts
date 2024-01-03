@@ -37,6 +37,19 @@ export function toDateTimeRangeString(startDate: Date, endDate: Date) {
   return `${startString} - ${endString}`;
 }
 
+export function toDateRangeString(startDate?: Date, endDate?: Date) {
+  if (!startDate) {
+    return "";
+  }
+
+  const startString = getDateString(startDate);
+
+  if (endDate && startDate.toDateString() !== endDate.toDateString()) {
+    return `${startString} - ${getDateString(endDate)}`;
+  }
+  return startString;
+}
+
 function getDateString(date: Date) {
   const day = date.getDate();
   const month = date.toLocaleString("default", { month: "long" });
