@@ -1,4 +1,8 @@
-import { searchFilter, sortByString } from "../src/helpers/SearchSortHelper";
+import {
+  dateInRange,
+  searchFilter,
+  sortByString
+} from "../src/helpers/SearchSortHelper";
 
 interface TestObject {
   id: number;
@@ -100,6 +104,56 @@ describe("searchFilter", () => {
       { id: 1, name: "x", obj: { prop: "a" } },
       { id: 3, name: "a", obj: { prop: "c" } }
     ]);
+  });
+});
+
+describe("dateInRange", () => {
+  test("it should return true if there's no range start", () => {
+    const date = new Date(2020, 1, 1, 10, 15);
+    const rangeStart: Date | undefined = undefined;
+    const rangeEnd = new Date(2020, 1, 3, 12, 15);
+
+    expect(dateInRange(date, rangeStart, rangeEnd)).toBe(true);
+  });
+
+  test("it should return false if the date is before range start", () => {
+    const date = new Date(2020, 1, 1, 10, 15);
+    const rangeStart = new Date(2020, 1, 6, 12, 15);
+    const rangeEnd = new Date(2020, 1, 9, 12, 15);
+
+    expect(dateInRange(date, rangeStart, rangeEnd)).toBe(false);
+  });
+
+  test("it should return true if the date is in range (end range exists)", () => {
+    const date = new Date(2020, 1, 7, 10, 15);
+    const rangeStart = new Date(2020, 1, 1, 12, 15);
+    const rangeEnd = new Date(2020, 1, 7, 12, 15);
+
+    expect(dateInRange(date, rangeStart, rangeEnd)).toBe(true);
+  });
+
+  test("it should return false if the date isn't in range (end range exists)", () => {
+    const date = new Date(2020, 1, 8, 10, 15);
+    const rangeStart = new Date(2020, 1, 6, 12, 15);
+    const rangeEnd = new Date(2020, 1, 7, 12, 15);
+
+    expect(dateInRange(date, rangeStart, rangeEnd)).toBe(false);
+  });
+
+  test("it should return true if the date is in range (no range end)", () => {
+    const date = new Date(2020, 1, 1, 10, 15);
+    const rangeStart = new Date(2020, 1, 1, 12, 15);
+    const rangeEnd: Date | undefined = undefined;
+
+    expect(dateInRange(date, rangeStart, rangeEnd)).toBe(true);
+  });
+
+  test("it should return false if the date isn't in range (no range end)", () => {
+    const date = new Date(2020, 1, 1, 10, 15);
+    const rangeStart = new Date(2020, 1, 6, 12, 15);
+    const rangeEnd: Date | undefined = undefined;
+
+    expect(dateInRange(date, rangeStart, rangeEnd)).toBe(false);
   });
 });
 
