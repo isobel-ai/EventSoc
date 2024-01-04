@@ -128,24 +128,24 @@ describe("endOfYear", () => {
   test("it should return July 31st of this year if the date is currently before then", () => {
     jest.useFakeTimers().setSystemTime(new Date(2000, 1, 1));
 
-    expect(endOfUniYear()).toEqual(new Date(2000, 6, 31));
+    expect(endOfUniYear()).toEqual(new Date(2000, 6, 31, 23, 59, 59, 999));
   });
 
   test("it should return July 31st of this year if the date is currently before then (boundary)", () => {
     jest.useFakeTimers().setSystemTime(new Date(2000, 6, 31));
 
-    expect(endOfUniYear()).toEqual(new Date(2000, 6, 31));
+    expect(endOfUniYear()).toEqual(new Date(2000, 6, 31, 23, 59, 59, 999));
   });
 
   test("it should return July 31st of next year if the date is currently after then", () => {
     jest.useFakeTimers().setSystemTime(new Date(2000, 9, 1));
 
-    expect(endOfUniYear()).toEqual(new Date(2001, 6, 31));
+    expect(endOfUniYear()).toEqual(new Date(2001, 6, 31, 23, 59, 59, 999));
   });
 
   test("it should return July 31st of next year if the date is currently after then (boundary)", () => {
     jest.useFakeTimers().setSystemTime(new Date(2000, 7, 1));
 
-    expect(endOfUniYear()).toEqual(new Date(2001, 6, 31));
+    expect(endOfUniYear()).toEqual(new Date(2001, 6, 31, 23, 59, 59, 999));
   });
 });
