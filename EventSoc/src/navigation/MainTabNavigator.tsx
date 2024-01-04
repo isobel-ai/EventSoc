@@ -2,13 +2,13 @@ import {
   BottomTabNavigationOptions,
   createBottomTabNavigator
 } from "@react-navigation/bottom-tabs";
-import EventsScreen from "../screens/Events/EventsScreen";
 import MyAccountScreen from "../screens/MyAccountScreen";
 import MyEventsScreen from "../screens/MyEventsScreen";
 import NotificationScreen from "../screens/NotificationScreen";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { config } from "../../config/gluestack-ui.config";
 import SocietiesNavigator from "./Societies/SocietiesNavigator";
+import EventsStackNavigator from "./EventsStackNavigator";
 
 export default function MainTabNavigator() {
   const Tab = createBottomTabNavigator();
@@ -24,7 +24,7 @@ export default function MainTabNavigator() {
     <Tab.Navigator screenOptions={tabNavigatorScreenOptions}>
       <Tab.Screen
         name="Events"
-        component={EventsScreen}
+        component={EventsStackNavigator}
         options={{
           tabBarIcon: ({ size }) => (
             <MaterialCommunityIcons
