@@ -84,8 +84,12 @@ function getTimeString(date: Date) {
  */
 export function endOfUniYear() {
   const thisYear = new Date().getFullYear();
+  const end = new Date(thisYear, 6, 31, 23, 59, 59, 999);
+
   const thisMonth = new Date().getMonth();
-  return thisMonth > 6
-    ? new Date(thisYear + 1, 6, 31)
-    : new Date(thisYear, 6, 31);
+  if (thisMonth > 6) {
+    end.setFullYear(thisYear + 1);
+  }
+
+  return end;
 }
