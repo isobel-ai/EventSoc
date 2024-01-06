@@ -9,7 +9,7 @@ import {
   VStack
 } from "@gluestack-ui/themed";
 import { RetrieveSocEvent } from "../models/SocEvent";
-import SocietyLabel from "./SocietyLabel";
+import SocietyPressable from "./SocietyPressable";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { toDateTimeRangeString } from "../helpers/DateTimeHelper";
 import { StyleProp, ViewStyle } from "react-native";
@@ -30,7 +30,7 @@ export default function EventPost(props: Props) {
     <VStack
       gap={10}
       paddingBottom={10}>
-      <SocietyLabel society={props.socEvent.society} />
+      <SocietyPressable society={props.socEvent.society} />
       <Pressable onPress={props.onPress}>
         <VStack
           gap={10}

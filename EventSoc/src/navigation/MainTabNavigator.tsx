@@ -8,10 +8,22 @@ import NotificationScreen from "../screens/NotificationScreen";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { config } from "../../config/gluestack-ui.config";
 import SocietiesNavigator from "./Societies/SocietiesNavigator";
-import EventsStackNavigator from "./EventsStackNavigator";
+import EventsStackNavigator, {
+  EventsStackParamList
+} from "./EventsStackNavigator";
+import { NavigatorScreenParams } from "@react-navigation/native";
+import { SocietiesStackParamList } from "./Societies/SocietiesStackNavigator";
+
+export type MainTabParamList = {
+  Events: NavigatorScreenParams<EventsStackParamList>;
+  "My Events": undefined;
+  "My Account": undefined;
+  Notifications: undefined;
+  Societies: NavigatorScreenParams<SocietiesStackParamList>;
+};
 
 export default function MainTabNavigator() {
-  const Tab = createBottomTabNavigator();
+  const Tab = createBottomTabNavigator<MainTabParamList>();
 
   const tabNavigatorScreenOptions = (): BottomTabNavigationOptions => ({
     headerStyle: { backgroundColor: config.tokens.colors.navigationLightPink },
