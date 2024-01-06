@@ -1,33 +1,27 @@
 import { createContext, useContext } from "react";
-import { RetrieveEvent, defaultRetrieveEvent } from "../models/Event";
-import { RetrieveSociety, defaultRetrieveSociety } from "../models/Society";
+import { RetrieveEvent } from "../models/Event";
+import { RetrieveSociety } from "../models/Society";
 
 type SocietiesContent = {
-  toEditEvent: RetrieveEvent;
-  setToEditEvent: React.Dispatch<React.SetStateAction<RetrieveEvent>>;
+  societies: RetrieveSociety[];
+  setSocieties: React.Dispatch<React.SetStateAction<RetrieveSociety[]>>;
 
-  eventDeleted: boolean;
-  setEventDeleted: React.Dispatch<React.SetStateAction<boolean>>;
+  updateSocietyInContext: (id: string) => Promise<void | Error>;
 
-  selectedSoc: RetrieveSociety;
-  setSelectedSoc: React.Dispatch<React.SetStateAction<RetrieveSociety>>;
-
-  updateSelectedSoc: () => Promise<void | Error>;
+  societyEvents: RetrieveEvent[];
+  setSocietyEvents: React.Dispatch<React.SetStateAction<RetrieveEvent[]>>;
 
   navigatorRef: React.MutableRefObject<any>;
 };
 
 const SocietiesContext = createContext<SocietiesContent>({
-  toEditEvent: defaultRetrieveEvent(),
-  setToEditEvent: () => {},
+  societies: [],
+  setSocieties: () => {},
 
-  eventDeleted: false,
-  setEventDeleted: () => {},
+  updateSocietyInContext: () => Promise.resolve(),
 
-  selectedSoc: defaultRetrieveSociety(),
-  setSelectedSoc: () => {},
-
-  updateSelectedSoc: () => Promise.resolve(),
+  societyEvents: [],
+  setSocietyEvents: () => {},
 
   navigatorRef: { current: null }
 });

@@ -12,11 +12,11 @@ import RegisterSocietyScreen from "../../screens/Societies/RegisterSocietyScreen
 import EditSocietyScreen from "../../screens/Societies/EditSocietyScreen";
 
 export type SocietiesStackParamList = {
-  Home: undefined;
+  Home: { societyId: string };
   "Register Society": undefined;
-  "Edit Society": undefined;
-  "Create Event": undefined;
-  "Edit Event": undefined;
+  "Edit Society": { societyId: string };
+  "Create Event": { organiserId: string };
+  "Edit Event": { eventId: string };
 };
 
 export default function SocietiesStackNavigator() {
@@ -51,6 +51,7 @@ export default function SocietiesStackNavigator() {
         options={{
           headerShown: false
         }}
+        initialParams={{ societyId: "" }}
       />
       <Stack.Screen
         name="Register Society"

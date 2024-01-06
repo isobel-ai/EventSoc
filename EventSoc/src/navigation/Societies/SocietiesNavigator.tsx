@@ -1,41 +1,36 @@
 import { useRef, useState } from "react";
 import SocietiesStackNavigator from "./SocietiesStackNavigator";
 import SocietiesContext from "../../contexts/SocietiesContext";
-import { RetrieveEvent, defaultRetrieveEvent } from "../../models/Event";
-import { RetrieveSociety, defaultRetrieveSociety } from "../../models/Society";
+import { RetrieveEvent } from "../../models/Event";
+import { RetrieveSociety } from "../../models/Society";
 import SocietiesSideMenu from "./SocietiesSideMenu";
 import { retrieveSociety } from "../../services/societiesService";
 
 export default function SocietiesNavigator() {
-  const [toEditEvent, setToEditEvent] =
-    useState<RetrieveEvent>(defaultRetrieveEvent);
+  const [societies, setSocieties] = useState<RetrieveSociety[]>([]);
 
-  const [eventDeleted, setEventDeleted] = useState<boolean>(false);
-
-  const [selectedSoc, setSelectedSoc] = useState<RetrieveSociety>(
-    defaultRetrieveSociety
-  );
-
-  const updateSelectedSoc = () =>
-    retrieveSociety(selectedSoc.id).then((result) => {
+  const updateSocietyInContext = (id: string) =>
+    retrieveSociety(id).then((result) => {
       if (result instanceof Error) {
         return result;
       }
-      return setSelectedSoc(result);
+      return setSocieties(
+        societies.map((soc) => (soc.id === id ? result : soc))
+      );
     });
+
+  const [societyEvents, setSocietyEvents] = useState<RetrieveEvent[]>([]);
 
   const navigatorRef = useRef<any>({ current: null });
 
   return (
     <SocietiesContext.Provider
       value={{
-        toEditEvent,
-        setToEditEvent,
-        eventDeleted,
-        setEventDeleted,
-        selectedSoc,
-        setSelectedSoc,
-        updateSelectedSoc,
+        societies,
+        setSocieties,
+        updateSocietyInContext,
+        societyEvents,
+        setSocietyEvents,
         navigatorRef
       }}>
       <SocietiesSideMenu>

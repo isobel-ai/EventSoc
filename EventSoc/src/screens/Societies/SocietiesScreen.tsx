@@ -19,14 +19,13 @@ import {
 } from "@gluestack-ui/themed";
 import React, { useEffect, useState } from "react";
 import ScreenView from "../../components/ScreenView";
-import { RetrieveEvent } from "../../models/Event";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { useIsFocused } from "@react-navigation/native";
 import { useSocietiesContext } from "../../contexts/SocietiesContext";
 import { retrieveUser } from "../../services/usersService";
 import { isEqual } from "lodash";
-import { defaultRetrieveSociety } from "../../models/Society";
+import { RetrieveSociety } from "../../models/Society";
 import { config } from "../../../config/gluestack-ui.config";
 import { retrieveEvents } from "../../services/eventsService";
 import SearchableList from "../../components/SearchableList";
@@ -36,39 +35,43 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 type Props = StackScreenProps<SocietiesStackParamList, "Home">;
 
 export default function SocietiesScreen(props: Props) {
-  const { selectedSoc, eventDeleted, setEventDeleted } = useSocietiesContext();
+  const { societies, societyEvents, setSocietyEvents } = useSocietiesContext();
 
   const [isExec, setIsExec] = useState<boolean>(false);
-
-  const [events, setEvents] = useState<RetrieveEvent[]>([]);
 
   const [errMsg, setErrMsg] = useState<string>("");
 
   const isFocused = useIsFocused();
 
-  useEffect(() => {
-    !isEqual(selectedSoc, defaultRetrieveSociety()) &&
-      retrieveUser().then((user) =>
-        setIsExec(selectedSoc.exec.includes(user.name))
-      );
-  }, [selectedSoc]);
+  const [society, setSociety] = useState<RetrieveSociety>();
+
+  const [eventDeleted, setEventDeleted] = useState<boolean>(false);
 
   useEffect(() => {
-    !isEqual(selectedSoc, defaultRetrieveSociety());
-    retrieveEvents(selectedSoc.eventRefs).then((result) => {
-      if (result instanceof Error) {
-        setErrMsg(result.message);
-      } else {
-        setErrMsg("");
-        setEvents(result);
-      }
-    }),
+    const newSoc = societies.find(
+      (soc) => soc.id === props.route.params.societyId
+    );
+    setSociety(newSoc);
+    newSoc &&
+      retrieveUser().then((user) => setIsExec(newSoc.exec.includes(user.name)));
+  }, [props.route.params.societyId, isFocused]);
+
+  useEffect(() => {
+    society &&
+      retrieveEvents(society.eventRefs).then((result) => {
+        if (result instanceof Error) {
+          setErrMsg(result.message);
+        } else {
+          setErrMsg("");
+          setSocietyEvents(result);
+        }
+      }),
       setEventDeleted(false);
-  }, [selectedSoc, isFocused, eventDeleted]);
+  }, [society, isFocused, eventDeleted]);
 
   return (
     <ScreenView extraStyle={{ height: "100%" }}>
-      {isEqual(selectedSoc, defaultRetrieveSociety()) ? (
+      {!society ? (
         <HStack
           gap={15}
           flex={1}
@@ -100,11 +103,11 @@ export default function SocietiesScreen(props: Props) {
                 <AvatarFallbackText
                   color="white"
                   fontSize="$lg">
-                  {selectedSoc.name}
+                  {society.name}
                 </AvatarFallbackText>
-                {selectedSoc.pictureUrl && (
+                {society.pictureUrl && (
                   <AvatarImage
-                    source={{ uri: selectedSoc.pictureUrl }}
+                    source={{ uri: society.pictureUrl }}
                     alt=""
                   />
                 )}
@@ -112,7 +115,7 @@ export default function SocietiesScreen(props: Props) {
               <Heading
                 fontSize="$2xl"
                 numberOfLines={1}>
-                {selectedSoc.name}
+                {society.name}
               </Heading>
               {isExec && (
                 <Button
@@ -120,7 +123,11 @@ export default function SocietiesScreen(props: Props) {
                   variant="link"
                   position="absolute"
                   right={15}
-                  onPress={() => props.navigation.navigate("Edit Society")}>
+                  onPress={() =>
+                    props.navigation.navigate("Edit Society", {
+                      societyId: society.id
+                    })
+                  }>
                   <ButtonIcon
                     as={EditIcon}
                     size="xl"
@@ -136,7 +143,7 @@ export default function SocietiesScreen(props: Props) {
               height="20%"
               paddingHorizontal={10}
               numberOfLines={4}>
-              {selectedSoc.description}
+              {society.description}
             </Text>
             <Heading marginLeft={10}>Events:</Heading>
             {errMsg ? (
@@ -155,16 +162,17 @@ export default function SocietiesScreen(props: Props) {
               </Alert>
             ) : (
               <SearchableList
-                data={events}
+                data={societyEvents}
                 renderItem={(event) => (
                   <EventListButton
                     retrieveEvent={event}
                     isExec={isExec}
+                    setEventDeleted={setEventDeleted}
                   />
                 )}
                 itemSeperator={() => <Divider h="$1" />}
                 maxHeight={isExec ? "62%" : "69%"}
-                clearSearch={[selectedSoc, isFocused, events]}
+                clearSearch={[society, isFocused, societyEvents]}
               />
             )}
           </View>
@@ -172,7 +180,11 @@ export default function SocietiesScreen(props: Props) {
             <Button
               size={"xl"}
               borderRadius="$none"
-              onPress={() => props.navigation.navigate("Create Event")}>
+              onPress={() =>
+                props.navigation.navigate("Create Event", {
+                  organiserId: society.id
+                })
+              }>
               <ButtonIcon
                 as={AddIcon}
                 size="xl"

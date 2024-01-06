@@ -38,7 +38,7 @@ export default function RegisterScreen(props: Props) {
             setErrMsg(result.message);
             setShowAlertDialog(true);
           } else {
-            props.navigation.goBack();
+            props.navigation.navigate("Home", { societyId: "" });
           }
         });
       }
