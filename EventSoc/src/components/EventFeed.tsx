@@ -11,13 +11,10 @@ interface Props {
 }
 
 export default function EventFeed(props: Props) {
-  const { selectedSocEvent, setSelectedSocEvent } = useEventsContext();
-
   const { navigate } = useNavigation<NavigationProp<EventsStackParamList>>();
 
   const handleEventPostPress = (socEvent: RetrieveSocEvent) => {
-    setSelectedSocEvent(socEvent);
-    navigate("Event");
+    navigate("Event", { eventId: socEvent.event.id });
   };
 
   return (

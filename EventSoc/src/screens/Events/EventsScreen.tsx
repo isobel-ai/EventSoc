@@ -8,9 +8,10 @@ import { config } from "../../../config/gluestack-ui.config";
 import ScreenView from "../../components/ScreenView";
 import EventFilter from "../../components/EventFilter";
 import EventFeed from "../../components/EventFeed";
+import { useEventsContext } from "../../contexts/EventsContext";
 
 export default function EventsScreen() {
-  const [socEvents, setSocEvents] = useState<RetrieveSocEvent[]>([]);
+  const { socEvents, setSocEvents } = useEventsContext();
 
   const [filteredSocEvents, setFilteredSocEvents] = useState<
     RetrieveSocEvent[]

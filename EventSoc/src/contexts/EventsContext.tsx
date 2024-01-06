@@ -2,13 +2,13 @@ import { createContext, useContext } from "react";
 import { RetrieveSocEvent, defaultRetrieveSocEvent } from "../models/SocEvent";
 
 type EventsContent = {
-  selectedSocEvent: RetrieveSocEvent;
-  setSelectedSocEvent: React.Dispatch<React.SetStateAction<RetrieveSocEvent>>;
+  socEvents: RetrieveSocEvent[];
+  setSocEvents: React.Dispatch<React.SetStateAction<RetrieveSocEvent[]>>;
 };
 
 const EventsContext = createContext<EventsContent>({
-  selectedSocEvent: defaultRetrieveSocEvent(),
-  setSelectedSocEvent: () => {}
+  socEvents: [],
+  setSocEvents: () => {}
 });
 export default EventsContext;
 

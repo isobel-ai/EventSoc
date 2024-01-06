@@ -12,13 +12,11 @@ import EventsContext from "../contexts/EventsContext";
 
 export type EventsStackParamList = {
   Home: undefined;
-  Event: undefined;
+  Event: { eventId: string };
 };
 
 export default function EventsStackNavigator() {
-  const [selectedSocEvent, setSelectedSocEvent] = useState<RetrieveSocEvent>(
-    defaultRetrieveSocEvent
-  );
+  const [socEvents, setSocEvents] = useState<RetrieveSocEvent[]>([]);
 
   const Stack = createStackNavigator<EventsStackParamList>();
 
@@ -41,7 +39,7 @@ export default function EventsStackNavigator() {
   });
 
   return (
-    <EventsContext.Provider value={{ selectedSocEvent, setSelectedSocEvent }}>
+    <EventsContext.Provider value={{ socEvents, setSocEvents }}>
       <Stack.Navigator screenOptions={stackScreenOptions}>
         <Stack.Screen
           name="Home"
