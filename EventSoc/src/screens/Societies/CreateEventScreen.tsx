@@ -13,7 +13,7 @@ import { createSocEvent } from "../../services/socEventsService";
 type Props = StackScreenProps<SocietiesStackParamList, "Create Event">;
 
 export default function CreateEventScreen(props: Props) {
-  const { selectedSoc, updateSelectedSoc } = useSocietiesContext();
+  const { updateSocietyInContext } = useSocietiesContext();
 
   const [createEvent, setCreateEvent] = useState<CreateEvent>(
     defaultCreateEvent()
@@ -28,14 +28,18 @@ export default function CreateEventScreen(props: Props) {
       setErrMsg(invalidErrMsg);
       setShowAlertDialog(true);
     } else {
-      createSocEvent(createEvent, selectedSoc.id).then((result) => {
-        if (result instanceof Error) {
-          setErrMsg(result.message);
-          setShowAlertDialog(true);
-        } else {
-          updateSelectedSoc().then(props.navigation.goBack);
+      createSocEvent(createEvent, props.route.params.organiserId).then(
+        (result) => {
+          if (result instanceof Error) {
+            setErrMsg(result.message);
+            setShowAlertDialog(true);
+          } else {
+            updateSocietyInContext(props.route.params.organiserId).then(
+              props.navigation.goBack
+            );
+          }
         }
-      });
+      );
     }
   };
 

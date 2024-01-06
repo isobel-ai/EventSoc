@@ -64,8 +64,8 @@ export function retrieveOtherUsers() {
 }
 
 export function createUser(id: string, name: string) {
-  setDoc(doc(usersCol, id), { ...defaultUser(), name: name }).catch((err) =>
-    console.log(err)
+  return setDoc(doc(usersCol, id), { ...defaultUser(), name: name }).catch(() =>
+    Error("Unable to create user. Try again later.")
   );
 }
 

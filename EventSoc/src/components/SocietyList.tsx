@@ -28,11 +28,10 @@ interface Props {
 }
 
 export default function SocietyList(props: Props) {
-  const { setSelectedSoc, navigatorRef } = useSocietiesContext();
+  const { navigatorRef } = useSocietiesContext();
 
-  const selectSocietyPage = (soc: RetrieveSociety) => {
-    setSelectedSoc(soc);
-    navigatorRef.current.navigate("Home");
+  const selectSocietyPage = (socId: string) => {
+    navigatorRef.current.navigate("Home", { societyId: socId });
     props.setIsSideMenuOpen(false);
   };
 
@@ -62,7 +61,7 @@ export default function SocietyList(props: Props) {
                 width="100%"
                 marginVertical={5}
                 justifyContent="flex-start"
-                onPress={() => selectSocietyPage(soc)}>
+                onPress={() => selectSocietyPage(soc.id)}>
                 <Avatar marginHorizontal={10}>
                   <AvatarFallbackText
                     color="white"

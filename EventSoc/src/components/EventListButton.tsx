@@ -37,11 +37,11 @@ import { deleteSocEvent } from "../services/socEventsService";
 interface Props {
   retrieveEvent: RetrieveEvent;
   isExec: boolean;
+  setEventDeleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function EventListButton(props: Props) {
-  const { selectedSoc, updateSelectedSoc, setToEditEvent, setEventDeleted } =
-    useSocietiesContext();
+  const { updateSocietyInContext } = useSocietiesContext();
 
   const { navigate } = useNavigation<NavigationProp<SocietiesStackParamList>>();
 
@@ -59,8 +59,7 @@ export default function EventListButton(props: Props) {
   };
 
   const goToEditEventPage = () => {
-    setToEditEvent(props.retrieveEvent);
-    navigate("Edit Event");
+    navigate("Edit Event", { eventId: props.retrieveEvent.id });
   };
 
   const handleAlertDialogClose = () => {
@@ -69,20 +68,20 @@ export default function EventListButton(props: Props) {
   };
 
   const deleteAndRefresh = () => {
-    deleteSocEvent(
-      props.retrieveEvent.id,
-      props.retrieveEvent.pictureUrl,
-      selectedSoc.id
-    ).then((result) => {
-      if (result instanceof Error) {
-        setErrorMsg(result.message);
-      } else {
-        updateSelectedSoc().then(() => {
-          setEventDeleted(true); // Causes the page to refresh
-          handleAlertDialogClose();
-        });
+    deleteSocEvent(props.retrieveEvent.id, props.retrieveEvent.pictureUrl).then(
+      (result) => {
+        if (result instanceof Error) {
+          setErrorMsg(result.message);
+        } else {
+          updateSocietyInContext(props.retrieveEvent.organiserRef.id).then(
+            () => {
+              props.setEventDeleted(true); // Causes the page to refresh
+              handleAlertDialogClose();
+            }
+          );
+        }
       }
-    });
+    );
   };
 
   return (

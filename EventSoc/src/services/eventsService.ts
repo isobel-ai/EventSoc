@@ -19,6 +19,19 @@ function retrieveEvent(eventRef: DocumentReference) {
     .catch(() => Error("Event couldn't be retrieved. Try again later."));
 }
 
+export function retrieveEventOrganiserRef(eventRef: DocumentReference) {
+  return getDoc(eventRef)
+    .then((eventSnapshot) => {
+      if (!eventSnapshot.exists()) {
+        throw Error;
+      }
+      return eventSnapshot.data().organiserRef as DocumentReference;
+    })
+    .catch(() =>
+      Error("Event organiser couldn't be retrieved. Try again later.")
+    );
+}
+
 export function retrieveEvents(eventRefs: DocumentReference[]) {
   const eventPromises = eventRefs.map((ref) => retrieveEvent(ref));
   return Promise.all(eventPromises)

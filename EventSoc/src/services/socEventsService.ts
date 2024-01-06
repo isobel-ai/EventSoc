@@ -12,6 +12,7 @@ import {
 } from "../config/firebaseConfig";
 import { CreateEvent } from "../models/Event";
 import { deleteImage, uploadImage } from "./cloudService";
+import { retrieveEventOrganiserRef } from "./eventsService";
 
 export function createSocEvent(createEvent: CreateEvent, socId: string) {
   return runTransaction(db, (transaction) => {
@@ -42,33 +43,24 @@ export function createSocEvent(createEvent: CreateEvent, socId: string) {
   });
 }
 
-export function deleteSocEvent(
-  eventId: string,
-  pictureUrl: string,
-  socId: string
-) {
+export function deleteSocEvent(eventId: string, pictureUrl: string) {
   return runTransaction(db, (transaction) => {
     const eventDoc = doc(eventsCol, eventId);
 
-    const deleteImageResult = pictureUrl
-      ? deleteImage(eventPicturesRef, eventId)
-      : Promise.resolve("");
-
-    return deleteImageResult
-      .then((result) => {
-        if (result instanceof Error) {
-          return result;
+    return retrieveEventOrganiserRef(eventDoc)
+      .then((retrieveResult) => {
+        if (retrieveResult instanceof Error) {
+          throw Error;
         }
+        return retrieveResult;
+      })
+      .then((eventOrganiserRef) => {
+        transaction.update(eventOrganiserRef, {
+          eventRefs: arrayRemove(eventDoc)
+        });
         transaction.delete(eventDoc);
       })
-      .then((deleteResult) => {
-        if (deleteResult instanceof Error) {
-          return deleteResult;
-        }
-        transaction.update(doc(societiesCol, socId), {
-          eventRefs: arrayRemove(doc(eventsCol, eventId))
-        });
-      })
+      .then(() => pictureUrl && deleteImage(eventPicturesRef, eventId))
       .catch(() => Error("Unable to delete event. Try again later."));
   });
 }

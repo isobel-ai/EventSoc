@@ -1,3 +1,4 @@
+import { DocumentReference } from "firebase/firestore";
 import { defaultDate } from "../helpers/DateTimeHelper";
 
 export interface Event {
@@ -7,6 +8,7 @@ export interface Event {
   startDate: Date;
   endDate: Date;
   pictureUrl: string;
+  organiserRef: DocumentReference;
 }
 
 export const defaultEvent: () => Event = () => {
@@ -16,7 +18,8 @@ export const defaultEvent: () => Event = () => {
     description: "",
     startDate: defaultDate(),
     endDate: defaultDate(),
-    pictureUrl: ""
+    pictureUrl: "",
+    organiserRef: <DocumentReference>(<unknown>null)
   };
 };
 

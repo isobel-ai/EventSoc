@@ -23,13 +23,12 @@ interface Props {
 }
 
 export default function SocietiesSideMenu(props: Props) {
-  const { navigatorRef } = useSocietiesContext();
+  const { societies, setSocieties, navigatorRef } = useSocietiesContext();
+
+  const [socErrMsg, setSocErrMsg] = useState<string>("");
 
   const [execSocieties, setExecSocieties] = useState<RetrieveSociety[]>([]);
   const [execSocErrMsg, setExecSocErrMsg] = useState<string>("");
-
-  const [societies, setSocieties] = useState<RetrieveSociety[]>([]);
-  const [socErrMsg, setSocErrMsg] = useState<string>("");
 
   const [isVisible, setIsVisible] = useState<boolean>(false);
 

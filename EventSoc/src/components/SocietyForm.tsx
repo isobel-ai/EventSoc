@@ -44,8 +44,6 @@ interface Props {
 }
 
 export default function SocietyForm(props: Props) {
-  const { selectedSoc } = useSocietiesContext();
-
   const [isSelectExecOpen, setIsSelectExecOpen] = useState<boolean>(false);
 
   const [errMsg, setErrMsg] = useState<string>("");
@@ -76,7 +74,7 @@ export default function SocietyForm(props: Props) {
   useEffect(() => {
     props.editingForm &&
       setExecItems(
-        userItems.filter((item) => selectedSoc.exec.includes(item.item))
+        userItems.filter((item) => props.createSociety.exec.includes(item.item))
       );
   }, [userItems]);
 
