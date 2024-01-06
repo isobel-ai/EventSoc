@@ -1,5 +1,4 @@
 import { DocumentReference } from "firebase/firestore";
-import { DocumentReference } from "firebase/firestore";
 import { defaultDate } from "../helpers/DateTimeHelper";
 
 export interface Event {
