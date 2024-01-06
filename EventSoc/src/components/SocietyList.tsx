@@ -47,7 +47,7 @@ export default function SocietyList(props: Props) {
       width="100%"
       marginVertical={5}
       justifyContent="flex-start"
-      onPress={() => selectSocietyPage(soc)}>
+      onPress={() => selectSocietyPage(soc.id)}>
       <Avatar marginHorizontal={10}>
         <AvatarFallbackText
           color="white"
