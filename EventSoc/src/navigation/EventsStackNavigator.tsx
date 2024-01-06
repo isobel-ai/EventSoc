@@ -6,18 +6,21 @@ import { config } from "../../config/gluestack-ui.config";
 import { ArrowLeftIcon, Icon } from "@gluestack-ui/themed";
 import EventsScreen from "../screens/Events/EventsScreen";
 import EventScreen from "../screens/Events/EventScreen";
-import { useState } from "react";
-import { RetrieveSocEvent, defaultRetrieveSocEvent } from "../models/SocEvent";
-import EventsContext from "../contexts/EventsContext";
+import {
+  NavigatorScreenParams,
+  getFocusedRouteNameFromRoute
+} from "@react-navigation/native";
+import SocietiesStackNavigator, {
+  SocietiesStackParamList
+} from "./Societies/SocietiesStackNavigator";
 
 export type EventsStackParamList = {
   Home: undefined;
   Event: { eventId: string };
+  Society: NavigatorScreenParams<SocietiesStackParamList>;
 };
 
 export default function EventsStackNavigator() {
-  const [socEvents, setSocEvents] = useState<RetrieveSocEvent[]>([]);
-
   const Stack = createStackNavigator<EventsStackParamList>();
 
   const stackScreenOptions = (): StackNavigationOptions => ({
@@ -25,8 +28,7 @@ export default function EventsStackNavigator() {
     headerStyle: {
       backgroundColor: config.tokens.colors.navigationDarkPink
     },
-    headerBackTitle: "Back to event feed",
-    headerBackTitleStyle: { color: "black", fontWeight: "bold" },
+    headerBackTitleStyle: { color: "black", fontWeight: "bold", fontSize: 25 },
     headerBackImage: () => (
       <Icon
         as={ArrowLeftIcon}
@@ -34,25 +36,33 @@ export default function EventsStackNavigator() {
         style={{ paddingLeft: 40 }}
         color="black"
       />
-    ),
-    gestureEnabled: false
+    )
   });
 
   return (
-    <EventsContext.Provider value={{ socEvents, setSocEvents }}>
-      <Stack.Navigator screenOptions={stackScreenOptions}>
-        <Stack.Screen
-          name="Home"
-          component={EventsScreen}
-          options={{
-            headerShown: false
-          }}
-        />
-        <Stack.Screen
-          name="Event"
-          component={EventScreen}
-        />
-      </Stack.Navigator>
-    </EventsContext.Provider>
+    <Stack.Navigator screenOptions={stackScreenOptions}>
+      <Stack.Screen
+        name="Home"
+        component={EventsScreen}
+        options={{
+          headerShown: false,
+          gestureEnabled: false
+        }}
+      />
+      <Stack.Screen
+        name="Event"
+        component={EventScreen}
+      />
+      <Stack.Screen
+        name="Society"
+        component={SocietiesStackNavigator}
+        options={({ route }) => {
+          const currentScreen = getFocusedRouteNameFromRoute(route);
+          return {
+            headerShown: currentScreen === "Home"
+          };
+        }}
+      />
+    </Stack.Navigator>
   );
 }

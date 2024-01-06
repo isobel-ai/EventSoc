@@ -86,6 +86,7 @@ export default function EventListButton(props: Props) {
 
   return (
     <Button
+      onPress={() => navigate("Event", { eventId: props.retrieveEvent.id })}
       backgroundColor={config.tokens.colors.eventButtonGray}
       height={100}
       width="100%"

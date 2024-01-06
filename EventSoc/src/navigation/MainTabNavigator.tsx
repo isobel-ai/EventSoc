@@ -13,6 +13,13 @@ import EventsStackNavigator, {
 } from "./EventsStackNavigator";
 import { NavigatorScreenParams } from "@react-navigation/native";
 import { SocietiesStackParamList } from "./Societies/SocietiesStackNavigator";
+import { useRef, useState } from "react";
+import EventsContext from "../contexts/EventsContext";
+import { RetrieveSocEvent } from "../models/SocEvent";
+import SocietiesContext from "../contexts/SocietiesContext";
+import { RetrieveEvent } from "../models/Event";
+import { RetrieveSociety } from "../models/Society";
+import { retrieveSociety } from "../services/societiesService";
 
 export type MainTabParamList = {
   Events: NavigatorScreenParams<EventsStackParamList>;
@@ -32,68 +39,98 @@ export default function MainTabNavigator() {
     tabBarShowLabel: false
   });
 
+  const [socEvents, setSocEvents] = useState<RetrieveSocEvent[]>([]);
+
+  const [societies, setSocieties] = useState<RetrieveSociety[]>([]);
+
+  const updateSocietyInContext = (id: string) =>
+    retrieveSociety(id).then((result) => {
+      if (result instanceof Error) {
+        return result;
+      }
+      return setSocieties(
+        societies.map((soc) => (soc.id === id ? result : soc))
+      );
+    });
+
+  const [societyEvents, setSocietyEvents] = useState<RetrieveEvent[]>([]);
+
+  const navigatorRef = useRef<any>({ current: null });
+
   return (
-    <Tab.Navigator screenOptions={tabNavigatorScreenOptions}>
-      <Tab.Screen
-        name="Events"
-        component={EventsStackNavigator}
-        options={{
-          tabBarIcon: ({ size }) => (
-            <MaterialCommunityIcons
-              name="home"
-              size={size}
-            />
-          )
-        }}
-      />
-      <Tab.Screen
-        name="My Events"
-        component={MyEventsScreen}
-        options={{
-          tabBarIcon: ({ size }) => (
-            <MaterialCommunityIcons
-              name="calendar-heart"
-              size={size}
-            />
-          )
-        }}
-      />
-      <Tab.Screen
-        name="My Account"
-        component={MyAccountScreen}
-        options={{
-          tabBarIcon: ({ size }) => (
-            <MaterialCommunityIcons
-              name="account"
-              size={size}
-            />
-          )
-        }}
-      />
-      <Tab.Screen
-        name="Notifications"
-        component={NotificationScreen}
-        options={{
-          tabBarIcon: ({ size }) => (
-            <MaterialCommunityIcons
-              name="bell-ring"
-              size={size}
-            />
-          )
-        }}
-      />
-      <Tab.Screen
-        name="Societies"
-        component={SocietiesNavigator}
-        options={{
-          tabBarIcon: ({ size }) => (
-            <MaterialCommunityIcons
-              name="account-group"
-              size={size}
-            />
-          )
-        }}
-      />
-    </Tab.Navigator>
+    <EventsContext.Provider value={{ socEvents, setSocEvents }}>
+      <SocietiesContext.Provider
+        value={{
+          societies,
+          setSocieties,
+          updateSocietyInContext,
+          societyEvents,
+          setSocietyEvents,
+          navigatorRef
+        }}>
+        <Tab.Navigator screenOptions={tabNavigatorScreenOptions}>
+          <Tab.Screen
+            name="Events"
+            component={EventsStackNavigator}
+            options={{
+              tabBarIcon: ({ size }) => (
+                <MaterialCommunityIcons
+                  name="home"
+                  size={size}
+                />
+              )
+            }}
+          />
+          <Tab.Screen
+            name="My Events"
+            component={MyEventsScreen}
+            options={{
+              tabBarIcon: ({ size }) => (
+                <MaterialCommunityIcons
+                  name="calendar-heart"
+                  size={size}
+                />
+              )
+            }}
+          />
+          <Tab.Screen
+            name="My Account"
+            component={MyAccountScreen}
+            options={{
+              tabBarIcon: ({ size }) => (
+                <MaterialCommunityIcons
+                  name="account"
+                  size={size}
+                />
+              )
+            }}
+          />
+          <Tab.Screen
+            name="Notifications"
+            component={NotificationScreen}
+            options={{
+              tabBarIcon: ({ size }) => (
+                <MaterialCommunityIcons
+                  name="bell-ring"
+                  size={size}
+                />
+              )
+            }}
+          />
+          <Tab.Screen
+            name="Societies"
+            component={SocietiesNavigator}
+            options={{
+              tabBarIcon: ({ size }) => (
+                <MaterialCommunityIcons
+                  name="account-group"
+                  size={size}
+                />
+              )
+            }}
+          />
+        </Tab.Navigator>
+      </SocietiesContext.Provider>
+    </EventsContext.Provider>
   );
 }
