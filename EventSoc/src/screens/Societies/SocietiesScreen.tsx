@@ -65,7 +65,9 @@ export default function SocietiesScreen(props: Props) {
         } else {
           setErrMsg("");
           setSocEvents(
-            events.filter((event) => society.eventIds.includes(event.id))
+            events
+              .filter((event) => society.eventIds.includes(event.id))
+              .reverse()
           );
         }
       }),
