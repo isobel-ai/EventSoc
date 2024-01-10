@@ -4,8 +4,8 @@ import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesSta
 import { useState } from "react";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import ErrorAlertDialog from "../../components/ErrorAlertDialog";
-import { useSocietiesContext } from "../../contexts/SocietiesContext";
-import { CreateSociety, defaultCreateSociety } from "../../models/Society";
+import { useAppContext } from "../../contexts/AppContext";
+import { SocietyData, defaultSocietyData } from "../../models/Society";
 import SocietyForm from "../../components/SocietyForm";
 import { getSocietyErrMsg } from "../../helpers/SocietyInputValidationHelper";
 import { getSocietyUpdates } from "../../helpers/UpdateHelper";
@@ -15,7 +15,7 @@ import { cloneDeep } from "lodash";
 type Props = StackScreenProps<SocietiesStackParamList, "Edit Society">;
 
 export default function EditSocietyScreen(props: Props) {
-  const { societies, updateSocietyInContext } = useSocietiesContext();
+  const { societies, updateSocietyInContext } = useAppContext();
 
   const [errMsg, setErrMsg] = useState<string>("");
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);

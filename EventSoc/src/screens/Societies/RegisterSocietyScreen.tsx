@@ -8,13 +8,13 @@ import { CreateSociety, defaultCreateSociety } from "../../models/Society";
 import SocietyForm from "../../components/SocietyForm";
 import { getSocietyErrMsg } from "../../helpers/SocietyInputValidationHelper";
 import { createSociety } from "../../services/societiesService";
-import { retrieveUser } from "../../services/usersService";
+import { useAppContext } from "../../contexts/AppContext";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Register Society">;
 
 export default function RegisterScreen(props: Props) {
-  const [createSoc, setCreateSoc] =
-    useState<CreateSociety>(defaultCreateSociety);
+  const { getUser } = useAppContext();
+
 
   const [errMsg, setErrMsg] = useState<string>("");
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);

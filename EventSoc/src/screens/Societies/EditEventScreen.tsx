@@ -7,15 +7,15 @@ import { getEventErrMsg } from "../../helpers/EventInputValidationHelper";
 import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import ErrorAlertDialog from "../../components/ErrorAlertDialog";
-import { useSocietiesContext } from "../../contexts/SocietiesContext";
-import { getEventUpdates } from "../../helpers/UpdateHelper";
+import { useAppContext } from "../../contexts/AppContext";
+import { getUpdates } from "../../helpers/UpdateHelper";
 import { updateEvent } from "../../services/eventsService";
 import { cloneDeep } from "lodash";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Edit Event">;
 
 export default function EditEventScreen(props: Props) {
-  const { societyEvents } = useSocietiesContext();
+  const { events } = useAppContext();
 
   const [errMsg, setErrMsg] = useState<string>("");
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);

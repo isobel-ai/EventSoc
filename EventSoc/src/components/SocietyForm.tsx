@@ -32,10 +32,9 @@ import { config } from "../../config/gluestack-ui.config";
 import { xorBy } from "lodash";
 import SelectBox, { Item } from "../../libs/multi-selectbox";
 import { LogBox } from "react-native";
-import { retrieveOtherUsers, retrieveUsers } from "../services/usersService";
-import { useSocietiesContext } from "../contexts/SocietiesContext";
 import { useIsFocused } from "@react-navigation/native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useAppContext } from "../contexts/AppContext";
 
 interface Props {
   createSociety: CreateSociety;
@@ -44,6 +43,8 @@ interface Props {
 }
 
 export default function SocietyForm(props: Props) {
+  const { users, updateUsers, getUser } = useAppContext();
+
   const [isSelectExecOpen, setIsSelectExecOpen] = useState<boolean>(false);
 
   const [errMsg, setErrMsg] = useState<string>("");
@@ -54,18 +55,18 @@ export default function SocietyForm(props: Props) {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    const retrieveUsersAttempt = props.editingForm
-      ? retrieveUsers()
-      : retrieveOtherUsers();
-
-    retrieveUsersAttempt.then((result) => {
+    updateUsers().then((result) => {
       if (result instanceof Error) {
         setErrMsg(result.message);
       } else {
-        const items = result.map((user) => {
-          return { id: user.id, item: user.name };
-        });
-        setUserItems(items);
+        const userId = getUser()?.id;
+        setUserItems(
+          users.flatMap((user) =>
+            props.editingForm || user.id !== userId
+              ? [{ id: user.id, item: user.data.name }]
+              : []
+          )
+        );
         setErrMsg("");
       }
     });

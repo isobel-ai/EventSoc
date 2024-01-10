@@ -27,7 +27,7 @@ import {
 } from "@gluestack-ui/themed";
 import { RetrieveEvent } from "../models/Event";
 import { config } from "../../config/gluestack-ui.config";
-import { useSocietiesContext } from "../contexts/SocietiesContext";
+import { useAppContext } from "../contexts/AppContext";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { SocietiesStackParamList } from "../navigation/Societies/SocietiesStackNavigator";
 import { useState } from "react";
@@ -41,7 +41,7 @@ interface Props {
 }
 
 export default function EventListButton(props: Props) {
-  const { updateSocietyInContext } = useSocietiesContext();
+  const { updateSocietyInContext } = useAppContext();
 
   const { navigate } = useNavigation<NavigationProp<SocietiesStackParamList>>();
 

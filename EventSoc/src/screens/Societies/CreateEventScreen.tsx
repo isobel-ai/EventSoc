@@ -7,13 +7,13 @@ import { useState } from "react";
 import { getEventErrMsg } from "../../helpers/EventInputValidationHelper";
 import { CreateEvent, defaultCreateEvent } from "../../models/Event";
 import ErrorAlertDialog from "../../components/ErrorAlertDialog";
-import { useSocietiesContext } from "../../contexts/SocietiesContext";
+import { useAppContext } from "../../contexts/AppContext";
 import { createSocEvent } from "../../services/socEventsService";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Create Event">;
 
 export default function CreateEventScreen(props: Props) {
-  const { updateSocietyInContext } = useSocietiesContext();
+  const { updateSocietyInContext } = useAppContext();
 
   const [createEvent, setCreateEvent] = useState<CreateEvent>(
     defaultCreateEvent()

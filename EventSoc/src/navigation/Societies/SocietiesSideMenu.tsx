@@ -16,14 +16,15 @@ import SideMenu, {
   ReactNativeSideMenuProps
 } from "react-native-side-menu-updated";
 import { config } from "../../../config/gluestack-ui.config";
-import { useSocietiesContext } from "../../contexts/SocietiesContext";
+import { useAppContext } from "../../contexts/AppContext";
 
 interface Props {
   children: ReactNode;
 }
 
 export default function SocietiesSideMenu(props: Props) {
-  const { societies, setSocieties, navigatorRef } = useSocietiesContext();
+  const { societies, updateSocieties, getUser } = useAppContext();
+
 
   const [socErrMsg, setSocErrMsg] = useState<string>("");
 

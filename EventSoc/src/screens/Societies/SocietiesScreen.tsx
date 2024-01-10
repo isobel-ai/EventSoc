@@ -22,10 +22,8 @@ import ScreenView from "../../components/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { useIsFocused } from "@react-navigation/native";
-import { useSocietiesContext } from "../../contexts/SocietiesContext";
-import { retrieveUser } from "../../services/usersService";
-import { isEqual } from "lodash";
-import { RetrieveSociety } from "../../models/Society";
+import { useAppContext } from "../../contexts/AppContext";
+import { SocietyData } from "../../models/Society";
 import { config } from "../../../config/gluestack-ui.config";
 import { retrieveEvents } from "../../services/eventsService";
 import SearchList from "../../components/SearchList";
@@ -35,7 +33,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 type Props = StackScreenProps<SocietiesStackParamList, "Home">;
 
 export default function SocietiesScreen(props: Props) {
-  const { societies, societyEvents, setSocietyEvents } = useSocietiesContext();
+  const { societies, events, updateEvents, getUser } = useAppContext();
 
   const [isExec, setIsExec] = useState<boolean>(false);
 
