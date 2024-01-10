@@ -1,8 +1,4 @@
-import {
-  dateInRange,
-  searchFilter,
-  sortByString
-} from "../src/helpers/SearchSortHelper";
+import { dateInRange, searchFilter } from "../src/helpers/SearchSortHelper";
 
 interface TestObject {
   id: number;
@@ -154,31 +150,5 @@ describe("dateInRange", () => {
     const rangeEnd: Date | undefined = undefined;
 
     expect(dateInRange(date, rangeStart, rangeEnd)).toBe(false);
-  });
-});
-
-describe("sortByString", () => {
-  test("it should return 1 if the first object is lesser than the other", () => {
-    const o1: TestObject = { id: 1, name: "b" };
-    const o2: TestObject = { id: 2, name: "a" };
-    const sortKey = "name";
-
-    expect(sortByString(o1, o2, sortKey)).toBe(1);
-  });
-
-  test("it should return 0 if the first object is equal to the other", () => {
-    const o1: TestObject = { id: 1, name: "a" };
-    const o2: TestObject = { id: 2, name: "A" };
-    const sortKey = "name";
-
-    expect(sortByString(o1, o2, sortKey)).toBe(0);
-  });
-
-  test("it should return -1 if the first object is greater than the other", () => {
-    const o1: TestObject = { id: 1, name: "a" };
-    const o2: TestObject = { id: 2, name: "b" };
-    const sortKey = "name";
-
-    expect(sortByString(o1, o2, sortKey)).toBe(-1);
   });
 });
