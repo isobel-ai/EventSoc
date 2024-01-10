@@ -7,16 +7,20 @@ import {
   Pressable
 } from "@gluestack-ui/themed";
 import { config } from "../../config/gluestack-ui.config";
-import { RetrieveSociety } from "../models/Society";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { EventsStackParamList } from "../navigation/EventsStackNavigator";
+import { useAppContext } from "../contexts/AppContext";
 
 interface Props {
-  society: RetrieveSociety;
+  societyId: string;
 }
 
 export default function SocietyPressable(props: Props) {
   const navigation = useNavigation<NavigationProp<EventsStackParamList>>();
+
+  const { societies } = useAppContext();
+
+  const society = societies.find((soc) => soc.id === props.societyId)?.data;
 
   return (
     <Pressable
@@ -28,7 +32,7 @@ export default function SocietyPressable(props: Props) {
         navigation.getId() !== "Societies" &&
           navigation.navigate("Society", {
             screen: "Home",
-            params: { societyId: props.society.id }
+            params: { societyId: props.societyId }
           });
       }}>
       <HStack
@@ -38,11 +42,11 @@ export default function SocietyPressable(props: Props) {
           <AvatarFallbackText
             color="white"
             fontSize="$lg">
-            {props.society.name}
+            {society?.name}
           </AvatarFallbackText>
-          {props.society.pictureUrl && (
+          {society?.pictureUrl && (
             <AvatarImage
-              source={{ uri: props.society.pictureUrl }}
+              source={{ uri: society.pictureUrl }}
               alt=""
             />
           )}
@@ -50,7 +54,7 @@ export default function SocietyPressable(props: Props) {
         <Heading
           fontSize="$xl"
           numberOfLines={1}>
-          {props.society.name}
+          {society?.name}
         </Heading>
       </HStack>
     </Pressable>
