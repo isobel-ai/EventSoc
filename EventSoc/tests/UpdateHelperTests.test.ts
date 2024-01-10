@@ -1,114 +1,61 @@
-import {
-  getEventUpdates,
-  getSocietyUpdates
-} from "../src/helpers/UpdateHelper";
-import { CreateEvent, defaultCreateEvent } from "../src/models/Event";
-import { CreateSociety, defaultCreateSociety } from "../src/models/Society";
+import { getUpdates } from "../src/helpers/UpdateHelper";
 
-describe("getEventUpdates", () => {
+interface TestObject {
+  id: number;
+  name: string;
+  obj: { prop: string };
+  arr: string[];
+}
+
+describe("getUpdates", () => {
   test("it should return no updates if there aren't any", () => {
-    const id = "1";
-    const event = defaultCreateEvent();
+    const before: TestObject = {
+      id: 1,
+      name: "a",
+      obj: { prop: "b" },
+      arr: ["c", "d"]
+    };
+    const after: TestObject = { ...before };
 
-    expect(getEventUpdates(id, event, { ...event })).toEqual({ id: id });
+    expect(getUpdates(before, after)).toEqual(<Partial<TestObject>>{});
   });
 
   test("it should return updates if there are changes (all changes)", () => {
-    const id = "1";
-
-    const before: CreateEvent = defaultCreateEvent();
-
-    const changes = {
-      name: "name change",
-      location: "location change",
-      description: "desc change",
-      startDate: new Date(4000, 1, 1),
-      endDate: new Date(4000, 1, 2),
-      pictureUrl: "picURL change",
-      localPictureUrl: "localURL change",
-      tags: ["a"]
+    const before: TestObject = {
+      id: 1,
+      name: "a",
+      obj: { prop: "b" },
+      arr: ["c", "d"]
+    };
+    const after: TestObject = {
+      id: 2,
+      name: "c",
+      obj: { prop: "d" },
+      arr: ["c"]
     };
 
-    const after: CreateEvent = {
-      ...defaultCreateEvent(),
-      ...changes
-    };
-
-    expect(getEventUpdates(id, before, after)).toEqual(
-      Object.assign(changes, { id: id })
-    );
+    expect(getUpdates(before, after)).toEqual(<Partial<TestObject>>{
+      ...after
+    });
   });
 
   test("it should return updates if there are changes (partial changes)", () => {
-    const id = "1";
-
-    const before: CreateEvent = defaultCreateEvent();
-
-    const after: CreateEvent = {
-      ...before,
-      name: "name change",
-      location: "location change",
-      startDate: new Date(3000, 1, 1)
+    const before: TestObject = {
+      id: 1,
+      name: "a",
+      obj: { prop: "b" },
+      arr: ["c", "d"]
+    };
+    const after: TestObject = {
+      id: 2,
+      name: "a",
+      obj: { prop: "d" },
+      arr: ["c", "d"]
     };
 
-    const updates = {
-      id: id,
-      name: after.name,
-      location: after.location,
-      startDate: after.startDate
-    };
-
-    expect(getEventUpdates(id, before, after)).toEqual(updates);
-  });
-});
-
-describe("getSocietyUpdates", () => {
-  test("it should return no updates if there aren't any", () => {
-    const id = "1";
-    const soc = defaultCreateSociety();
-
-    expect(getSocietyUpdates(id, soc, { ...soc })).toEqual({ id: id });
-  });
-
-  test("it should return updates if there are changes (all changes - not eventRefs)", () => {
-    const id = "1";
-
-    const before: CreateSociety = defaultCreateSociety();
-
-    const after: CreateSociety = {
-      ...before,
-      name: "name change",
-      description: "desc change",
-      pictureUrl: "picURL change",
-      localPictureUrl: "localURL change",
-      exec: ["a"]
-    };
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { eventRefs, ...expectedUpdates } = after;
-
-    expect(getSocietyUpdates(id, before, after)).toEqual(
-      Object.assign(expectedUpdates, { id: id })
-    );
-  });
-
-  test("it should return updates if there are changes (partial changes)", () => {
-    const id = "1";
-
-    const before: CreateSociety = defaultCreateSociety();
-
-    const after: CreateSociety = {
-      ...before,
-      name: "name change",
-      exec: ["a"]
-    };
-
-    const updates = {
-      id: id,
-      name: after.name,
-      exec: after.exec
-    };
-
-    expect(getSocietyUpdates(id, before, after)).toEqual(updates);
+    expect(getUpdates(before, after)).toEqual(<Partial<TestObject>>{
+      id: 2,
+      obj: { prop: "d" }
+    });
   });
 });

@@ -1,7 +1,7 @@
 import ScreenView from "../../components/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
-import { CreateEvent, defaultCreateEvent } from "../../models/Event";
+import { EventData, defaultEventData } from "../../models/Event";
 import { useState } from "react";
 import { getEventErrMsg } from "../../helpers/EventInputValidationHelper";
 import EventForm from "../../components/EventForm";
@@ -22,16 +22,10 @@ export default function EditEventScreen(props: Props) {
 
   const toEditEvent = events.find(
     (event) => event.id === props.route.params.eventId
-  );
-  let beforeEvent = defaultCreateEvent();
+  )?.data;
   if (!toEditEvent) {
     setErrMsg("Could not retrieve event details. Try again later.");
     setShowAlertDialog(true);
-  } else {
-    const { id, ...event } = toEditEvent;
-    beforeEvent = Object.assign(event, {
-      localPictureUrl: event.pictureUrl
-    });
   }
 
   const beforeEvent = toEditEvent ?? defaultEventData();
@@ -45,6 +39,7 @@ export default function EditEventScreen(props: Props) {
       setErrMsg(invalidErrMsg);
       setShowAlertDialog(true);
     } else {
+      const eventUpdates = getUpdates(beforeEvent, afterEvent);
       updateEvent(eventUpdates, props.route.params.eventId).then((result) => {
         if (result instanceof Error) {
           setErrMsg(result.message);

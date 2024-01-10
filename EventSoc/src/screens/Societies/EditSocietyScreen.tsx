@@ -8,9 +8,9 @@ import { useAppContext } from "../../contexts/AppContext";
 import { SocietyData, defaultSocietyData } from "../../models/Society";
 import SocietyForm from "../../components/SocietyForm";
 import { getSocietyErrMsg } from "../../helpers/SocietyInputValidationHelper";
-import { getSocietyUpdates } from "../../helpers/UpdateHelper";
-import { updateSociety } from "../../services/societiesService";
 import { cloneDeep } from "lodash";
+import { getUpdates } from "../../helpers/UpdateHelper";
+import { updateSociety } from "../../services/societiesService";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Edit Society">;
 
@@ -20,18 +20,13 @@ export default function EditSocietyScreen(props: Props) {
   const [errMsg, setErrMsg] = useState<string>("");
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
 
-  const toEditSociety = societies.find(
+  const toEditSoc = societies.find(
     (soc) => soc.id === props.route.params.societyId
-  );
-  let beforeSoc = defaultCreateSociety();
-  if (!toEditSociety) {
+  )?.data;
+  if (!toEditSoc) {
     setErrMsg("Could not retrieve society details. Try again later.");
     setShowAlertDialog(true);
   } else {
-    const { id, ...soc } = toEditSociety;
-    beforeSoc = Object.assign(soc, {
-      localPictureUrl: soc.pictureUrl
-    });
   }
 
   const beforeSoc = toEditSoc ?? defaultSocietyData();
@@ -43,12 +38,8 @@ export default function EditSocietyScreen(props: Props) {
       setErrMsg(invalidErrMsg);
       setShowAlertDialog(true);
     } else {
-      const updateSoc = getSocietyUpdates(
-        props.route.params.societyId,
-        beforeSoc,
-        afterSoc
-      );
-      updateSociety(updateSoc).then((result) => {
+      const socUpdates = getUpdates(beforeSoc, afterSoc);
+      updateSociety(socUpdates, props.route.params.societyId).then((result) => {
         if (result instanceof Error) {
           setErrMsg(result.message);
           setShowAlertDialog(true);
