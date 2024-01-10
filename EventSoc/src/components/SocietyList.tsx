@@ -5,11 +5,7 @@ import {
   Avatar,
   AvatarFallbackText,
   AvatarImage,
-  Text,
-  Divider,
-  Heading,
-  AlertText,
-  Alert
+  Divider
 } from "@gluestack-ui/themed";
 import { Society } from "../models/Society";
 import SearchList from "./SearchList";
@@ -23,7 +19,6 @@ interface Props {
   societies: Society[];
   isSideMenuOpen: boolean;
   setIsSideMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  errMsg: string;
   maxHeight?: DimensionValue;
 }
 
@@ -73,32 +68,16 @@ export default function SocietyList(props: Props) {
       width="100%"
       maxHeight={props.maxHeight}>
       <SideMenuHeading heading={props.title} />
-      {!props.errMsg ? (
-        <SearchList
-          curvedSearchBar={false}
-          data={props.societies}
-          renderItem={renderSocietyButton}
+      <SearchList
+        curvedSearchBar={false}
+        data={props.societies}
+        renderItem={renderSocietyButton}
         searchKeys={["data.name"]}
-          clearSearch={[props.isSideMenuOpen]}
-          itemSeperator={() => <Divider />}
-          maxHeight="90%"
-          listEmptyText="No societies"
-        />
-      ) : (
-        <Alert
-          action="error"
-          variant="solid"
-          width="90%"
-          marginTop={15}>
-          <MaterialIcons
-            name="error-outline"
-            size={40}
-            color={config.tokens.colors.error}
-            style={{ paddingRight: 15 }}
-          />
-          <AlertText>{props.errMsg}</AlertText>
-        </Alert>
-      )}
+        clearSearch={[props.isSideMenuOpen]}
+        itemSeperator={() => <Divider />}
+        maxHeight="90%"
+        listEmptyText="No societies"
+      />
     </VStack>
   );
 }
