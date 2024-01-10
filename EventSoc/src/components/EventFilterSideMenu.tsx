@@ -11,8 +11,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { config } from "../../config/gluestack-ui.config";
 import SelectBox, { Item } from "../../libs/multi-selectbox";
 import { isEqual, xorBy } from "lodash";
-import { retrieveSocieties } from "../services/societiesService";
 import { Dimensions } from "react-native";
+import { useAppContext } from "../contexts/AppContext";
 
 interface Props {
   children: ReactNode;
@@ -31,18 +31,20 @@ interface Props {
 }
 
 export default function EventFilterSideMenu(props: Props) {
+  const { updateSocieties, societies } = useAppContext();
+
   const [socItems, setSocItems] = useState<Item[]>([]);
 
   const [retrieveSocsErrMsg, setRetrieveSocsErrMsg] = useState<string>("");
 
   useEffect(() => {
     props.isFilterMenuOpen &&
-      retrieveSocieties().then((result) => {
+      updateSocieties().then((result) => {
         if (result instanceof Error) {
           setRetrieveSocsErrMsg(result.message);
         } else {
-          const items = result.map((soc) => {
-            return { id: soc.id, item: soc.name };
+          const items = societies.map((soc) => {
+            return { id: soc.id, item: soc.data.name };
           });
           setSocItems(items);
           props.setSelectedSocItems(

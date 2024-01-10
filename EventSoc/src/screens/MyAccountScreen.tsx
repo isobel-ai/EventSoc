@@ -17,9 +17,7 @@ export default function MyAccountScreen() {
 
   const isFocused = useIsFocused();
 
-  useEffect(() => {
-    retrieveUser().then((user) => setUser(user));
-  }, [isFocused]);
+  useEffect(() => setUser(getUser()), [isFocused]);
 
   return (
     <ScreenView>

@@ -7,10 +7,6 @@ import {
   ButtonText,
   VStack
 } from "@gluestack-ui/themed";
-import {
-  retrieveExecSocieties,
-  retrieveSocieties
-} from "../../services/societiesService";
 import SocietyList from "../../components/SocietyList";
 import SideMenu, {
   ReactNativeSideMenuProps
@@ -34,20 +30,18 @@ export default function SocietiesSideMenu(props: Props) {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    retrieveExecSocieties().then((result) => {
+    isVisible &&
+      updateSocieties().then((result) => {
       if (result instanceof Error) {
-        setExecSocErrMsg(result.message);
+          setUpdateSocsErrMsg(result.message);
       } else {
-        setExecSocieties(result);
-        setExecSocErrMsg("");
-      }
-    });
-    retrieveSocieties().then((result) => {
-      if (result instanceof Error) {
-        setSocErrMsg(result.message);
-      } else {
-        setSocieties(result);
-        setSocErrMsg("");
+          const userName = getUser()?.data.name;
+          setExecSocieties(
+            userName
+              ? societies.filter((soc) => soc.data.exec.includes(userName))
+              : []
+          );
+          setUpdateSocsErrMsg("");
       }
     });
   }, [isVisible]);

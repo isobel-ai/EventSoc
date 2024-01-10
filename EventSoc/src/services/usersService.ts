@@ -1,5 +1,4 @@
 import {
-  getDoc,
   doc,
   getCountFromServer,
   query,
@@ -7,65 +6,25 @@ import {
   setDoc,
   getDocs
 } from "firebase/firestore";
-import { auth, usersCol } from "../config/firebaseConfig";
-import { RetrieveUser, defaultRetrieveUser, defaultUser } from "../models/User";
-import { isEqual } from "lodash";
-import { sortByString } from "../helpers/SearchSortHelper";
-
-let user: RetrieveUser = defaultRetrieveUser();
-
-export function resetUser() {
-  user = defaultRetrieveUser();
-}
-
-export async function retrieveUser() {
-  // Retrieve user if the function hasn't been called before
-  if (isEqual(user, defaultRetrieveUser())) {
-    const id = auth.currentUser?.uid;
-    Object.assign(
-      user,
-      await getDoc(doc(usersCol, id))
-        .then((userSnapshot) => {
-          return userSnapshot.exists()
-            ? ({ ...userSnapshot.data(), id: id } as RetrieveUser)
-            : user;
-        })
-        .catch(() => {
-          return user;
-        })
-    );
-  }
-
-  return user;
-}
+import { usersCol } from "../config/firebaseConfig";
+import { User, UserData, defaultUserData } from "../models/User";
 
 export function retrieveUsers() {
   return getDocs(usersCol)
     .then((usersSnapshot) => {
-      const userList = usersSnapshot.docs.map((doc) => {
-        return { ...doc.data(), id: doc.id } as RetrieveUser;
-      });
-      return userList.sort((s1, s2) => sortByString(s1, s2, "name"));
+      const unorderedUsers = usersSnapshot.docs.map(
+        (doc) => <User>{ id: doc.id, data: doc.data() }
+      );
+      return unorderedUsers.sort((a, b) =>
+        a.data.name.localeCompare(b.data.name)
+      );
     })
-    .catch(() => Error("Unable to retrieve users. Try again later."));
-}
-
-export function retrieveOtherUsers() {
-  retrieveUser(); // Set user if not already set
-
-  return getDocs(query(usersCol, where("name", "!=", user.name)))
-    .then((usersSnapshot) => {
-      const userList = usersSnapshot.docs.map((doc) => {
-        return { ...doc.data(), id: doc.id } as RetrieveUser;
-      });
-      return userList.sort((s1, s2) => sortByString(s1, s2, "name"));
-    })
-    .catch(() => Error("Unable to retrieve users. Try again later."));
+    .catch(() => Error("Could not retrieve all users. Try again later."));
 }
 
 export function createUser(id: string, name: string) {
-  return setDoc(doc(usersCol, id), { ...defaultUser(), name: name }).catch(() =>
-    Error("Unable to create user. Try again later.")
+  return setDoc(doc(usersCol, id), { ...defaultUserData(), name: name }).catch(
+    () => Error("Unable to create user. Try again later.")
   );
 }
 

@@ -71,13 +71,14 @@ export default function EventListButton(props: Props) {
     deleteSocEvent(
       props.event.id,
       props.event.data.pictureUrl,
+      props.event.data.organiserId
     ).then((result) => {
-        if (result instanceof Error) {
-          setErrorMsg(result.message);
-        } else {
+      if (result instanceof Error) {
+        setErrorMsg(result.message);
+      } else {
         updateSocietyInContext(props.event.data.organiserId).then(() => {
-              props.setEventDeleted(true); // Causes the page to refresh
-              handleAlertDialogClose();
+          props.setEventDeleted(true); // Causes the page to refresh
+          handleAlertDialogClose();
         });
       }
     });

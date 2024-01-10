@@ -11,6 +11,7 @@ import { Event } from "../../models/Event";
 export default function EventsScreen() {
   const { events, updateEvents } = useAppContext();
 
+  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
 
   const [filteredSocEvents, setFilteredSocEvents] = useState<
     RetrieveSocEvent[]
@@ -23,12 +24,13 @@ export default function EventsScreen() {
 
   useEffect(() => {
     isFocused &&
-      retrieveSocEvents().then((result) => {
+      updateEvents().then((result) => {
         if (result instanceof Error) {
-          setRetrieveSocEventsErrMsg(result.message);
+          setRetrieveEventsErrMsg(result.message);
         } else {
-          setSocEvents(result);
-          setRetrieveSocEventsErrMsg("");
+          const now = new Date();
+          setUpcomingEvents(events.filter((event) => event.data.endDate > now));
+          setRetrieveEventsErrMsg("");
         }
       });
   }, [isFocused]);

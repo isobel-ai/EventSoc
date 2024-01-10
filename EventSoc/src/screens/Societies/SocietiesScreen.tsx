@@ -25,7 +25,6 @@ import { useIsFocused } from "@react-navigation/native";
 import { useAppContext } from "../../contexts/AppContext";
 import { SocietyData } from "../../models/Society";
 import { config } from "../../../config/gluestack-ui.config";
-import { retrieveEvents } from "../../services/eventsService";
 import SearchList from "../../components/SearchList";
 import EventListButton from "../../components/EventListButton";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -44,6 +43,7 @@ export default function SocietiesScreen(props: Props) {
 
   const [society, setSociety] = useState<SocietyData>();
 
+  const [socEvents, setSocEvents] = useState<Event[]>([]);
 
   const [eventDeleted, setEventDeleted] = useState<boolean>(false);
 
@@ -52,18 +52,21 @@ export default function SocietiesScreen(props: Props) {
       (soc) => soc.id === props.route.params.societyId
     )?.data;
     setSociety(newSoc);
-    newSoc &&
-      retrieveUser().then((user) => setIsExec(newSoc.exec.includes(user.name)));
+
+    const userName = getUser()?.data.name;
+    newSoc && userName && setIsExec(newSoc.exec.includes(userName));
   }, [props.route.params.societyId, isFocused]);
 
   useEffect(() => {
     society &&
-      retrieveEvents(society.eventRefs).then((result) => {
+      updateEvents().then((result) => {
         if (result instanceof Error) {
           setErrMsg(result.message);
         } else {
           setErrMsg("");
-          setSocietyEvents(result);
+          setSocEvents(
+            events.filter((event) => society.eventIds.includes(event.id))
+          );
         }
       }),
       setEventDeleted(false);
@@ -122,7 +125,7 @@ export default function SocietiesScreen(props: Props) {
                   right={15}
                   onPress={() =>
                     props.navigation.navigate("Edit Society", {
-                      societyId: society.id
+                      societyId: props.route.params.societyId
                     })
                   }>
                   <ButtonIcon

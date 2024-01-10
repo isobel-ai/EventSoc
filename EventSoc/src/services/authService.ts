@@ -4,7 +4,7 @@ import {
   signInWithEmailAndPassword
 } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
-import { createUser, resetUser, usernameTaken } from "./usersService";
+import { createUser, usernameTaken } from "./usersService";
 
 export function login(email: string, password: string) {
   return signInWithEmailAndPassword(auth, email, password).catch((e) => {
@@ -46,6 +46,5 @@ export async function register(name: string, email: string, password: string) {
 export function signOut() {
   return auth
     .signOut()
-    .then(resetUser)
     .catch(() => Error("Something went wrong. Try again later."));
 }

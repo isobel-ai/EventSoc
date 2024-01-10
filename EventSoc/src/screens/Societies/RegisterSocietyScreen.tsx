@@ -15,34 +15,34 @@ type Props = StackScreenProps<SocietiesStackParamList, "Register Society">;
 export default function RegisterScreen(props: Props) {
   const { getUser } = useAppContext();
 
+  const [society, setSociety] = useState<SocietyData>(defaultSocietyData);
 
   const [errMsg, setErrMsg] = useState<string>("");
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
 
   const registerSociety = () => {
     // Add user to exec
-    retrieveUser().then((user) => {
-      const fullExec = createSoc.exec.slice();
-      if (user.name) {
-        fullExec.push(user.name);
-      }
-      const fullCreateSoc = { ...createSoc, exec: fullExec };
+    const userName = getUser()?.data.name;
+    const fullExec = society.exec.slice();
+    if (userName) {
+      fullExec.push(userName);
+    }
+    const fullSoc = { ...society, exec: fullExec };
 
-      const invalidErrMsg = getSocietyErrMsg(fullCreateSoc);
-      if (invalidErrMsg) {
-        setErrMsg(invalidErrMsg);
-        setShowAlertDialog(true);
-      } else {
-        createSociety(fullCreateSoc).then((result) => {
-          if (result instanceof Error) {
-            setErrMsg(result.message);
-            setShowAlertDialog(true);
-          } else {
-            props.navigation.navigate("Home", { societyId: "" });
-          }
-        });
-      }
-    });
+    const invalidErrMsg = getSocietyErrMsg(fullSoc);
+    if (invalidErrMsg) {
+      setErrMsg(invalidErrMsg);
+      setShowAlertDialog(true);
+    } else {
+      createSociety(fullSoc).then((result) => {
+        if (result instanceof Error) {
+          setErrMsg(result.message);
+          setShowAlertDialog(true);
+        } else {
+          props.navigation.navigate("Home", { societyId: "" });
+        }
+      });
+    }
   };
 
   return (
