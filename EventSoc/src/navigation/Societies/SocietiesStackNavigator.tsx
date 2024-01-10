@@ -7,7 +7,6 @@ import { config } from "../../../config/gluestack-ui.config";
 import CreateEventScreen from "../../screens/Societies/CreateEventScreen";
 import EditEventScreen from "../../screens/Societies/EditEventScreen";
 import { CloseIcon, Icon } from "@gluestack-ui/themed";
-import { useSocietiesContext } from "../../contexts/SocietiesContext";
 import RegisterSocietyScreen from "../../screens/Societies/RegisterSocietyScreen";
 import EditSocietyScreen from "../../screens/Societies/EditSocietyScreen";
 import EventScreen from "../../screens/Events/EventScreen";
@@ -54,7 +53,7 @@ export default function SocietiesStackNavigator() {
       <Stack.Screen
         name="Register Society"
         component={RegisterSocietyScreen}
-        options={{ headerLeft: () => null }} // Don't show back button
+        options={{ animationEnabled: false, headerLeft: () => null }} // Don't show back button
       />
       <Stack.Screen
         name="Edit Society"
