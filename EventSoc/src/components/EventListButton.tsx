@@ -124,16 +124,18 @@ export default function EventListButton(props: Props) {
               </Button>
             );
           }}>
-          <MenuItem
-            key="edit"
-            textValue="Edit Event">
-            <Icon
-              as={DownloadIcon}
-              size="xl"
-              mr="$5"
-            />
-            <MenuItemLabel size="sm">Edit Event</MenuItemLabel>
-          </MenuItem>
+          {props.event.data.startDate > new Date() && (
+            <MenuItem
+              key="edit"
+              textValue="Edit Event">
+              <Icon
+                as={DownloadIcon}
+                size="xl"
+                mr="$5"
+              />
+              <MenuItemLabel size="sm">Edit Event</MenuItemLabel>
+            </MenuItem>
+          )}
           <MenuItem
             key="delete"
             textValue="Delete Event">
