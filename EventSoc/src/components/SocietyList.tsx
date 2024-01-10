@@ -14,8 +14,9 @@ import {
 import { Society } from "../models/Society";
 import SearchList from "./SearchList";
 import { DimensionValue } from "react-native";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import SideMenuHeading from "./SideMenuHeading";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { MainTabParamList } from "../navigation/MainTabNavigator";
 
 interface Props {
   title: string;
@@ -27,10 +28,10 @@ interface Props {
 }
 
 export default function SocietyList(props: Props) {
-  const { navigatorRef } = useSocietiesContext();
+  const { navigate } = useNavigation<NavigationProp<MainTabParamList>>();
 
   const selectSocietyPage = (socId: string) => {
-    navigatorRef.current.navigate("Home", { societyId: socId });
+    navigate("Societies", { screen: "Home", params: { societyId: socId } });
     props.setIsSideMenuOpen(false);
   };
 

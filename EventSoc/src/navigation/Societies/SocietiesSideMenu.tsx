@@ -13,6 +13,8 @@ import SideMenu, {
 } from "react-native-side-menu-updated";
 import { config } from "../../../config/gluestack-ui.config";
 import { useAppContext } from "../../contexts/AppContext";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { MainTabParamList } from "../MainTabNavigator";
 
 interface Props {
   children: ReactNode;
@@ -21,6 +23,7 @@ interface Props {
 export default function SocietiesSideMenu(props: Props) {
   const { societies, updateSocieties, getUser } = useAppContext();
 
+  const { navigate } = useNavigation<NavigationProp<MainTabParamList>>();
 
   const [socErrMsg, setSocErrMsg] = useState<string>("");
 
@@ -47,7 +50,7 @@ export default function SocietiesSideMenu(props: Props) {
   }, [isVisible]);
 
   const goToRegisterSocietyScreen = () => {
-    navigatorRef.current.navigate("Register Society");
+    navigate("Societies", { screen: "Register Society" });
     setIsVisible(false);
   };
 

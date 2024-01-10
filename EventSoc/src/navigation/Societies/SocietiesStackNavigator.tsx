@@ -22,8 +22,6 @@ export type SocietiesStackParamList = {
 };
 
 export default function SocietiesStackNavigator() {
-  const { navigatorRef } = useSocietiesContext();
-
   const Stack = createStackNavigator<SocietiesStackParamList>();
 
   const stackScreenOptions = (): StackNavigationOptions => ({
@@ -44,10 +42,7 @@ export default function SocietiesStackNavigator() {
   return (
     <Stack.Navigator
       id="Societies"
-      screenOptions={({ navigation }) => {
-        navigatorRef.current = navigation;
-        return stackScreenOptions();
-      }}>
+      screenOptions={stackScreenOptions}>
       <Stack.Screen
         name="Home"
         component={SocietiesScreen}
