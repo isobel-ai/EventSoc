@@ -14,16 +14,14 @@ import { Keyboard } from "react-native";
 import { dateInRange, searchFilter } from "../helpers/SearchSortHelper";
 import { MaterialIcons } from "@expo/vector-icons";
 import ScreenView from "./ScreenView";
-import { RetrieveSocEvent } from "../models/SocEvent";
+import { Event } from "../models/Event";
 import EventFilterSideMenu from "./EventFilterSideMenu";
 import { Item } from "../../libs/multi-selectbox";
 
 interface Props {
   children: ReactNode;
-  socEvents: RetrieveSocEvent[];
-  setFullyFilteredSocEvents: React.Dispatch<
-    React.SetStateAction<RetrieveSocEvent[]>
-  >;
+  events: Event[];
+  setFullyFilteredEvents: React.Dispatch<React.SetStateAction<Event[]>>;
 }
 
 export default function EventFilter(props: Props) {
@@ -34,36 +32,34 @@ export default function EventFilter(props: Props) {
   const [filterStartDate, setFilterStartDate] = useState<Date>();
   const [filterEndDate, setFilterEndDate] = useState<Date>();
 
-  const [filteredSocEvents, setFilteredSocEvents] = useState<
-    RetrieveSocEvent[]
-  >(props.socEvents);
+  const [filteredEvents, setFilteredEvents] = useState<Event[]>(props.events);
 
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   // Reload feed
-  useEffect(() => filterSocEvents(), [props.socEvents]);
-  useEffect(() => searchFunction(searchTerm), [filteredSocEvents]);
+  useEffect(() => filterEvents(), [props.events]);
+  useEffect(() => searchFunction(searchTerm), [filteredEvents]);
 
   useEffect(() => {
-    !isFilterMenuOpen && filterSocEvents();
+    !isFilterMenuOpen && filterEvents();
   }, [isFilterMenuOpen]);
 
-  const filterSocEvents = () => {
-    const newFilteredSocEvents = props.socEvents.filter(
-      (socEvent) =>
-        dateInRange(socEvent.event.startDate, filterStartDate, filterEndDate) &&
+  const filterEvents = () => {
+    const newFilteredEvents = props.events.filter(
+      (event) =>
+        dateInRange(event.data.startDate, filterStartDate, filterEndDate) &&
         (selectedSocItems.length === 0 ||
           selectedSocItems.some(
-            (socItem) => socItem.item === socEvent.society.name
+            (socItem) => socItem.id === event.data.organiserId
           ))
     );
-    setFilteredSocEvents(newFilteredSocEvents);
+    setFilteredEvents(newFilteredEvents);
   };
 
   const searchFunction = (text: string) => {
     setSearchTerm(text);
-    props.setFullyFilteredSocEvents(
-      searchFilter(text, filteredSocEvents, ["event.name", "event.tags"])
+    props.setFullyFilteredEvents(
+      searchFilter(text, filteredEvents, ["data.name", "data.tags"])
     );
   };
 

@@ -1,6 +1,4 @@
-import { RetrieveSocEvent } from "../../models/SocEvent";
 import { useEffect, useState } from "react";
-import { retrieveSocEvents } from "../../services/socEventsService";
 import { useIsFocused } from "@react-navigation/native";
 import { Alert, AlertText } from "@gluestack-ui/themed";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -8,10 +6,11 @@ import { config } from "../../../config/gluestack-ui.config";
 import ScreenView from "../../components/ScreenView";
 import EventFilter from "../../components/EventFilter";
 import EventFeed from "../../components/EventFeed";
-import { useEventsContext } from "../../contexts/EventsContext";
+import { Event } from "../../models/Event";
 
 export default function EventsScreen() {
-  const { socEvents, setSocEvents } = useEventsContext();
+  const { events, updateEvents } = useAppContext();
+
 
   const [filteredSocEvents, setFilteredSocEvents] = useState<
     RetrieveSocEvent[]
@@ -36,7 +35,7 @@ export default function EventsScreen() {
 
   return (
     <>
-      {retrieveSocEventsErrMsg ? (
+      {retrieveEventsErrMsg ? (
         <ScreenView>
           <Alert
             action="error"
@@ -50,14 +49,14 @@ export default function EventsScreen() {
               color={config.tokens.colors.error}
               style={{ paddingRight: 10 }}
             />
-            <AlertText>{retrieveSocEventsErrMsg}</AlertText>
+            <AlertText>{retrieveEventsErrMsg}</AlertText>
           </Alert>
         </ScreenView>
       ) : (
         <EventFilter
-          socEvents={socEvents}
-          setFullyFilteredSocEvents={setFilteredSocEvents}>
-          <EventFeed feed={filteredSocEvents} />
+          events={upcomingEvents}
+          setFullyFilteredEvents={setFilteredEvents}>
+          <EventFeed feed={filteredEvents} />
         </EventFilter>
       )}
     </>

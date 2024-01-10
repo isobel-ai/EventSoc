@@ -8,14 +8,14 @@ import {
   Text,
   VStack
 } from "@gluestack-ui/themed";
-import { RetrieveSocEvent } from "../models/SocEvent";
 import SocietyPressable from "./SocietyPressable";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { toDateTimeRangeString } from "../helpers/DateTimeHelper";
 import { StyleProp, ViewStyle } from "react-native";
+import { EventData } from "../models/Event";
 
 interface Props {
-  socEvent: RetrieveSocEvent;
+  event: EventData;
   onPress?: () => void;
 }
 
@@ -30,7 +30,7 @@ export default function EventPost(props: Props) {
     <VStack
       gap={10}
       paddingBottom={10}>
-      <SocietyPressable society={props.socEvent.society} />
+      <SocietyPressable societyId={props.event.organiserId} />
       <Pressable onPress={props.onPress}>
         <VStack
           gap={10}
@@ -39,7 +39,7 @@ export default function EventPost(props: Props) {
             marginHorizontal={5}
             alignItems="flex-start"
             gap={5}>
-            <Heading>{props.socEvent.event.name}</Heading>
+            <Heading>{props.event.name}</Heading>
             <HStack style={iconTextContainerStyle}>
               <Icon
                 as={CalendarDaysIcon}
@@ -47,8 +47,8 @@ export default function EventPost(props: Props) {
               />
               <Text>
                 {toDateTimeRangeString(
-                  props.socEvent.event.startDate,
-                  props.socEvent.event.endDate
+                  props.event.startDate,
+                  props.event.endDate
                 )}
               </Text>
             </HStack>
@@ -58,13 +58,13 @@ export default function EventPost(props: Props) {
                 size={23}
                 color="black"
               />
-              <Text>{props.socEvent.event.location}</Text>
+              <Text>{props.event.location}</Text>
             </HStack>
           </VStack>
-          {props.socEvent.event.pictureUrl && (
+          {props.event.pictureUrl && (
             <Image
               size="2xl"
-              source={props.socEvent.event.pictureUrl}
+              source={props.event.pictureUrl}
               alt=""
             />
           )}

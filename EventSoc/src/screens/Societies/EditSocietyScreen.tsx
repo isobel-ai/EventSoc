@@ -34,7 +34,8 @@ export default function EditSocietyScreen(props: Props) {
     });
   }
 
-  const [afterSoc, setAfterSoc] = useState<CreateSociety>(cloneDeep(beforeSoc));
+  const beforeSoc = toEditSoc ?? defaultSocietyData();
+  const [afterSoc, setAfterSoc] = useState<SocietyData>(cloneDeep(beforeSoc));
 
   const editSociety = () => {
     const invalidErrMsg = getSocietyErrMsg(afterSoc);
@@ -63,8 +64,8 @@ export default function EditSocietyScreen(props: Props) {
   return (
     <ScreenView hasNavHeader>
       <SocietyForm
-        createSociety={afterSoc}
-        setCreateSociety={setAfterSoc}
+        society={afterSoc}
+        setSociety={setAfterSoc}
         editingForm
       />
       <Button

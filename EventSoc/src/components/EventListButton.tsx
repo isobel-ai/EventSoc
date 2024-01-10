@@ -25,7 +25,7 @@ import {
   AlertText,
   VStack
 } from "@gluestack-ui/themed";
-import { RetrieveEvent } from "../models/Event";
+import { Event } from "../models/Event";
 import { config } from "../../config/gluestack-ui.config";
 import { useAppContext } from "../contexts/AppContext";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
@@ -35,7 +35,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { deleteSocEvent } from "../services/socEventsService";
 
 interface Props {
-  retrieveEvent: RetrieveEvent;
+  event: Event;
   isExec: boolean;
   setEventDeleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -59,7 +59,7 @@ export default function EventListButton(props: Props) {
   };
 
   const goToEditEventPage = () => {
-    navigate("Edit Event", { eventId: props.retrieveEvent.id });
+    navigate("Edit Event", { eventId: props.event.id });
   };
 
   const handleAlertDialogClose = () => {
@@ -68,34 +68,33 @@ export default function EventListButton(props: Props) {
   };
 
   const deleteAndRefresh = () => {
-    deleteSocEvent(props.retrieveEvent.id, props.retrieveEvent.pictureUrl).then(
-      (result) => {
+    deleteSocEvent(
+      props.event.id,
+      props.event.data.pictureUrl,
+    ).then((result) => {
         if (result instanceof Error) {
           setErrorMsg(result.message);
         } else {
-          updateSocietyInContext(props.retrieveEvent.organiserRef.id).then(
-            () => {
+        updateSocietyInContext(props.event.data.organiserId).then(() => {
               props.setEventDeleted(true); // Causes the page to refresh
               handleAlertDialogClose();
-            }
-          );
-        }
+        });
       }
-    );
+    });
   };
 
   return (
     <Button
-      onPress={() => navigate("Event", { eventId: props.retrieveEvent.id })}
+      onPress={() => navigate("Event", { eventId: props.event.id })}
       backgroundColor={config.tokens.colors.eventButtonGray}
       height={100}
       width="100%"
       alignSelf="center"
       borderRadius="$none">
-      {props.retrieveEvent.pictureUrl && (
+      {props.event.data.pictureUrl && (
         <Image
           size="md"
-          source={props.retrieveEvent.pictureUrl}
+          source={props.event.data.pictureUrl}
           alt=""
           style={{ position: "absolute", left: 10 }}
         />
@@ -104,7 +103,7 @@ export default function EventListButton(props: Props) {
         numberOfLines={2}
         ellipsizeMode="tail"
         lineBreakStrategyIOS="standard">
-        {props.retrieveEvent.name}
+        {props.event.data.name}
       </ButtonText>
       {props.isExec && (
         <Menu

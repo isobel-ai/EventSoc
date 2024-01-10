@@ -4,7 +4,7 @@ import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesSta
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import { useState } from "react";
 import ErrorAlertDialog from "../../components/ErrorAlertDialog";
-import { CreateSociety, defaultCreateSociety } from "../../models/Society";
+import { SocietyData, defaultSocietyData } from "../../models/Society";
 import SocietyForm from "../../components/SocietyForm";
 import { getSocietyErrMsg } from "../../helpers/SocietyInputValidationHelper";
 import { createSociety } from "../../services/societiesService";
@@ -48,8 +48,8 @@ export default function RegisterScreen(props: Props) {
   return (
     <ScreenView hasNavHeader>
       <SocietyForm
-        createSociety={createSoc}
-        setCreateSociety={setCreateSoc}
+        society={society}
+        setSociety={setSociety}
       />
       <Button
         size="xl"

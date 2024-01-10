@@ -11,17 +11,15 @@ import {
   AlertText,
   Alert
 } from "@gluestack-ui/themed";
-import { useSocietiesContext } from "../contexts/SocietiesContext";
-import { RetrieveSociety } from "../models/Society";
+import { Society } from "../models/Society";
 import SearchList from "./SearchList";
-import { config } from "../../config/gluestack-ui.config";
 import { DimensionValue } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import SideMenuHeading from "./SideMenuHeading";
 
 interface Props {
   title: string;
-  societies: RetrieveSociety[];
+  societies: Society[];
   isSideMenuOpen: boolean;
   setIsSideMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   errMsg: string;
@@ -36,7 +34,7 @@ export default function SocietyList(props: Props) {
     props.setIsSideMenuOpen(false);
   };
 
-  const renderSocietyButton = (soc: RetrieveSociety) => (
+  const renderSocietyButton = (soc: Society) => (
     <Button
       key={soc.id}
       variant="link"
@@ -52,11 +50,11 @@ export default function SocietyList(props: Props) {
         <AvatarFallbackText
           color="white"
           fontSize="$sm">
-          {soc.name}
+          {soc.data.name}
         </AvatarFallbackText>
-        {soc.pictureUrl && (
+        {soc.data.pictureUrl && (
           <AvatarImage
-            source={{ uri: soc.pictureUrl }}
+            source={{ uri: soc.data.pictureUrl }}
             alt=""
           />
         )}
@@ -64,7 +62,7 @@ export default function SocietyList(props: Props) {
       <ButtonText
         numberOfLines={1}
         ellipsizeMode="tail">
-        {soc.name}
+        {soc.data.name}
       </ButtonText>
     </Button>
   );
@@ -79,7 +77,7 @@ export default function SocietyList(props: Props) {
           curvedSearchBar={false}
           data={props.societies}
           renderItem={renderSocietyButton}
-          searchKeys={["name"]}
+        searchKeys={["data.name"]}
           clearSearch={[props.isSideMenuOpen]}
           itemSeperator={() => <Divider />}
           maxHeight="90%"

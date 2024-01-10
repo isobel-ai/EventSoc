@@ -1,12 +1,12 @@
 import { Text } from "@gluestack-ui/themed";
-import { RetrieveSocEvent } from "../models/SocEvent";
+import { Event } from "../models/Event";
 import EventPost from "./EventPost";
 import { FlatList } from "react-native";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { EventsStackParamList } from "../navigation/EventsStackNavigator";
 
 interface Props {
-  feed: RetrieveSocEvent[];
+  feed: Event[];
 }
 
 export default function EventFeed(props: Props) {
@@ -21,7 +21,7 @@ export default function EventFeed(props: Props) {
       data={props.feed}
       renderItem={({ item }) => (
         <EventPost
-          socEvent={item}
+          event={item.data}
           onPress={() => handleEventPostPress(item)}
         />
       )}

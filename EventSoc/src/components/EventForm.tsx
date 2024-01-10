@@ -12,14 +12,14 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { ScrollView, StyleProp, ViewStyle } from "react-native";
 import { endOfUniYear, setDate, setTime } from "../helpers/DateTimeHelper";
-import { CreateEvent } from "../models/Event";
+import { EventData } from "../models/Event";
 import { useRef, useState } from "react";
 import TagInput from "./TagInput";
 import { xor } from "lodash";
 
 interface Props {
-  createEvent: CreateEvent;
-  setCreateEvent: React.Dispatch<React.SetStateAction<CreateEvent>>;
+  event: EventData;
+  setEvent: React.Dispatch<React.SetStateAction<EventData>>;
 }
 
 export default function EventForm(props: Props) {
@@ -64,10 +64,10 @@ export default function EventForm(props: Props) {
         <Input>
           <InputField
             placeholder="Event name"
-            value={props.createEvent.name ? props.createEvent.name : undefined}
+            value={props.event.name ? props.event.name : undefined}
             onChangeText={(t) =>
-              props.setCreateEvent({
-                ...props.createEvent,
+              props.setEvent({
+                ...props.event,
                 name: t
               })
             }
@@ -81,14 +81,10 @@ export default function EventForm(props: Props) {
         <Input>
           <InputField
             placeholder="Event location"
-            value={
-              props.createEvent.location
-                ? props.createEvent.location
-                : undefined
-            }
+            value={props.event.location ? props.event.location : undefined}
             onChangeText={(l) =>
-              props.setCreateEvent({
-                ...props.createEvent,
+              props.setEvent({
+                ...props.event,
                 location: l
               })
             }
@@ -103,13 +99,11 @@ export default function EventForm(props: Props) {
           <TextareaInput
             placeholder="Event Description"
             value={
-              props.createEvent.description
-                ? props.createEvent.description
-                : undefined
+              props.event.description ? props.event.description : undefined
             }
             onChangeText={(t) =>
-              props.setCreateEvent({
-                ...props.createEvent,
+              props.setEvent({
+                ...props.event,
                 description: t
               })
             }
@@ -123,29 +117,29 @@ export default function EventForm(props: Props) {
         <HStack>
           <DateTimePicker
             style={dateTimePickerStyle}
-            value={props.createEvent.startDate}
+            value={props.event.startDate}
             mode={"date"}
             minimumDate={new Date()}
             maximumDate={endOfUniYear()}
             onChange={(_, date) =>
               date &&
-              props.setCreateEvent({
-                ...props.createEvent,
-                startDate: setDate(props.createEvent.startDate, date)
+              props.setEvent({
+                ...props.event,
+                startDate: setDate(props.event.startDate, date)
               })
             }
           />
           <DateTimePicker
             style={dateTimePickerStyle}
-            value={props.createEvent.startDate}
+            value={props.event.startDate}
             mode={"time"}
             minimumDate={new Date()}
             is24Hour={true}
             onChange={(_, date) =>
               date &&
-              props.setCreateEvent({
-                ...props.createEvent,
-                startDate: setTime(props.createEvent.startDate, date)
+              props.setEvent({
+                ...props.event,
+                startDate: setTime(props.event.startDate, date)
               })
             }
           />
@@ -158,29 +152,29 @@ export default function EventForm(props: Props) {
         <HStack>
           <DateTimePicker
             style={dateTimePickerStyle}
-            value={props.createEvent.endDate}
+            value={props.event.endDate}
             mode={"date"}
             minimumDate={new Date()}
             maximumDate={endOfUniYear()}
             onChange={(_, date) =>
               date &&
-              props.setCreateEvent({
-                ...props.createEvent,
-                endDate: setDate(props.createEvent.endDate, date)
+              props.setEvent({
+                ...props.event,
+                endDate: setDate(props.event.endDate, date)
               })
             }
           />
           <DateTimePicker
             style={dateTimePickerStyle}
-            value={props.createEvent.endDate}
+            value={props.event.endDate}
             mode={"time"}
             minimumDate={new Date()}
             is24Hour={true}
             onChange={(_, date) =>
               date &&
-              props.setCreateEvent({
-                ...props.createEvent,
-                endDate: setTime(props.createEvent.endDate, date)
+              props.setEvent({
+                ...props.event,
+                endDate: setTime(props.event.endDate, date)
               })
             }
           />
@@ -191,11 +185,11 @@ export default function EventForm(props: Props) {
           <FormControlLabelText>Event Tags</FormControlLabelText>
         </FormControlLabel>
         <TagInput
-          tags={props.createEvent.tags}
+          tags={props.event.tags}
           onChangeTags={(tag) =>
-            props.setCreateEvent({
-              ...props.createEvent,
-              tags: xor(props.createEvent.tags, [tag])
+            props.setEvent({
+              ...props.event,
+              tags: xor(props.event.tags, [tag])
             })
           }
         />

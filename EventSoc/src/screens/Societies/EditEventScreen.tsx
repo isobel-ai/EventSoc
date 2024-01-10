@@ -20,7 +20,7 @@ export default function EditEventScreen(props: Props) {
   const [errMsg, setErrMsg] = useState<string>("");
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
 
-  const toEditEvent = societyEvents.find(
+  const toEditEvent = events.find(
     (event) => event.id === props.route.params.eventId
   );
   let beforeEvent = defaultCreateEvent();
@@ -34,7 +34,8 @@ export default function EditEventScreen(props: Props) {
     });
   }
 
-  const [afterEvent, setAfterEvent] = useState<CreateEvent>(
+  const beforeEvent = toEditEvent ?? defaultEventData();
+  const [afterEvent, setAfterEvent] = useState<EventData>(
     cloneDeep(beforeEvent)
   );
 
@@ -44,12 +45,7 @@ export default function EditEventScreen(props: Props) {
       setErrMsg(invalidErrMsg);
       setShowAlertDialog(true);
     } else {
-      const eventUpdates = getEventUpdates(
-        props.route.params.eventId,
-        beforeEvent,
-        afterEvent
-      );
-      updateEvent(eventUpdates).then((result) => {
+      updateEvent(eventUpdates, props.route.params.eventId).then((result) => {
         if (result instanceof Error) {
           setErrMsg(result.message);
           setShowAlertDialog(true);
@@ -63,8 +59,8 @@ export default function EditEventScreen(props: Props) {
   return (
     <ScreenView hasNavHeader>
       <EventForm
-        createEvent={afterEvent}
-        setCreateEvent={setAfterEvent}
+        event={afterEvent}
+        setEvent={setAfterEvent}
       />
       <Button
         size="xl"

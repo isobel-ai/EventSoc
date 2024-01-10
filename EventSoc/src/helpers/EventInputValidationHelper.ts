@@ -1,9 +1,9 @@
-import { Event } from "../models/Event";
+import { EventData } from "../models/Event";
 
 /**
  * Returns an empty string if the event is valid, and an appropriate error message otherwise
  */
-export function getEventErrMsg(event: Event) {
+export function getEventErrMsg(event: EventData) {
   let errMsg = "";
 
   const validDate =

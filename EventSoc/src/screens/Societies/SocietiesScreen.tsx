@@ -29,6 +29,7 @@ import { retrieveEvents } from "../../services/eventsService";
 import SearchList from "../../components/SearchList";
 import EventListButton from "../../components/EventListButton";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { Event } from "../../models/Event";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Home">;
 
@@ -41,14 +42,15 @@ export default function SocietiesScreen(props: Props) {
 
   const isFocused = useIsFocused();
 
-  const [society, setSociety] = useState<RetrieveSociety>();
+  const [society, setSociety] = useState<SocietyData>();
+
 
   const [eventDeleted, setEventDeleted] = useState<boolean>(false);
 
   useEffect(() => {
     const newSoc = societies.find(
       (soc) => soc.id === props.route.params.societyId
-    );
+    )?.data;
     setSociety(newSoc);
     newSoc &&
       retrieveUser().then((user) => setIsExec(newSoc.exec.includes(user.name)));
@@ -157,18 +159,18 @@ export default function SocietiesScreen(props: Props) {
               </Alert>
             ) : (
               <SearchList
-                data={societyEvents}
+                data={socEvents}
                 renderItem={(event) => (
                   <EventListButton
-                    retrieveEvent={event}
+                    event={event}
                     isExec={isExec}
                     setEventDeleted={setEventDeleted}
                   />
                 )}
-                searchKeys={["name"]}
+                searchKeys={["data.name"]}
                 itemSeperator={() => <Divider h="$1" />}
                 maxHeight={isExec ? "58%" : "74%"}
-                clearSearch={[society, isFocused, societyEvents]}
+                clearSearch={[society, isFocused, socEvents]}
                 listEmptyText="No events"
               />
             )}
@@ -179,7 +181,7 @@ export default function SocietiesScreen(props: Props) {
               borderRadius="$none"
               onPress={() =>
                 props.navigation.navigate("Create Event", {
-                  organiserId: society.id
+                  organiserId: props.route.params.societyId
                 })
               }>
               <ButtonIcon

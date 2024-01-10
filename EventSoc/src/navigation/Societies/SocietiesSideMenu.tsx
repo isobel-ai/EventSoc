@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { RetrieveSociety } from "../../models/Society";
+import { Society } from "../../models/Society";
 import {
   AddIcon,
   Button,

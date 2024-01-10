@@ -26,7 +26,7 @@ import {
   Alert,
   AlertText
 } from "@gluestack-ui/themed";
-import { CreateSociety } from "../models/Society";
+import { SocietyData } from "../models/Society";
 import { useEffect, useState } from "react";
 import { config } from "../../config/gluestack-ui.config";
 import { xorBy } from "lodash";
@@ -37,8 +37,8 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useAppContext } from "../contexts/AppContext";
 
 interface Props {
-  createSociety: CreateSociety;
-  setCreateSociety: React.Dispatch<React.SetStateAction<CreateSociety>>;
+  society: SocietyData;
+  setSociety: React.Dispatch<React.SetStateAction<SocietyData>>;
   editingForm?: boolean;
 }
 
@@ -75,7 +75,7 @@ export default function SocietyForm(props: Props) {
   useEffect(() => {
     props.editingForm &&
       setExecItems(
-        userItems.filter((item) => props.createSociety.exec.includes(item.item))
+        userItems.filter((item) => props.society.exec.includes(item.item))
       );
   }, [userItems]);
 
@@ -86,7 +86,7 @@ export default function SocietyForm(props: Props) {
   const setExec = () => {
     if (!errMsg) {
       const exec = execItems.map((i) => i.item);
-      props.setCreateSociety({ ...props.createSociety, exec: exec });
+      props.setSociety({ ...props.society, exec: exec });
     }
     setIsSelectExecOpen(false);
   };
@@ -102,11 +102,11 @@ export default function SocietyForm(props: Props) {
       style={{ paddingHorizontal: 20 }}
       contentContainerStyle={{ gap: 20, paddingBottom: 20 }}>
       <PictureUpload
-        image={props.createSociety.localPictureUrl}
+        image={props.society.pictureUrl}
         setImage={(u) =>
-          props.setCreateSociety({
-            ...props.createSociety,
-            localPictureUrl: u
+          props.setSociety({
+            ...props.society,
+            pictureUrl: u
           })
         }
       />
@@ -117,12 +117,10 @@ export default function SocietyForm(props: Props) {
         <Input>
           <InputField
             placeholder="Society Name"
-            value={
-              props.createSociety.name ? props.createSociety.name : undefined
-            }
+            value={props.society.name ? props.society.name : undefined}
             onChangeText={(t) =>
-              props.setCreateSociety({
-                ...props.createSociety,
+              props.setSociety({
+                ...props.society,
                 name: t
               })
             }
@@ -137,13 +135,11 @@ export default function SocietyForm(props: Props) {
           <TextareaInput
             placeholder="Society Description"
             value={
-              props.createSociety.description
-                ? props.createSociety.description
-                : undefined
+              props.society.description ? props.society.description : undefined
             }
             onChangeText={(t) =>
-              props.setCreateSociety({
-                ...props.createSociety,
+              props.setSociety({
+                ...props.society,
                 description: t
               })
             }

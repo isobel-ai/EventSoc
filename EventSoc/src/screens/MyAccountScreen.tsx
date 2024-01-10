@@ -1,14 +1,16 @@
 import { Button, ButtonText, Heading } from "@gluestack-ui/themed";
 import ScreenView from "../components/ScreenView";
-import { RetrieveUser, defaultRetrieveUser } from "../models/User";
+import { User } from "../models/User";
 import { useEffect, useState } from "react";
-import { retrieveUser } from "../services/usersService";
 import { useIsFocused } from "@react-navigation/native";
 import { signOut } from "../services/authService";
 import ErrorAlertDialog from "../components/ErrorAlertDialog";
+import { useAppContext } from "../contexts/AppContext";
 
 export default function MyAccountScreen() {
-  const [user, setUser] = useState<RetrieveUser>(defaultRetrieveUser());
+  const { getUser } = useAppContext();
+
+  const [user, setUser] = useState<User>();
 
   const [errMsg, setErrMsg] = useState<string>("");
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
@@ -21,7 +23,7 @@ export default function MyAccountScreen() {
 
   return (
     <ScreenView>
-      {user.name && <Heading textAlign="center">Name: {user.name}</Heading>}
+      {user && <Heading textAlign="center">Name: {user.data.name}</Heading>}
       <Button
         action={"negative"}
         borderRadius="$none"
