@@ -12,8 +12,8 @@ interface Props {
 export default function EventFeed(props: Props) {
   const { navigate } = useNavigation<NavigationProp<EventsStackParamList>>();
 
-  const handleEventPostPress = (socEvent: RetrieveSocEvent) => {
-    navigate("Event", { eventId: socEvent.event.id });
+  const handleEventPostPress = (eventId: string) => {
+    navigate("Event", { eventId: eventId });
   };
 
   return (
@@ -22,7 +22,7 @@ export default function EventFeed(props: Props) {
       renderItem={({ item }) => (
         <EventPost
           event={item.data}
-          onPress={() => handleEventPostPress(item)}
+          onPress={() => handleEventPostPress(item.id)}
         />
       )}
       keyboardShouldPersistTaps="always"
