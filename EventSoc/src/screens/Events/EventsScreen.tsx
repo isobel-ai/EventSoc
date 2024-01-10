@@ -6,6 +6,7 @@ import { config } from "../../../config/gluestack-ui.config";
 import ScreenView from "../../components/ScreenView";
 import EventFilter from "../../components/EventFilter";
 import EventFeed from "../../components/EventFeed";
+import { useAppContext } from "../../contexts/AppContext";
 import { Event } from "../../models/Event";
 
 export default function EventsScreen() {
@@ -13,12 +14,9 @@ export default function EventsScreen() {
 
   const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
 
-  const [filteredSocEvents, setFilteredSocEvents] = useState<
-    RetrieveSocEvent[]
-  >([]);
+  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
 
-  const [retrieveSocEventsErrMsg, setRetrieveSocEventsErrMsg] =
-    useState<string>("");
+  const [retrieveEventsErrMsg, setRetrieveEventsErrMsg] = useState<string>("");
 
   const isFocused = useIsFocused();
 

@@ -7,24 +7,23 @@ import {
 } from "@gluestack-ui/themed";
 import EventPost from "../../components/EventPost";
 import ScreenView from "../../components/ScreenView";
-import { useEventsContext } from "../../contexts/EventsContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { EventsStackParamList } from "../../navigation/EventsStackNavigator";
 import { config } from "../../../config/gluestack-ui.config";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useAppContext } from "../../contexts/AppContext";
 
 type Props = StackScreenProps<EventsStackParamList, "Event">;
 
 export default function EventScreen(props: Props) {
-  const { socEvents } = useEventsContext();
+  const { events } = useAppContext();
 
-  const socEvent = socEvents.find(
-    (socEvent) => socEvent.event.id === props.route.params.eventId
-  );
+  const event = events.find((event) => event.id === props.route.params.eventId)
+    ?.data;
 
   return (
     <ScreenView extraStyle={{ height: "107%" }}>
-      {!socEvent ? (
+      {!event ? (
         <ScreenView>
           <Alert
             action="error"
@@ -45,20 +44,20 @@ export default function EventScreen(props: Props) {
         </ScreenView>
       ) : (
         <ScrollView>
-          <EventPost socEvent={socEvent} />
+          <EventPost event={event} />
           <VStack
             alignItems="flex-start"
             marginHorizontal={18}>
-            {socEvent.event.description && (
+            {event.description && (
               <>
                 <Text fontWeight="$bold">Description:</Text>
-                <Text>{socEvent.event.description}</Text>
+                <Text>{event.description}</Text>
               </>
             )}
-            {socEvent.event.tags.length > 0 && (
+            {event.tags.length > 0 && (
               <>
                 <Text fontWeight="$bold">Tags:</Text>
-                <Text>{socEvent.event.tags.join(", ")}</Text>
+                <Text>{event.tags.join(", ")}</Text>
               </>
             )}
           </VStack>

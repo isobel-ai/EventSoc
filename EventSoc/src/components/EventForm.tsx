@@ -30,13 +30,6 @@ export default function EventForm(props: Props) {
 
   const dateTimePickerStyle: StyleProp<ViewStyle> = { left: -10 };
 
-  const setPictureURL = (url: string) => {
-    props.setCreateEvent({
-      ...props.createEvent,
-      localPictureUrl: url
-    });
-  };
-
   return (
     <ScrollView
       ref={scrollViewRef}
@@ -54,8 +47,13 @@ export default function EventForm(props: Props) {
         paddingBottom: 20
       }}>
       <PictureUpload
-        image={props.createEvent.localPictureUrl}
-        setImage={setPictureURL}
+        image={props.event.pictureUrl}
+        setImage={(url: string) => {
+          props.setEvent({
+            ...props.event,
+            pictureUrl: url
+          });
+        }}
       />
       <FormControl isRequired={true}>
         <FormControlLabel>
