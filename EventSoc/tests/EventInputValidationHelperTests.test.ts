@@ -1,10 +1,10 @@
 import { getEventErrMsg } from "../src/helpers/EventInputValidationHelper";
-import { Event, defaultEvent } from "../src/models/Event";
+import { EventData, defaultEventData } from "../src/models/Event";
 
 describe("getEventErrMsg", () => {
   test("it should return an empty string if event is valid", () => {
-    const event: Event = {
-      ...defaultEvent(),
+    const event: EventData = {
+      ...defaultEventData(),
       name: "name",
       location: "location",
       startDate: new Date(3000, 1, 1),
@@ -15,8 +15,8 @@ describe("getEventErrMsg", () => {
   });
 
   test("it should return an appropriate message if the event's name is empty", () => {
-    const event: Event = {
-      ...defaultEvent(),
+    const event: EventData = {
+      ...defaultEventData(),
       location: "location",
       startDate: new Date(3000, 1, 1),
       endDate: new Date(3000, 1, 2)
@@ -26,8 +26,8 @@ describe("getEventErrMsg", () => {
   });
 
   test("it should return an appropriate message if the event's location is empty", () => {
-    const event: Event = {
-      ...defaultEvent(),
+    const event: EventData = {
+      ...defaultEventData(),
       name: "name",
       startDate: new Date(3000, 1, 1),
       endDate: new Date(3000, 1, 2)
@@ -37,8 +37,8 @@ describe("getEventErrMsg", () => {
   });
 
   test("it should return an appropriate message if the event starts in the past", () => {
-    const event: Event = {
-      ...defaultEvent(),
+    const event: EventData = {
+      ...defaultEventData(),
       name: "name",
       location: "location",
       startDate: new Date(2000, 1, 1),
@@ -51,8 +51,8 @@ describe("getEventErrMsg", () => {
   });
 
   test("it should return an appropriate message if the event ends after it starts", () => {
-    const event: Event = {
-      ...defaultEvent(),
+    const event: EventData = {
+      ...defaultEventData(),
       name: "name",
       location: "location",
       startDate: new Date(3000, 1, 1),
@@ -65,8 +65,8 @@ describe("getEventErrMsg", () => {
   });
 
   test("it should return an appropriate message if the event is invalid for multiple reasons", () => {
-    const event: Event = {
-      ...defaultEvent(),
+    const event: EventData = {
+      ...defaultEventData(),
       startDate: new Date(3000, 1, 1),
       endDate: new Date(3000, 1, 2)
     };

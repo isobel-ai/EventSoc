@@ -1,40 +1,35 @@
 import ScreenView from "../../components/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
-import { CreateEvent, defaultCreateEvent } from "../../models/Event";
+import { EventData, defaultEventData } from "../../models/Event";
 import { useState } from "react";
 import { getEventErrMsg } from "../../helpers/EventInputValidationHelper";
 import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import ErrorAlertDialog from "../../components/ErrorAlertDialog";
-import { useSocietiesContext } from "../../contexts/SocietiesContext";
-import { getEventUpdates } from "../../helpers/UpdateHelper";
+import { useAppContext } from "../../contexts/AppContext";
+import { getUpdates } from "../../helpers/UpdateHelper";
 import { updateEvent } from "../../services/eventsService";
 import { cloneDeep } from "lodash";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Edit Event">;
 
 export default function EditEventScreen(props: Props) {
-  const { societyEvents } = useSocietiesContext();
+  const { events } = useAppContext();
 
   const [errMsg, setErrMsg] = useState<string>("");
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
 
-  const toEditEvent = societyEvents.find(
+  const toEditEvent = events.find(
     (event) => event.id === props.route.params.eventId
-  );
-  let beforeEvent = defaultCreateEvent();
+  )?.data;
   if (!toEditEvent) {
     setErrMsg("Could not retrieve event details. Try again later.");
     setShowAlertDialog(true);
-  } else {
-    const { id, ...event } = toEditEvent;
-    beforeEvent = Object.assign(event, {
-      localPictureUrl: event.pictureUrl
-    });
   }
 
-  const [afterEvent, setAfterEvent] = useState<CreateEvent>(
+  const beforeEvent = toEditEvent ?? defaultEventData();
+  const [afterEvent, setAfterEvent] = useState<EventData>(
     cloneDeep(beforeEvent)
   );
 
@@ -44,12 +39,8 @@ export default function EditEventScreen(props: Props) {
       setErrMsg(invalidErrMsg);
       setShowAlertDialog(true);
     } else {
-      const eventUpdates = getEventUpdates(
-        props.route.params.eventId,
-        beforeEvent,
-        afterEvent
-      );
-      updateEvent(eventUpdates).then((result) => {
+      const eventUpdates = getUpdates(beforeEvent, afterEvent);
+      updateEvent(eventUpdates, props.route.params.eventId).then((result) => {
         if (result instanceof Error) {
           setErrMsg(result.message);
           setShowAlertDialog(true);
@@ -61,10 +52,10 @@ export default function EditEventScreen(props: Props) {
   };
 
   return (
-    <ScreenView>
+    <ScreenView hasNavHeader>
       <EventForm
-        createEvent={afterEvent}
-        setCreateEvent={setAfterEvent}
+        event={afterEvent}
+        setEvent={setAfterEvent}
       />
       <Button
         size="xl"

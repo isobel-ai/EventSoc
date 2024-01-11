@@ -1,16 +1,17 @@
-import React, { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 
 export function useAuth() {
-  const [loggedIn, setLoggedIn] = React.useState<boolean>(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [userId, setUserId] = useState<string>("");
 
   useEffect(() => {
-    const unsubscribeFromAuthStateChanged = onAuthStateChanged(auth, (user) =>
-      setLoggedIn(Boolean(user))
-    );
+    const unsubscribeFromAuthStateChanged = onAuthStateChanged(auth, (user) => {
+      setLoggedIn(Boolean(user)), setUserId(user ? user.uid : "");
+    });
     return unsubscribeFromAuthStateChanged;
   }, []);
 
-  return loggedIn;
+  return { loggedIn, userId };
 }

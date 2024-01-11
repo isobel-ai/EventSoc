@@ -5,49 +5,45 @@ import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import { useState } from "react";
 import { getEventErrMsg } from "../../helpers/EventInputValidationHelper";
-import { CreateEvent, defaultCreateEvent } from "../../models/Event";
+import { EventData, defaultEventData } from "../../models/Event";
 import ErrorAlertDialog from "../../components/ErrorAlertDialog";
-import { useSocietiesContext } from "../../contexts/SocietiesContext";
+import { useAppContext } from "../../contexts/AppContext";
 import { createSocEvent } from "../../services/socEventsService";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Create Event">;
 
 export default function CreateEventScreen(props: Props) {
-  const { updateSocietyInContext } = useSocietiesContext();
+  const { updateSocietyInContext } = useAppContext();
 
-  const [createEvent, setCreateEvent] = useState<CreateEvent>(
-    defaultCreateEvent()
-  );
+  const [event, setEvent] = useState<EventData>(defaultEventData());
 
   const [errMsg, setErrMsg] = useState<string>("");
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
 
   const postEvent = () => {
-    const invalidErrMsg = getEventErrMsg(createEvent);
+    const invalidErrMsg = getEventErrMsg(event);
     if (invalidErrMsg) {
       setErrMsg(invalidErrMsg);
       setShowAlertDialog(true);
     } else {
-      createSocEvent(createEvent, props.route.params.organiserId).then(
-        (result) => {
-          if (result instanceof Error) {
-            setErrMsg(result.message);
-            setShowAlertDialog(true);
-          } else {
-            updateSocietyInContext(props.route.params.organiserId).then(
-              props.navigation.goBack
-            );
-          }
+      createSocEvent(event, props.route.params.organiserId).then((result) => {
+        if (result instanceof Error) {
+          setErrMsg(result.message);
+          setShowAlertDialog(true);
+        } else {
+          updateSocietyInContext(props.route.params.organiserId).then(
+            props.navigation.goBack
+          );
         }
-      );
+      });
     }
   };
 
   return (
-    <ScreenView>
+    <ScreenView hasNavHeader>
       <EventForm
-        createEvent={createEvent}
-        setCreateEvent={setCreateEvent}
+        event={event}
+        setEvent={setEvent}
       />
       <Button
         size="xl"

@@ -10,57 +10,56 @@ import {
   societiesCol,
   db
 } from "../config/firebaseConfig";
-import { CreateEvent } from "../models/Event";
+import { EventData } from "../models/Event";
 import { deleteImage, uploadImage } from "./cloudService";
-import { retrieveEventOrganiserRef } from "./eventsService";
 
-export function createSocEvent(createEvent: CreateEvent, socId: string) {
+export function createSocEvent(event: EventData, socId: string) {
   return runTransaction(db, (transaction) => {
     const eventRef = doc(eventsCol);
+    const socRef = doc(societiesCol, socId);
 
-    const { localPictureUrl: localPictureURL, ...event } = createEvent;
-
-    const uploadResult = localPictureURL
-      ? uploadImage(eventPicturesRef, localPictureURL, eventRef.id)
+    const uploadResult = event.pictureUrl
+      ? uploadImage(eventPicturesRef, event.pictureUrl, eventRef.id)
       : Promise.resolve("");
 
-    return uploadResult
-      .then((result) => {
-        if (result instanceof Error) {
-          return result;
-        }
-        transaction.set(eventRef, { ...event, pictureUrl: result });
-      })
-      .then((createResult) => {
-        if (createResult instanceof Error) {
-          return createResult;
-        }
-        transaction.update(doc(societiesCol, socId), {
-          eventRefs: arrayUnion(eventRef)
+    return uploadResult.then((result) => {
+      if (result instanceof Error) {
+        throw result;
+      }
+      transaction
+        .set(eventRef, {
+          ...event,
+          pictureUrl: result,
+          organiserId: socId
+        })
+        .update(socRef, {
+          eventIds: arrayUnion(eventRef.id)
         });
-      })
-      .catch(() => Error("Event couldn't be created. Try again later."));
-  });
+    });
+  }).catch(() => Error("Event couldn't be created. Try again later."));
 }
 
-export function deleteSocEvent(eventId: string, pictureUrl: string) {
+export function deleteSocEvent(
+  eventId: string,
+  pictureUrl: string,
+  organiserId: string
+) {
   return runTransaction(db, (transaction) => {
     const eventDoc = doc(eventsCol, eventId);
+    const organiserDoc = doc(societiesCol, organiserId);
 
-    return retrieveEventOrganiserRef(eventDoc)
-      .then((retrieveResult) => {
-        if (retrieveResult instanceof Error) {
-          throw Error;
-        }
-        return retrieveResult;
+    transaction
+      .update(organiserDoc, {
+        eventRefs: arrayRemove(eventDoc)
       })
-      .then((eventOrganiserRef) => {
-        transaction.update(eventOrganiserRef, {
-          eventRefs: arrayRemove(eventDoc)
-        });
-        transaction.delete(eventDoc);
-      })
-      .then(() => pictureUrl && deleteImage(eventPicturesRef, eventId))
-      .catch(() => Error("Unable to delete event. Try again later."));
-  });
+      .delete(eventDoc);
+
+    return pictureUrl
+      ? deleteImage(eventPicturesRef, eventId).then((result) => {
+          if (result instanceof Error) {
+            throw result;
+          }
+        })
+      : Promise.resolve();
+  }).catch(() => Error("Unable to delete event. Try again later."));
 }

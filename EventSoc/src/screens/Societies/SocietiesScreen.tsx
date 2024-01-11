@@ -22,20 +22,18 @@ import ScreenView from "../../components/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { useIsFocused } from "@react-navigation/native";
-import { useSocietiesContext } from "../../contexts/SocietiesContext";
-import { retrieveUser } from "../../services/usersService";
-import { isEqual } from "lodash";
-import { RetrieveSociety } from "../../models/Society";
+import { useAppContext } from "../../contexts/AppContext";
+import { SocietyData } from "../../models/Society";
 import { config } from "../../../config/gluestack-ui.config";
-import { retrieveEvents } from "../../services/eventsService";
-import SearchableList from "../../components/SearchableList";
+import SearchList from "../../components/SearchList";
 import EventListButton from "../../components/EventListButton";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { Event } from "../../models/Event";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Home">;
 
 export default function SocietiesScreen(props: Props) {
-  const { societies, societyEvents, setSocietyEvents } = useSocietiesContext();
+  const { societies, events, updateEvents, getUser } = useAppContext();
 
   const [isExec, setIsExec] = useState<boolean>(false);
 
@@ -43,40 +41,43 @@ export default function SocietiesScreen(props: Props) {
 
   const isFocused = useIsFocused();
 
-  const [society, setSociety] = useState<RetrieveSociety>();
+  const [society, setSociety] = useState<SocietyData>();
 
-  const [eventDeleted, setEventDeleted] = useState<boolean>(false);
+  const [socEvents, setSocEvents] = useState<Event[]>([]);
 
   useEffect(() => {
     const newSoc = societies.find(
       (soc) => soc.id === props.route.params.societyId
-    );
+    )?.data;
     setSociety(newSoc);
-    newSoc &&
-      retrieveUser().then((user) => setIsExec(newSoc.exec.includes(user.name)));
+
+    const userName = getUser()?.data.name;
+    newSoc && userName && setIsExec(newSoc.exec.includes(userName));
   }, [props.route.params.societyId, isFocused]);
 
   useEffect(() => {
     society &&
-      retrieveEvents(society.eventRefs).then((result) => {
+      updateEvents().then((result) => {
         if (result instanceof Error) {
           setErrMsg(result.message);
         } else {
           setErrMsg("");
-          setSocietyEvents(result);
+          setSocEvents(
+            events
+              .filter((event) => society.eventIds.includes(event.id))
+              .reverse()
+          );
         }
-      }),
-      setEventDeleted(false);
-  }, [society, isFocused, eventDeleted]);
+      });
+  }, [society, isFocused, societies]);
 
   return (
-    <ScreenView extraStyle={{ height: "100%" }}>
+    <ScreenView>
       {!society ? (
         <HStack
           gap={15}
-          flex={1}
           width="80%"
-          marginTop={20}
+          marginTop={40}
           alignSelf="center">
           <Icon
             as={ArrowLeftIcon}
@@ -89,9 +90,7 @@ export default function SocietiesScreen(props: Props) {
         </HStack>
       ) : (
         <>
-          <View
-            height="100%"
-            top={-20}>
+          <View height="96%">
             <HStack
               backgroundColor={config.tokens.colors.coolGray200}
               gap={15}
@@ -125,7 +124,7 @@ export default function SocietiesScreen(props: Props) {
                   right={15}
                   onPress={() =>
                     props.navigation.navigate("Edit Society", {
-                      societyId: society.id
+                      societyId: props.route.params.societyId
                     })
                   }>
                   <ButtonIcon
@@ -161,18 +160,19 @@ export default function SocietiesScreen(props: Props) {
                 <AlertText>{errMsg}</AlertText>
               </Alert>
             ) : (
-              <SearchableList
-                data={societyEvents}
+              <SearchList
+                data={socEvents}
                 renderItem={(event) => (
                   <EventListButton
-                    retrieveEvent={event}
+                    event={event}
                     isExec={isExec}
-                    setEventDeleted={setEventDeleted}
                   />
                 )}
+                searchKeys={["data.name"]}
                 itemSeperator={() => <Divider h="$1" />}
-                maxHeight={isExec ? "62%" : "69%"}
-                clearSearch={[society, isFocused, societyEvents]}
+                maxHeight={isExec ? "58%" : "74%"}
+                clearSearch={[society, isFocused, socEvents]}
+                listEmptyText="No events"
               />
             )}
           </View>
@@ -182,7 +182,7 @@ export default function SocietiesScreen(props: Props) {
               borderRadius="$none"
               onPress={() =>
                 props.navigation.navigate("Create Event", {
-                  organiserId: society.id
+                  organiserId: props.route.params.societyId
                 })
               }>
               <ButtonIcon

@@ -4,52 +4,52 @@ import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesSta
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import { useState } from "react";
 import ErrorAlertDialog from "../../components/ErrorAlertDialog";
-import { CreateSociety, defaultCreateSociety } from "../../models/Society";
+import { SocietyData, defaultSocietyData } from "../../models/Society";
 import SocietyForm from "../../components/SocietyForm";
 import { getSocietyErrMsg } from "../../helpers/SocietyInputValidationHelper";
 import { createSociety } from "../../services/societiesService";
-import { retrieveUser } from "../../services/usersService";
+import { useAppContext } from "../../contexts/AppContext";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Register Society">;
 
 export default function RegisterScreen(props: Props) {
-  const [createSoc, setCreateSoc] =
-    useState<CreateSociety>(defaultCreateSociety);
+  const { getUser } = useAppContext();
+
+  const [society, setSociety] = useState<SocietyData>(defaultSocietyData);
 
   const [errMsg, setErrMsg] = useState<string>("");
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
 
   const registerSociety = () => {
     // Add user to exec
-    retrieveUser().then((user) => {
-      const fullExec = createSoc.exec.slice();
-      if (user.name) {
-        fullExec.push(user.name);
-      }
-      const fullCreateSoc = { ...createSoc, exec: fullExec };
+    const userName = getUser()?.data.name;
+    const fullExec = society.exec.slice();
+    if (userName) {
+      fullExec.push(userName);
+    }
+    const fullSoc = { ...society, exec: fullExec };
 
-      const invalidErrMsg = getSocietyErrMsg(fullCreateSoc);
-      if (invalidErrMsg) {
-        setErrMsg(invalidErrMsg);
-        setShowAlertDialog(true);
-      } else {
-        createSociety(fullCreateSoc).then((result) => {
-          if (result instanceof Error) {
-            setErrMsg(result.message);
-            setShowAlertDialog(true);
-          } else {
-            props.navigation.navigate("Home", { societyId: "" });
-          }
-        });
-      }
-    });
+    const invalidErrMsg = getSocietyErrMsg(fullSoc);
+    if (invalidErrMsg) {
+      setErrMsg(invalidErrMsg);
+      setShowAlertDialog(true);
+    } else {
+      createSociety(fullSoc).then((result) => {
+        if (result instanceof Error) {
+          setErrMsg(result.message);
+          setShowAlertDialog(true);
+        } else {
+          props.navigation.navigate("Home", { societyId: "" });
+        }
+      });
+    }
   };
 
   return (
-    <ScreenView>
+    <ScreenView hasNavHeader>
       <SocietyForm
-        createSociety={createSoc}
-        setCreateSociety={setCreateSoc}
+        society={society}
+        setSociety={setSociety}
       />
       <Button
         size="xl"

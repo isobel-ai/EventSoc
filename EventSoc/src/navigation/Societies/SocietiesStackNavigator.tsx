@@ -7,9 +7,9 @@ import { config } from "../../../config/gluestack-ui.config";
 import CreateEventScreen from "../../screens/Societies/CreateEventScreen";
 import EditEventScreen from "../../screens/Societies/EditEventScreen";
 import { CloseIcon, Icon } from "@gluestack-ui/themed";
-import { useSocietiesContext } from "../../contexts/SocietiesContext";
 import RegisterSocietyScreen from "../../screens/Societies/RegisterSocietyScreen";
 import EditSocietyScreen from "../../screens/Societies/EditSocietyScreen";
+import EventScreen from "../../screens/Events/EventScreen";
 
 export type SocietiesStackParamList = {
   Home: { societyId: string };
@@ -17,11 +17,10 @@ export type SocietiesStackParamList = {
   "Edit Society": { societyId: string };
   "Create Event": { organiserId: string };
   "Edit Event": { eventId: string };
+  Event: { eventId: string };
 };
 
 export default function SocietiesStackNavigator() {
-  const { navigatorRef } = useSocietiesContext();
-
   const Stack = createStackNavigator<SocietiesStackParamList>();
 
   const stackScreenOptions = (): StackNavigationOptions => ({
@@ -41,10 +40,8 @@ export default function SocietiesStackNavigator() {
 
   return (
     <Stack.Navigator
-      screenOptions={({ navigation }) => {
-        navigatorRef.current = navigation;
-        return stackScreenOptions();
-      }}>
+      id="Societies"
+      screenOptions={stackScreenOptions}>
       <Stack.Screen
         name="Home"
         component={SocietiesScreen}
@@ -56,7 +53,7 @@ export default function SocietiesStackNavigator() {
       <Stack.Screen
         name="Register Society"
         component={RegisterSocietyScreen}
-        options={{ headerLeft: () => null }} // Don't show back button
+        options={{ animationEnabled: false, headerLeft: () => null }} // Don't show back button
       />
       <Stack.Screen
         name="Edit Society"
@@ -69,6 +66,10 @@ export default function SocietiesStackNavigator() {
       <Stack.Screen
         name="Edit Event"
         component={EditEventScreen}
+      />
+      <Stack.Screen
+        name="Event"
+        component={EventScreen}
       />
     </Stack.Navigator>
   );

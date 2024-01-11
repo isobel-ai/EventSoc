@@ -1,94 +1,57 @@
-import {
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  updateDoc,
-  where
-} from "firebase/firestore";
+import { doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/firestore";
 import { societiesCol, societyPicturesRef } from "../config/firebaseConfig";
-import {
-  CreateSociety,
-  RetrieveSociety,
-  UpdateSociety
-} from "../models/Society";
-import { retrieveUser } from "./usersService";
+import { Society, SocietyData } from "../models/Society";
 import { updateImage, uploadImage } from "./cloudService";
-import { sortByString } from "../helpers/SearchSortHelper";
 
-export function retrieveSociety(socId: string) {
-  return getDoc(doc(societiesCol, socId))
-    .then((socSnapshot) => {
-      return { ...socSnapshot.data(), id: socSnapshot.id } as RetrieveSociety;
-    })
+export function retrieveSocietyData(soc: string) {
+  const socDoc = doc(societiesCol, soc);
+  return getDoc(socDoc)
+    .then((socSnapshot) => <SocietyData>socSnapshot.data())
     .catch(() => Error("Society couldn't be retrieved. Try again later."));
 }
 
 export function retrieveSocieties() {
   return getDocs(societiesCol)
     .then((societiesSnapshot) => {
-      const societyList = societiesSnapshot.docs.map((doc) => {
-        return { ...doc.data(), id: doc.id } as RetrieveSociety;
-      });
-      return societyList.sort((s1, s2) => sortByString(s1, s2, "name"));
+      const unorderedSocs = societiesSnapshot.docs.map(
+        (doc) => <Society>{ id: doc.id, data: doc.data() }
+      );
+      return unorderedSocs.sort((a, b) =>
+        a.data.name.localeCompare(b.data.name)
+      );
     })
     .catch(() => Error("Could not retrieve all societies. Try again later."));
 }
 
-export function retrieveExecSocieties() {
-  return retrieveUser().then((user) =>
-    getDocs(query(societiesCol, where("exec", "array-contains", user.name)))
-      .then((societiesSnapshot) => {
-        const societyList = societiesSnapshot.docs.map((doc) => {
-          return { ...doc.data(), id: doc.id } as RetrieveSociety;
-        });
-        return societyList.sort((s1, s2) => sortByString(s1, s2, "name"));
-      })
-      .catch(() => Error("Could not retrieve exec societies. Try again later."))
-  );
-}
-
-export function createSociety(createSociety: CreateSociety) {
+export function createSociety(society: SocietyData) {
   const socRef = doc(societiesCol);
 
-  const { localPictureUrl: localPictureURL, ...soc } = createSociety;
+  const uploadResult = society.pictureUrl
+    ? uploadImage(societyPicturesRef, society.pictureUrl, socRef.id)
+    : Promise.resolve("");
 
-  if (localPictureURL) {
-    return uploadImage(societyPicturesRef, localPictureURL, socRef.id)
-      .then((result) => {
-        if (result instanceof Error) {
-          return result;
-        }
-        setDoc(socRef, { ...soc, pictureUrl: result });
-      })
-      .catch(() => Error("Couldn't create society. Try again later."));
-  }
-
-  return setDoc(socRef, soc).catch(() =>
-    Error("Couldn't create society. Try again later.")
-  );
+  return uploadResult
+    .then((result) => {
+      if (result instanceof Error) {
+        return result;
+      }
+      setDoc(socRef, { ...society, pictureUrl: result });
+    })
+    .catch(() => Error("Couldn't create society. Try again later."));
 }
 
-export function updateSociety(socUpdates: UpdateSociety) {
-  const { id, localPictureUrl, ...updates } = socUpdates;
-  const socDoc = doc(societiesCol, id);
+export function updateSociety(
+  updates: Partial<SocietyData>,
+  societyId: string
+) {
+  const societyDoc = doc(societiesCol, societyId);
 
-  let updateAttempt;
-  if (localPictureUrl !== undefined) {
-    updateAttempt = updateImage(societyPicturesRef, id, localPictureUrl).then(
-      (url) => {
-        if (url instanceof Error) {
-          return url;
-        }
-        updateDoc(socDoc, { ...updates, pictureUrl: url });
+  return updateImage(societyPicturesRef, societyId, updates.pictureUrl)
+    .then((url) => {
+      if (url instanceof Error) {
+        return url;
       }
-    );
-  } else {
-    updateAttempt = updateDoc(socDoc, updates);
-  }
-
-  return updateAttempt.catch(() =>
-    Error("Unable to update society. Try again later.")
-  );
+      updateDoc(societyDoc, { ...updates, pictureUrl: url });
+    })
+    .catch(() => Error("Unable to update society. Try again later."));
 }

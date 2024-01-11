@@ -19,21 +19,26 @@ export function uploadImage(
     .catch(() => Error("Unable to upload image. Try again later."));
 }
 
+/**
+ * @param url if undefined, do nothing. If empty string, delete image. Otherwise upload image.
+ */
 export function updateImage(
   storage: StorageReference,
   id: string,
-  url: string
+  url?: string
 ) {
-  // If new image, upload. Otherwise delete old image.
+  if (url === undefined) {
+    return Promise.resolve("");
+  }
   if (url) {
     return uploadImage(storage, url, id);
   }
-  return deleteImage(storage, id);
+  return deleteImage(storage, id).then(() => "");
 }
 
 export function deleteImage(storage: StorageReference, id: string) {
   const picRef = ref(storage, id);
-  return deleteObject(picRef)
-    .then(() => "")
-    .catch((err) => Error("Unable to delete image. Try again later."));
+  return deleteObject(picRef).catch(() =>
+    Error("Unable to delete image. Try again later.")
+  );
 }

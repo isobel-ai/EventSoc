@@ -1,24 +1,56 @@
+/**
+ * @param searchKeys An array of keys of O that correspond to string([]) values.
+ *
+ * Use dot notation for multi-dimensional keys, e.g. obj.key
+ */
 export function searchFilter<O>(
   searchFor: string,
   searchIn: O[],
-  searchKey: string
+  searchKeys: string[]
 ) {
   const formattedSearchFor = searchFor.toUpperCase();
-  const filteredSearchIn = searchIn.filter((item) => {
-    const formattedItem = (item[searchKey as keyof O] as string).toUpperCase();
-    return formattedItem.includes(formattedSearchFor);
-  });
+  const filteredSearchIn = searchIn.filter((item) =>
+    searchKeys.some((key) => {
+      const itemProp = getObjectProperty(item, key);
+      if (Array.isArray(itemProp)) {
+        return itemProp.some((prop) => {
+          const formattedProp = String(prop).toUpperCase();
+          return formattedProp.includes(formattedSearchFor);
+        });
+      }
+      const formattedItem = String(itemProp).toUpperCase();
+      return formattedItem.includes(formattedSearchFor);
+    })
+  );
   return filteredSearchIn;
 }
 
-export function sortByString<O>(o1: O, o2: O, sortKey: string) {
-  const formattedO1 = (o1[sortKey as keyof O] as string).toUpperCase();
-  const formattedO2 = (o2[sortKey as keyof O] as string).toUpperCase();
-  if (formattedO1 < formattedO2) {
-    return -1;
+function getObjectProperty<O>(obj: O, key: string) {
+  const keys = key.split(".");
+  let property: any = obj[keys[0] as keyof O];
+  for (let i = 1; i < keys.length; i++) {
+    property = property[keys[i] as keyof typeof property];
   }
-  if (formattedO1 === formattedO2) {
-    return 0;
+  return property;
+}
+
+export function dateInRange(date: Date, rangeStart?: Date, rangeEnd?: Date) {
+  if (!rangeStart) {
+    // No range
+    return true;
   }
-  return 1;
+
+  const normalizedRangeStart = new Date(rangeStart);
+  normalizedRangeStart.setHours(0, 0, 0, 0);
+
+  if (date >= normalizedRangeStart) {
+    const normalizedRangeEnd = rangeEnd
+      ? new Date(rangeEnd)
+      : new Date(rangeStart);
+    normalizedRangeEnd.setHours(23, 59, 59, 999);
+
+    return date <= normalizedRangeEnd;
+  }
+
+  return false;
 }

@@ -6,7 +6,8 @@ import {
   InputIcon,
   InputSlot,
   SearchIcon,
-  View
+  View,
+  Text
 } from "@gluestack-ui/themed";
 import { ComponentType, ReactElement, useEffect, useState } from "react";
 import { DimensionValue, Keyboard } from "react-native";
@@ -15,25 +16,29 @@ import { searchFilter } from "../helpers/SearchSortHelper";
 interface Props<I> {
   data: I[];
   renderItem: (item: I) => ReactElement;
-  clearSearch: any[];
+  searchKeys: string[];
+  clearSearch?: any[];
   curvedSearchBar?: boolean;
   itemSeperator?: ComponentType;
   maxHeight?: DimensionValue;
+  listEmptyText?: string;
 }
 
-export default function SearchableList<Item extends { name: string }>(
-  props: Props<Item>
-) {
+export default function SearchList<Item>(props: Props<Item>) {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [filteredData, setFilteredData] = useState<Item[]>(props.data);
 
-  useEffect(() => {
-    Keyboard.dismiss(), searchFunction("");
-  }, props.clearSearch);
+  if (props.clearSearch) {
+    useEffect(() => {
+      Keyboard.dismiss(), searchFunction("");
+    }, props.clearSearch);
+  }
+
+  useEffect(() => searchFunction(searchTerm), [props.data]); // Reload list
 
   const searchFunction = (text: string) => {
     setSearchTerm(text);
-    setFilteredData(searchFilter(text, props.data, "name"));
+    setFilteredData(searchFilter(text, props.data, props.searchKeys));
   };
 
   return (
@@ -58,6 +63,14 @@ export default function SearchableList<Item extends { name: string }>(
         renderItem={({ item }) => props.renderItem(item as Item)}
         ItemSeparatorComponent={props.itemSeperator}
         keyboardShouldPersistTaps="always"
+        ListEmptyComponent={
+          <Text
+            fontSize={"$lg"}
+            alignSelf="center"
+            paddingTop={10}>
+            {props.listEmptyText || ""}
+          </Text>
+        }
       />
     </View>
   );

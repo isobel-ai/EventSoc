@@ -1,8 +1,7 @@
 import * as ImagePicker from "expo-image-picker";
 import { ImageBackground, TouchableOpacity } from "react-native";
 import { Button, ButtonIcon, Icon, TrashIcon } from "@gluestack-ui/themed";
-
-import uploadPictureImage = require("../assets/images/photoUpload.png");
+import uploadPictureImage from "../assets/images/photoUpload.png";
 
 interface Props {
   image: string;
@@ -13,9 +12,9 @@ export default function PictureUpload(props: Props) {
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
+      allowsEditing: false,
       aspect: [1, 1],
-      quality: 1
+      quality: 0
     });
     const source = result.assets ? result.assets[0].uri : props.image;
     props.setImage(source);

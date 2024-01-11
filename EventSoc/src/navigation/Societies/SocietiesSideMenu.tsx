@@ -1,58 +1,58 @@
 import { ReactNode, useEffect, useState } from "react";
-import { RetrieveSociety } from "../../models/Society";
+import { Society } from "../../models/Society";
 import {
   AddIcon,
+  Alert,
+  AlertText,
   Button,
   ButtonIcon,
   ButtonText,
   VStack
 } from "@gluestack-ui/themed";
-import {
-  retrieveExecSocieties,
-  retrieveSocieties
-} from "../../services/societiesService";
 import SocietyList from "../../components/SocietyList";
 import SideMenu, {
   ReactNativeSideMenuProps
 } from "react-native-side-menu-updated";
 import { config } from "../../../config/gluestack-ui.config";
-import { useSocietiesContext } from "../../contexts/SocietiesContext";
+import { useAppContext } from "../../contexts/AppContext";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { MainTabParamList } from "../MainTabNavigator";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 interface Props {
   children: ReactNode;
 }
 
 export default function SocietiesSideMenu(props: Props) {
-  const { societies, setSocieties, navigatorRef } = useSocietiesContext();
+  const { societies, updateSocieties, getUser } = useAppContext();
 
-  const [socErrMsg, setSocErrMsg] = useState<string>("");
+  const { navigate } = useNavigation<NavigationProp<MainTabParamList>>();
 
-  const [execSocieties, setExecSocieties] = useState<RetrieveSociety[]>([]);
-  const [execSocErrMsg, setExecSocErrMsg] = useState<string>("");
+  const [execSocieties, setExecSocieties] = useState<Society[]>([]);
+
+  const [updateSocsErrMsg, setUpdateSocsErrMsg] = useState<string>("");
 
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    retrieveExecSocieties().then((result) => {
-      if (result instanceof Error) {
-        setExecSocErrMsg(result.message);
-      } else {
-        setExecSocieties(result);
-        setExecSocErrMsg("");
-      }
-    });
-    retrieveSocieties().then((result) => {
-      if (result instanceof Error) {
-        setSocErrMsg(result.message);
-      } else {
-        setSocieties(result);
-        setSocErrMsg("");
-      }
-    });
+    isVisible &&
+      updateSocieties().then((result) => {
+        if (result instanceof Error) {
+          setUpdateSocsErrMsg(result.message);
+        } else {
+          const userName = getUser()?.data.name;
+          setExecSocieties(
+            userName
+              ? societies.filter((soc) => soc.data.exec.includes(userName))
+              : []
+          );
+          setUpdateSocsErrMsg("");
+        }
+      });
   }, [isVisible]);
 
   const goToRegisterSocietyScreen = () => {
-    navigatorRef.current.navigate("Register Society");
+    navigate("Societies", { screen: "Register Society" });
     setIsVisible(false);
   };
 
@@ -65,22 +65,38 @@ export default function SocietiesSideMenu(props: Props) {
         borderRightWidth="$2"
         height="100%"
         gap={18}>
-        <SocietyList
-          title="Exec Societies"
-          societies={execSocieties}
-          isSideMenuOpen={isVisible}
-          setIsSideMenuOpen={setIsVisible}
-          errMsg={execSocErrMsg}
-          maxHeight="41%"
-        />
-        <SocietyList
-          title="All Societies"
-          societies={societies}
-          isSideMenuOpen={isVisible}
-          setIsSideMenuOpen={setIsVisible}
-          errMsg={socErrMsg}
-          maxHeight="47%"
-        />
+        {updateSocsErrMsg ? (
+          <Alert
+            action="error"
+            variant="solid"
+            width="90%"
+            marginTop={15}>
+            <MaterialIcons
+              name="error-outline"
+              size={40}
+              color={config.tokens.colors.error}
+              style={{ paddingRight: 15 }}
+            />
+            <AlertText>{updateSocsErrMsg}</AlertText>
+          </Alert>
+        ) : (
+          <>
+            <SocietyList
+              title="Exec Societies"
+              societies={execSocieties}
+              isSideMenuOpen={isVisible}
+              setIsSideMenuOpen={setIsVisible}
+              maxHeight="41%"
+            />
+            <SocietyList
+              title="All Societies"
+              societies={societies}
+              isSideMenuOpen={isVisible}
+              setIsSideMenuOpen={setIsVisible}
+              maxHeight="47%"
+            />
+          </>
+        )}
         <Button
           size={"xl"}
           borderRadius="$none"

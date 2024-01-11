@@ -1,9 +1,9 @@
-import { Society } from "../models/Society";
+import { SocietyData } from "../models/Society";
 
 /**
  * Returns an empty string if the society is valid, and an appropriate error message otherwise
  */
-export function getSocietyErrMsg(society: Society) {
+export function getSocietyErrMsg(society: SocietyData) {
   let errMsg = "";
 
   if (society.name && society.exec.length > 0) {

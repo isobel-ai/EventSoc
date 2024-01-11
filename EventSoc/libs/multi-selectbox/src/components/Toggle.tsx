@@ -1,19 +1,22 @@
 import React, { memo, PropsWithoutRef } from "react";
-import { TouchableOpacity, GestureResponderEvent } from "react-native";
-import { Color } from "react-native-svg";
-import Colors from "./constants/Colors";
+import {
+  TouchableOpacity,
+  GestureResponderEvent,
+  ColorValue
+} from "react-native";
 import Icon from "./Icon";
+import { config } from "../../../../config/gluestack-ui.config";
 
 export type ToggleProps = PropsWithoutRef<{
   onTouch?: (event: GestureResponderEvent) => void;
   checked?: boolean;
-  iconColor?: Color;
+  iconColor?: ColorValue;
 }>;
 
 function Toggle({
   onTouch,
   checked,
-  iconColor = Colors.primary,
+  iconColor = config.tokens.colors.navigationDarkPink,
   ...props
 }: ToggleProps) {
   return (
