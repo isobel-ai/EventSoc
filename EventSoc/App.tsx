@@ -20,6 +20,12 @@ import { Event } from "./src/models/Event";
 export default function App() {
   const { loggedIn, userId } = useAuth();
 
+  const [isAuthLoading, setIsAuthLoading] = useState<boolean>(
+    loggedIn === undefined
+  );
+
+  useEffect(() => setIsAuthLoading(loggedIn === undefined), [loggedIn]);
+
   const [societies, setSocieties] = useState<Society[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -84,9 +90,13 @@ export default function App() {
     <AppContext.Provider value={appContent}>
       <GluestackUIProvider config={config}>
         <SafeAreaProvider>
-          <NavigationContainer>
-            {loggedIn ? <MainTabNavigator /> : <LoginStackNavigator />}
-          </NavigationContainer>
+          {isAuthLoading ? (
+            <></>
+          ) : (
+            <NavigationContainer>
+              {loggedIn ? <MainTabNavigator /> : <LoginStackNavigator />}
+            </NavigationContainer>
+          )}
         </SafeAreaProvider>
       </GluestackUIProvider>
     </AppContext.Provider>
