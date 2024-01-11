@@ -18,6 +18,7 @@ import { retrieveUsers } from "./src/services/usersService";
 import { Event } from "./src/models/Event";
 
 export default function App() {
+  // Auth
   const { loggedIn, userId } = useAuth();
 
   const [isAuthLoading, setIsAuthLoading] = useState<boolean>(
@@ -26,6 +27,7 @@ export default function App() {
 
   useEffect(() => setIsAuthLoading(loggedIn === undefined), [loggedIn]);
 
+  // App Context
   const [societies, setSocieties] = useState<Society[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [users, setUsers] = useState<User[]>([]);
