@@ -12,14 +12,33 @@ import SocietyPressable from "./SocietyPressable";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { toDateTimeRangeString } from "../helpers/DateTimeHelper";
 import { StyleProp, ViewStyle } from "react-native";
-import { EventData } from "../models/Event";
+import { Event } from "../models/Event";
+import EventMenu from "./EventMenu";
+import { useEffect, useState } from "react";
+import { useAppContext } from "../contexts/AppContext";
 
 interface Props {
-  event: EventData;
+  event: Event;
   onPress?: () => void;
 }
 
 export default function EventPost(props: Props) {
+  const { societies, getUser } = useAppContext();
+
+  const [isExec, setIsExec] = useState<boolean>(false);
+
+  useEffect(() => {
+    const user = getUser();
+    if (user) {
+      const society = societies.find(
+        (soc) => soc.id === props.event.data.organiserId
+      );
+      setIsExec(society?.data.exec.includes(user.data.name) ?? false);
+    } else {
+      setIsExec(false);
+    }
+  }, [societies]);
+
   const iconTextContainerStyle: StyleProp<ViewStyle> = {
     width: "90%",
     gap: 5,
@@ -30,7 +49,8 @@ export default function EventPost(props: Props) {
     <VStack
       gap={10}
       paddingBottom={10}>
-      <SocietyPressable societyId={props.event.organiserId} />
+      <SocietyPressable societyId={props.event.data.organiserId} />
+      {isExec && <EventMenu event={props.event} />}
       <Pressable onPress={props.onPress}>
         <VStack
           gap={10}
@@ -39,7 +59,7 @@ export default function EventPost(props: Props) {
             marginHorizontal={5}
             alignItems="flex-start"
             gap={5}>
-            <Heading>{props.event.name}</Heading>
+            <Heading>{props.event.data.name}</Heading>
             <HStack style={iconTextContainerStyle}>
               <Icon
                 as={CalendarDaysIcon}
@@ -47,8 +67,8 @@ export default function EventPost(props: Props) {
               />
               <Text>
                 {toDateTimeRangeString(
-                  props.event.startDate,
-                  props.event.endDate
+                  props.event.data.startDate,
+                  props.event.data.endDate
                 )}
               </Text>
             </HStack>
@@ -58,13 +78,13 @@ export default function EventPost(props: Props) {
                 size={23}
                 color="black"
               />
-              <Text>{props.event.location}</Text>
+              <Text>{props.event.data.location}</Text>
             </HStack>
           </VStack>
-          {props.event.pictureUrl && (
+          {props.event.data.pictureUrl && (
             <Image
               size="2xl"
-              source={props.event.pictureUrl}
+              source={props.event.data.pictureUrl}
               alt=""
             />
           )}

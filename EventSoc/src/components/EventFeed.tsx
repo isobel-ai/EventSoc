@@ -21,7 +21,7 @@ export default function EventFeed(props: Props) {
       data={props.feed}
       renderItem={({ item }) => (
         <EventPost
-          event={item.data}
+          event={item}
           onPress={() => handleEventPostPress(item.id)}
         />
       )}

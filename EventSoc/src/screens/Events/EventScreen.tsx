@@ -18,8 +18,7 @@ type Props = StackScreenProps<EventsStackParamList, "Event">;
 export default function EventScreen(props: Props) {
   const { events } = useAppContext();
 
-  const event = events.find((event) => event.id === props.route.params.eventId)
-    ?.data;
+  const event = events.find((event) => event.id === props.route.params.eventId);
 
   return (
     <ScreenView extraStyle={{ height: "107%" }}>
@@ -48,16 +47,16 @@ export default function EventScreen(props: Props) {
           <VStack
             alignItems="flex-start"
             marginHorizontal={18}>
-            {event.description && (
+            {event.data.description && (
               <>
                 <Text fontWeight="$bold">Description:</Text>
-                <Text>{event.description}</Text>
+                <Text>{event.data.description}</Text>
               </>
             )}
-            {event.tags.length > 0 && (
+            {event.data.tags.length > 0 && (
               <>
                 <Text fontWeight="$bold">Tags:</Text>
-                <Text>{event.tags.join(", ")}</Text>
+                <Text>{event.data.tags.join(", ")}</Text>
               </>
             )}
           </VStack>

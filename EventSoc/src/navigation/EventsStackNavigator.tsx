@@ -13,10 +13,12 @@ import {
 import SocietiesStackNavigator, {
   SocietiesStackParamList
 } from "./Societies/SocietiesStackNavigator";
+import EditEventScreen from "../screens/Societies/EditEventScreen";
 
 export type EventsStackParamList = {
   Home: undefined;
   Event: { eventId: string };
+  "Edit Event": { eventId: string };
   Society: NavigatorScreenParams<SocietiesStackParamList>;
 };
 
@@ -52,6 +54,10 @@ export default function EventsStackNavigator() {
       <Stack.Screen
         name="Event"
         component={EventScreen}
+      />
+      <Stack.Screen
+        name="Edit Event"
+        component={EditEventScreen}
       />
       <Stack.Screen
         name="Society"
