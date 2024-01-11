@@ -21,6 +21,7 @@ import {
   validEmail,
   validPassword
 } from "../../helpers/AuthInputValidationHelper";
+import { Keyboard } from "react-native";
 
 type Props = StackScreenProps<LoginStackParamList, "Login">;
 
@@ -89,9 +90,10 @@ export default function LoginScreen(props: Props) {
           action={"positive"}
           width="80%"
           isDisabled={!validEntries}
-          onPress={() =>
-            login(email, password).catch((err) => setErrMsg(err.message))
-          }>
+          onPress={() => {
+            Keyboard.dismiss();
+            login(email, password).catch((err) => setErrMsg(err.message));
+          }}>
           <ButtonText>Login</ButtonText>
         </Button>
       </VStack>
