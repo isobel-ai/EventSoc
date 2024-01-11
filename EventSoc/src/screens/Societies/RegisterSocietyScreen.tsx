@@ -13,7 +13,7 @@ import { useAppContext } from "../../contexts/AppContext";
 type Props = StackScreenProps<SocietiesStackParamList, "Register Society">;
 
 export default function RegisterScreen(props: Props) {
-  const { getUser } = useAppContext();
+  const { getUser, updateSocieties } = useAppContext();
 
   const [society, setSociety] = useState<SocietyData>(defaultSocietyData);
 
@@ -35,7 +35,11 @@ export default function RegisterScreen(props: Props) {
       setShowAlertDialog(true);
     } else {
       createSociety(fullSoc)
-        .then(() => props.navigation.navigate("Home", { societyId: "" }))
+        .then((socId) => {
+          updateSocieties()
+            .then(() => props.navigation.navigate("Home", { societyId: socId }))
+            .catch();
+        })
         .catch((err) => {
           setErrMsg(err.message);
           setShowAlertDialog(true);

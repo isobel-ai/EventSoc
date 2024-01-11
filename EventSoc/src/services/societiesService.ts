@@ -37,6 +37,7 @@ export function createSociety(society: SocietyData) {
   return uploadResult
     .then((downloadUrl) => {
       setDoc(socRef, { ...society, pictureUrl: downloadUrl });
+      return socRef.id;
     })
     .catch(() => {
       throw Error("Couldn't create society. Try again later.");
