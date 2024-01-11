@@ -40,7 +40,7 @@ export default function SocietiesStackNavigator() {
 
   return (
     <Stack.Navigator
-      id="Societies"
+      initialRouteName="Home"
       screenOptions={stackScreenOptions}>
       <Stack.Screen
         name="Home"

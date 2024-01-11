@@ -33,7 +33,9 @@ export default function MainTabNavigator() {
   });
 
   return (
-    <Tab.Navigator screenOptions={tabNavigatorScreenOptions}>
+    <Tab.Navigator
+      initialRouteName="Events"
+      screenOptions={tabNavigatorScreenOptions}>
       <Tab.Screen
         name="Events"
         component={EventsStackNavigator}

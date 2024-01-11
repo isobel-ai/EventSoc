@@ -42,7 +42,9 @@ export default function EventsStackNavigator() {
   });
 
   return (
-    <Stack.Navigator screenOptions={stackScreenOptions}>
+    <Stack.Navigator
+      initialRouteName="Home"
+      screenOptions={stackScreenOptions}>
       <Stack.Screen
         name="Home"
         component={EventsScreen}
