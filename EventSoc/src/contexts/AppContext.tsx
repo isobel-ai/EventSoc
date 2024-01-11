@@ -12,8 +12,6 @@ export type AppContent = {
   updateEvents: () => Promise<void>;
   updateUsers: () => Promise<void>;
 
-  updateSocietyInContext: (id: string) => Promise<void>;
-
   getUser: () => User | undefined;
 };
 
@@ -25,8 +23,6 @@ const AppContext = createContext<AppContent>({
   updateSocieties: () => Promise.resolve(),
   updateEvents: () => Promise.resolve(),
   updateUsers: () => Promise.resolve(),
-
-  updateSocietyInContext: () => Promise.resolve(undefined),
 
   getUser: () => undefined
 });

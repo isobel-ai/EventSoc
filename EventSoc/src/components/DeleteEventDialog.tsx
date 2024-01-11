@@ -31,7 +31,7 @@ interface Props {
 }
 
 export default function DeleteEventDialog(props: Props) {
-  const { updateSocietyInContext } = useAppContext();
+  const { updateSocieties } = useAppContext();
 
   const [errorMsg, setErrorMsg] = useState<string>("");
 
@@ -46,7 +46,7 @@ export default function DeleteEventDialog(props: Props) {
       props.event.data.pictureUrl,
       props.event.data.organiserId
     )
-      .then(() => updateSocietyInContext(props.event.data.organiserId))
+      .then(() => updateSocieties().catch())
       .then(handleAlertDialogClose)
       .catch((err) => {
         setErrorMsg(err.message);
