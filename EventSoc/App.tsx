@@ -33,41 +33,32 @@ export default function App() {
   const [users, setUsers] = useState<User[]>([]);
 
   const updateSocieties = () => {
-    return retrieveSocieties().then((result) => {
-      if (result instanceof Error) {
-        return result;
-      }
-      setSocieties(result);
+    return retrieveSocieties().then((newSocs) => {
+      setSocieties(newSocs);
     });
   };
 
   const updateEvents = () => {
-    return retrieveEvents().then((result) => {
-      if (result instanceof Error) {
-        return result;
-      }
-      setEvents(result);
+    return retrieveEvents().then((newEvents) => {
+      setEvents(newEvents);
     });
   };
 
   const updateUsers = () => {
-    return retrieveUsers().then((result) => {
-      if (result instanceof Error) {
-        return result;
-      }
-      setUsers(result);
+    return retrieveUsers().then((newUsers) => {
+      setUsers(newUsers);
     });
   };
 
-  const updateSocietyInContext = (id: string) =>
-    retrieveSocietyData(id).then((result) => {
-      if (result instanceof Error) {
-        return result;
-      }
+  const updateSocietyInContext = (id: string) => {
+    return retrieveSocietyData(id).then((socData) => {
       setSocieties(
-        societies.map((soc) => (soc.id === id ? { ...soc, data: result } : soc))
+        societies.map((soc) =>
+          soc.id === id ? { ...soc, data: socData } : soc
+        )
       );
     });
+  };
 
   const getUser = (): User | undefined => {
     return users.find((user) => user.id === userId);

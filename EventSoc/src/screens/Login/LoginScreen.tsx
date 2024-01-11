@@ -90,9 +90,7 @@ export default function LoginScreen(props: Props) {
           width="80%"
           isDisabled={!validEntries}
           onPress={() =>
-            login(email, password).then(
-              (result) => result instanceof Error && setErrMsg(result.message)
-            )
+            login(email, password).catch((err) => setErrMsg(err.message))
           }>
           <ButtonText>Login</ButtonText>
         </Button>

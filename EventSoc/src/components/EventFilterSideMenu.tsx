@@ -39,10 +39,8 @@ export default function EventFilterSideMenu(props: Props) {
 
   useEffect(() => {
     props.isFilterMenuOpen &&
-      updateSocieties().then((result) => {
-        if (result instanceof Error) {
-          setRetrieveSocsErrMsg(result.message);
-        } else {
+      updateSocieties()
+        .then(() => {
           const items = societies.map((soc) => {
             return { id: soc.id, item: soc.data.name };
           });
@@ -55,8 +53,8 @@ export default function EventFilterSideMenu(props: Props) {
             )
           );
           setRetrieveSocsErrMsg("");
-        }
-      });
+        })
+        .catch((err) => setRetrieveSocsErrMsg(err.message));
   }, [props.isFilterMenuOpen]);
 
   const handleSelectedSocItemsChange = (item: Item) => {

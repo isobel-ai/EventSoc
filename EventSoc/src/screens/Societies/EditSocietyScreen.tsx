@@ -39,16 +39,16 @@ export default function EditSocietyScreen(props: Props) {
       setShowAlertDialog(true);
     } else {
       const socUpdates = getUpdates(beforeSoc, afterSoc);
-      updateSociety(socUpdates, props.route.params.societyId).then((result) => {
-        if (result instanceof Error) {
-          setErrMsg(result.message);
-          setShowAlertDialog(true);
-        } else {
+      updateSociety(socUpdates, props.route.params.societyId)
+        .then(() =>
           updateSocietyInContext(props.route.params.societyId).then(
             props.navigation.goBack
-          );
-        }
-      });
+          )
+        )
+        .catch((err) => {
+          setErrMsg(err.message);
+          setShowAlertDialog(true);
+        });
     }
   };
 

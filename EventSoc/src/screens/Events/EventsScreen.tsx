@@ -22,15 +22,13 @@ export default function EventsScreen() {
 
   useEffect(() => {
     isFocused &&
-      updateEvents().then((result) => {
-        if (result instanceof Error) {
-          setRetrieveEventsErrMsg(result.message);
-        } else {
+      updateEvents()
+        .then(() => {
           const now = new Date();
           setUpcomingEvents(events.filter((event) => event.data.endDate > now));
           setRetrieveEventsErrMsg("");
-        }
-      });
+        })
+        .catch((err) => setRetrieveEventsErrMsg(err.message));
   }, [isFocused]);
 
   return (

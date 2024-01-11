@@ -26,11 +26,9 @@ export default function MyAccountScreen() {
         action={"negative"}
         borderRadius="$none"
         onPress={() =>
-          signOut().then((result) => {
-            if (result instanceof Error) {
-              setErrMsg(result.message);
-              setShowAlertDialog(true);
-            }
+          signOut().catch((err) => {
+            setErrMsg(err.message);
+            setShowAlertDialog(true);
           })
         }>
         <ButtonText>Logout</ButtonText>

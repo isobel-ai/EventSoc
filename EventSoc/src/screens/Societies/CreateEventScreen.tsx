@@ -26,16 +26,13 @@ export default function CreateEventScreen(props: Props) {
       setErrMsg(invalidErrMsg);
       setShowAlertDialog(true);
     } else {
-      createSocEvent(event, props.route.params.organiserId).then((result) => {
-        if (result instanceof Error) {
-          setErrMsg(result.message);
+      createSocEvent(event, props.route.params.organiserId)
+        .then(() => updateSocietyInContext(props.route.params.organiserId))
+        .then(props.navigation.goBack)
+        .catch((err) => {
+          setErrMsg(err.message);
           setShowAlertDialog(true);
-        } else {
-          updateSocietyInContext(props.route.params.organiserId).then(
-            props.navigation.goBack
-          );
-        }
-      });
+        });
     }
   };
 

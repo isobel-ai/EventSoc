@@ -45,15 +45,12 @@ export default function DeleteEventDialog(props: Props) {
       props.event.id,
       props.event.data.pictureUrl,
       props.event.data.organiserId
-    ).then((result) => {
-      if (result instanceof Error) {
-        setErrorMsg(result.message);
-      } else {
-        updateSocietyInContext(props.event.data.organiserId).then(() => {
-          handleAlertDialogClose();
-        });
-      }
-    });
+    )
+      .then(() => updateSocietyInContext(props.event.data.organiserId))
+      .then(handleAlertDialogClose)
+      .catch((err) => {
+        setErrorMsg(err.message);
+      });
   };
 
   return (

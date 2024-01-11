@@ -40,14 +40,12 @@ export default function EditEventScreen(props: Props) {
       setShowAlertDialog(true);
     } else {
       const eventUpdates = getUpdates(beforeEvent, afterEvent);
-      updateEvent(eventUpdates, props.route.params.eventId).then((result) => {
-        if (result instanceof Error) {
-          setErrMsg(result.message);
+      updateEvent(eventUpdates, props.route.params.eventId)
+        .then(props.navigation.goBack)
+        .catch((err) => {
+          setErrMsg(err.message);
           setShowAlertDialog(true);
-        } else {
-          props.navigation.goBack();
-        }
-      });
+        });
     }
   };
 

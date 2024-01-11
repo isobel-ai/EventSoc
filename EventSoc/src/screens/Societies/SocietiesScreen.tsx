@@ -57,18 +57,16 @@ export default function SocietiesScreen(props: Props) {
 
   useEffect(() => {
     society &&
-      updateEvents().then((result) => {
-        if (result instanceof Error) {
-          setErrMsg(result.message);
-        } else {
+      updateEvents()
+        .then(() => {
           setErrMsg("");
           setSocEvents(
             events
               .filter((event) => society.eventIds.includes(event.id))
               .reverse()
           );
-        }
-      });
+        })
+        .catch((err) => setErrMsg(err.message));
   }, [society, isFocused, societies]);
 
   return (

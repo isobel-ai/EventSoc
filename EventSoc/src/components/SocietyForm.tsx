@@ -55,10 +55,8 @@ export default function SocietyForm(props: Props) {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    updateUsers().then((result) => {
-      if (result instanceof Error) {
-        setErrMsg(result.message);
-      } else {
+    updateUsers()
+      .then(() => {
         const userId = getUser()?.id;
         setUserItems(
           users.flatMap((user) =>
@@ -68,8 +66,8 @@ export default function SocietyForm(props: Props) {
           )
         );
         setErrMsg("");
-      }
-    });
+      })
+      .catch((err) => setErrMsg(err.message));
   }, [isFocused]);
 
   useEffect(() => {

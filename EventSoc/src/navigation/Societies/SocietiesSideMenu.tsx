@@ -36,10 +36,8 @@ export default function SocietiesSideMenu(props: Props) {
 
   useEffect(() => {
     isVisible &&
-      updateSocieties().then((result) => {
-        if (result instanceof Error) {
-          setUpdateSocsErrMsg(result.message);
-        } else {
+      updateSocieties()
+        .then(() => {
           const userName = getUser()?.data.name;
           setExecSocieties(
             userName
@@ -47,8 +45,8 @@ export default function SocietiesSideMenu(props: Props) {
               : []
           );
           setUpdateSocsErrMsg("");
-        }
-      });
+        })
+        .catch((err) => setUpdateSocsErrMsg(err.message));
   }, [isVisible]);
 
   const goToRegisterSocietyScreen = () => {

@@ -15,18 +15,19 @@ export function retrieveEvents() {
         return <Event>{ id: doc.id, data: event };
       })
     )
-    .catch(() => Error("Could not retrieve all events. Try again later."));
+    .catch(() => {
+      throw Error("Could not retrieve all events. Try again later.");
+    });
 }
 
 export function updateEvent(updates: Partial<EventData>, eventId: string) {
   const eventDoc = doc(eventsCol, eventId);
 
   return updateImage(eventPicturesRef, eventId, updates.pictureUrl)
-    .then((url) => {
-      if (url instanceof Error) {
-        return url;
-      }
-      updateDoc(eventDoc, { ...updates, pictureUrl: url });
+    .then((downloadUrl) => {
+      updateDoc(eventDoc, { ...updates, pictureUrl: downloadUrl });
     })
-    .catch(() => Error("Unable to update event. Try again later."));
+    .catch(() => {
+      throw Error("Unable to update event. Try again later.");
+    });
 }

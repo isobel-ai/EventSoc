@@ -34,14 +34,12 @@ export default function RegisterScreen(props: Props) {
       setErrMsg(invalidErrMsg);
       setShowAlertDialog(true);
     } else {
-      createSociety(fullSoc).then((result) => {
-        if (result instanceof Error) {
-          setErrMsg(result.message);
+      createSociety(fullSoc)
+        .then(() => props.navigation.navigate("Home", { societyId: "" }))
+        .catch((err) => {
+          setErrMsg(err.message);
           setShowAlertDialog(true);
-        } else {
-          props.navigation.navigate("Home", { societyId: "" });
-        }
-      });
+        });
     }
   };
 
