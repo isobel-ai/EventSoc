@@ -45,8 +45,6 @@ export default function SocietiesScreen(props: Props) {
 
   const [socEvents, setSocEvents] = useState<Event[]>([]);
 
-  const [eventDeleted, setEventDeleted] = useState<boolean>(false);
-
   useEffect(() => {
     const newSoc = societies.find(
       (soc) => soc.id === props.route.params.societyId
@@ -70,9 +68,8 @@ export default function SocietiesScreen(props: Props) {
               .reverse()
           );
         }
-      }),
-      setEventDeleted(false);
-  }, [society, isFocused, eventDeleted]);
+      });
+  }, [society, isFocused, societies]);
 
   return (
     <ScreenView>
@@ -169,7 +166,6 @@ export default function SocietiesScreen(props: Props) {
                   <EventListButton
                     event={event}
                     isExec={isExec}
-                    setEventDeleted={setEventDeleted}
                   />
                 )}
                 searchKeys={["data.name"]}
