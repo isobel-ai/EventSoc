@@ -13,10 +13,6 @@ interface Props {
 export default function EventListButton(props: Props) {
   const { navigate } = useNavigation<NavigationProp<SocietiesStackParamList>>();
 
-  const goToEditEventPage = () => {
-    navigate("Edit Event", { eventId: props.event.id });
-  };
-
   return (
     <Button
       onPress={() => navigate("Event", { eventId: props.event.id })}
@@ -39,12 +35,7 @@ export default function EventListButton(props: Props) {
         lineBreakStrategyIOS="standard">
         {props.event.data.name}
       </ButtonText>
-      {props.isExec && (
-        <EventMenu
-          event={props.event}
-          goToEditEventPage={goToEditEventPage}
-        />
-      )}
+      {props.isExec && <EventMenu event={props.event} />}
     </Button>
   );
 }

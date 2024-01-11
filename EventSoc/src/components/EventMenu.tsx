@@ -12,19 +12,26 @@ import {
 import { useState } from "react";
 import DeleteEventDialog from "./DeleteEventDialog";
 import { Event } from "../models/Event";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { SocietiesStackParamList } from "../navigation/Societies/SocietiesStackNavigator";
+import { EventsStackParamList } from "../navigation/EventsStackNavigator";
 
 interface Props {
   event: Event;
-  goToEditEventPage: () => void;
 }
 
 export default function EventMenu(props: Props) {
+  const { navigate } =
+    useNavigation<
+      NavigationProp<SocietiesStackParamList | EventsStackParamList>
+    >();
+
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
 
   const menuSelectionHandler = (keys: Iterable<React.Key> | string) => {
     const keySet = new Set<React.Key>(keys);
     if (keySet.has("edit")) {
-      props.goToEditEventPage();
+      navigate("Edit Event", { eventId: props.event.id });
     } else if (keySet.has("delete")) {
       setShowAlertDialog(true);
     }
