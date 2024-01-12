@@ -19,17 +19,23 @@ export function retrieveUsers() {
         a.data.name.localeCompare(b.data.name)
       );
     })
-    .catch(() => Error("Could not retrieve all users. Try again later."));
+    .catch(() => {
+      throw Error("Could not retrieve all users. Try again later.");
+    });
 }
 
 export function createUser(id: string, name: string) {
   return setDoc(doc(usersCol, id), { ...defaultUserData(), name: name }).catch(
-    () => Error("Unable to create user. Try again later.")
+    () => {
+      throw Error("Unable to create user. Try again later.");
+    }
   );
 }
 
 export function usernameTaken(name: string) {
   return getCountFromServer(query(usersCol, where("name", "==", name)))
     .then((result) => Boolean(result.data().count))
-    .catch(() => Error("Something went wrong. Try again later."));
+    .catch(() => {
+      throw Error("Something went wrong. Try again later.");
+    });
 }

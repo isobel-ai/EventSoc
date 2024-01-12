@@ -11,7 +11,9 @@ export default function LoginStackNavigator() {
   const Stack = createStackNavigator<LoginStackParamList>();
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      initialRouteName="Login"
+      screenOptions={{ headerShown: false }}>
       <Stack.Screen
         name="Login"
         component={LoginScreen}

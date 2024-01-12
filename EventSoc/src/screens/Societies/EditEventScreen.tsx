@@ -17,15 +17,15 @@ type Props = StackScreenProps<SocietiesStackParamList, "Edit Event">;
 export default function EditEventScreen(props: Props) {
   const { events } = useAppContext();
 
-  const [errMsg, setErrMsg] = useState<string>("");
-  const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
+  const [editEventErrMsg, setEditEventErrMsg] = useState<string>("");
+  const [showErrorDialog, setShowErrorDialog] = useState<boolean>(false);
 
   const toEditEvent = events.find(
     (event) => event.id === props.route.params.eventId
   )?.data;
   if (!toEditEvent) {
-    setErrMsg("Could not retrieve event details. Try again later.");
-    setShowAlertDialog(true);
+    setEditEventErrMsg("Could not retrieve event details. Try again later.");
+    setShowErrorDialog(true);
   }
 
   const beforeEvent = toEditEvent ?? defaultEventData();
@@ -36,18 +36,16 @@ export default function EditEventScreen(props: Props) {
   const editEvent = () => {
     const invalidErrMsg = getEventErrMsg(afterEvent);
     if (invalidErrMsg) {
-      setErrMsg(invalidErrMsg);
-      setShowAlertDialog(true);
+      setEditEventErrMsg(invalidErrMsg);
+      setShowErrorDialog(true);
     } else {
       const eventUpdates = getUpdates(beforeEvent, afterEvent);
-      updateEvent(eventUpdates, props.route.params.eventId).then((result) => {
-        if (result instanceof Error) {
-          setErrMsg(result.message);
-          setShowAlertDialog(true);
-        } else {
-          props.navigation.goBack();
-        }
-      });
+      updateEvent(eventUpdates, props.route.params.eventId)
+        .then(props.navigation.goBack)
+        .catch((err) => {
+          setEditEventErrMsg(err.message);
+          setShowErrorDialog(true);
+        });
     }
   };
 
@@ -63,7 +61,11 @@ export default function EditEventScreen(props: Props) {
         onPress={editEvent}>
         <ButtonText>Update</ButtonText>
       </Button>
-      <ErrorAlertDialog {...{ showAlertDialog, setShowAlertDialog, errMsg }} />
+      <ErrorAlertDialog
+        isVisible={showErrorDialog}
+        setIsVisible={setShowErrorDialog}
+        errMsg={editEventErrMsg}
+      />
     </ScreenView>
   );
 }

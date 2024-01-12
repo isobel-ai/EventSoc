@@ -21,6 +21,7 @@ import {
   validEmail,
   validPassword
 } from "../../helpers/AuthInputValidationHelper";
+import { Keyboard } from "react-native";
 
 type Props = StackScreenProps<LoginStackParamList, "Login">;
 
@@ -28,9 +29,10 @@ export default function LoginScreen(props: Props) {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const [errorMsg, setErrMsg] = useState<string>("");
+  const [loginErrMsg, setLoginErrMsg] = useState<string>("");
 
   const [validEntries, setValidEntries] = useState<boolean>(false);
+
   useEffect(
     () => setValidEntries(validEmail(email) && validPassword(password)),
     [email, password]
@@ -40,7 +42,7 @@ export default function LoginScreen(props: Props) {
     props.navigation.navigate("Register");
     setEmail("");
     setPassword("");
-    setErrMsg("");
+    setLoginErrMsg("");
   };
 
   return (
@@ -89,15 +91,14 @@ export default function LoginScreen(props: Props) {
           action={"positive"}
           width="80%"
           isDisabled={!validEntries}
-          onPress={() =>
-            login(email, password).then(
-              (result) => result instanceof Error && setErrMsg(result.message)
-            )
-          }>
+          onPress={() => {
+            Keyboard.dismiss();
+            login(email, password).catch((err) => setLoginErrMsg(err.message));
+          }}>
           <ButtonText>Login</ButtonText>
         </Button>
       </VStack>
-      {errorMsg && (
+      {loginErrMsg && (
         <Alert
           action="error"
           variant="solid"
@@ -108,7 +109,7 @@ export default function LoginScreen(props: Props) {
             color={config.tokens.colors.error}
             style={{ paddingRight: 5 }}
           />
-          <AlertText>{errorMsg}</AlertText>
+          <AlertText>{loginErrMsg}</AlertText>
         </Alert>
       )}
       <Divider

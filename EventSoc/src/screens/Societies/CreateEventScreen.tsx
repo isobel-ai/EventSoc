@@ -13,29 +13,26 @@ import { createSocEvent } from "../../services/socEventsService";
 type Props = StackScreenProps<SocietiesStackParamList, "Create Event">;
 
 export default function CreateEventScreen(props: Props) {
-  const { updateSocietyInContext } = useAppContext();
+  const { updateSocieties } = useAppContext();
 
   const [event, setEvent] = useState<EventData>(defaultEventData());
 
-  const [errMsg, setErrMsg] = useState<string>("");
-  const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
+  const [createEventErrMsg, setCreateEventErrMsg] = useState<string>("");
+  const [showErrorDialog, setShowErrorDialog] = useState<boolean>(false);
 
-  const postEvent = () => {
+  const createEvent = () => {
     const invalidErrMsg = getEventErrMsg(event);
     if (invalidErrMsg) {
-      setErrMsg(invalidErrMsg);
-      setShowAlertDialog(true);
+      setCreateEventErrMsg(invalidErrMsg);
+      setShowErrorDialog(true);
     } else {
-      createSocEvent(event, props.route.params.organiserId).then((result) => {
-        if (result instanceof Error) {
-          setErrMsg(result.message);
-          setShowAlertDialog(true);
-        } else {
-          updateSocietyInContext(props.route.params.organiserId).then(
-            props.navigation.goBack
-          );
-        }
-      });
+      createSocEvent(event, props.route.params.organiserId)
+        .then(() => updateSocieties().catch())
+        .then(props.navigation.goBack)
+        .catch((err) => {
+          setCreateEventErrMsg(err.message);
+          setShowErrorDialog(true);
+        });
     }
   };
 
@@ -49,10 +46,14 @@ export default function CreateEventScreen(props: Props) {
         size="xl"
         action={"positive"}
         borderRadius="$none"
-        onPress={postEvent}>
+        onPress={createEvent}>
         <ButtonText>Post</ButtonText>
       </Button>
-      <ErrorAlertDialog {...{ showAlertDialog, setShowAlertDialog, errMsg }} />
+      <ErrorAlertDialog
+        isVisible={showErrorDialog}
+        setIsVisible={setShowErrorDialog}
+        errMsg={createEventErrMsg}
+      />
     </ScreenView>
   );
 }

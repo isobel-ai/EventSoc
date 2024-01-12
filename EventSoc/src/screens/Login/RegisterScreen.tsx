@@ -24,6 +24,7 @@ import {
   validPassword
 } from "../../helpers/AuthInputValidationHelper";
 import { register } from "../../services/authService";
+import { Keyboard } from "react-native";
 
 interface Input {
   value: string;
@@ -39,7 +40,7 @@ export default function RegisterScreen(props: Props) {
   const [password, setPassword] = useState<Input>(defaultInput);
   const [confirmPswd, setConfirmPswd] = useState<Input>(defaultInput);
 
-  const [errorMsg, setErrMsg] = useState<string>("");
+  const [registerErrMsg, setRegisterErrMsg] = useState<string>("");
 
   return (
     <ScreenView
@@ -53,8 +54,9 @@ export default function RegisterScreen(props: Props) {
       <Button
         variant={"link"}
         size={"lg"}
-        top={-5}
-        left={-100}
+        position="absolute"
+        top={50}
+        left={5}
         onPress={props.navigation.goBack}>
         <ButtonIcon
           as={ArrowLeftIcon}
@@ -64,6 +66,7 @@ export default function RegisterScreen(props: Props) {
       </Button>
       <Heading
         size="2xl"
+        marginTop={80}
         style={{ textAlign: "center" }}>
         Welcome to EventSoc
       </Heading>
@@ -178,15 +181,16 @@ export default function RegisterScreen(props: Props) {
           isDisabled={
             name.error || email.error || password.error || confirmPswd.error
           }
-          onPress={() =>
-            register(name.value, email.value, password.value).then(
-              (result) => result instanceof Error && setErrMsg(result.message)
-            )
-          }>
+          onPress={() => {
+            Keyboard.dismiss();
+            register(name.value, email.value, password.value).catch((err) =>
+              setRegisterErrMsg(err.message)
+            );
+          }}>
           <ButtonText>Register</ButtonText>
         </Button>
       </ScrollView>
-      {errorMsg && (
+      {registerErrMsg && (
         <Alert
           action="error"
           variant="solid"
@@ -197,7 +201,7 @@ export default function RegisterScreen(props: Props) {
             color={config.tokens.colors.error}
             style={{ paddingRight: 5 }}
           />
-          <AlertText>{errorMsg}</AlertText>
+          <AlertText>{registerErrMsg}</AlertText>
         </Alert>
       )}
     </ScreenView>

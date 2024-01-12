@@ -13,12 +13,12 @@ import { useAppContext } from "../../contexts/AppContext";
 type Props = StackScreenProps<SocietiesStackParamList, "Register Society">;
 
 export default function RegisterScreen(props: Props) {
-  const { getUser } = useAppContext();
+  const { getUser, updateSocieties } = useAppContext();
 
   const [society, setSociety] = useState<SocietyData>(defaultSocietyData);
 
-  const [errMsg, setErrMsg] = useState<string>("");
-  const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
+  const [registerErrMsg, setRegisterErrMsg] = useState<string>("");
+  const [showErrorDialog, setShowErrorDialog] = useState<boolean>(false);
 
   const registerSociety = () => {
     // Add user to exec
@@ -31,17 +31,19 @@ export default function RegisterScreen(props: Props) {
 
     const invalidErrMsg = getSocietyErrMsg(fullSoc);
     if (invalidErrMsg) {
-      setErrMsg(invalidErrMsg);
-      setShowAlertDialog(true);
+      setRegisterErrMsg(invalidErrMsg);
+      setShowErrorDialog(true);
     } else {
-      createSociety(fullSoc).then((result) => {
-        if (result instanceof Error) {
-          setErrMsg(result.message);
-          setShowAlertDialog(true);
-        } else {
-          props.navigation.navigate("Home", { societyId: "" });
-        }
-      });
+      createSociety(fullSoc)
+        .then((socId) => {
+          updateSocieties()
+            .then(() => props.navigation.navigate("Home", { societyId: socId }))
+            .catch();
+        })
+        .catch((err) => {
+          setRegisterErrMsg(err.message);
+          setShowErrorDialog(true);
+        });
     }
   };
 
@@ -57,7 +59,11 @@ export default function RegisterScreen(props: Props) {
         onPress={registerSociety}>
         <ButtonText>Register</ButtonText>
       </Button>
-      <ErrorAlertDialog {...{ showAlertDialog, setShowAlertDialog, errMsg }} />
+      <ErrorAlertDialog
+        isVisible={showErrorDialog}
+        setIsVisible={setShowErrorDialog}
+        errMsg={registerErrMsg}
+      />
     </ScreenView>
   );
 }

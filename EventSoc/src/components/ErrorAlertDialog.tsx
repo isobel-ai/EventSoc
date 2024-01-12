@@ -18,8 +18,8 @@ import { config } from "../../config/gluestack-ui.config";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 interface Props {
-  showAlertDialog: boolean;
-  setShowAlertDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  isVisible: boolean;
+  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 
   errMsg: string;
 }
@@ -27,10 +27,8 @@ interface Props {
 export default function ErrorAlertDialog(props: Props) {
   return (
     <AlertDialog
-      isOpen={props.showAlertDialog}
-      onClose={() => {
-        props.setShowAlertDialog(false);
-      }}>
+      isOpen={props.isVisible}
+      onClose={() => props.setIsVisible(false)}>
       <AlertDialogBackdrop />
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -57,9 +55,7 @@ export default function ErrorAlertDialog(props: Props) {
           <Button
             variant="outline"
             action="secondary"
-            onPress={() => {
-              props.setShowAlertDialog(false);
-            }}>
+            onPress={() => props.setIsVisible(false)}>
             <ButtonText>OK</ButtonText>
           </Button>
         </AlertDialogFooter>

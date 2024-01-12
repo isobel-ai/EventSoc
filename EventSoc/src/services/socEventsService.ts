@@ -22,21 +22,20 @@ export function createSocEvent(event: EventData, socId: string) {
       ? uploadImage(eventPicturesRef, event.pictureUrl, eventRef.id)
       : Promise.resolve("");
 
-    return uploadResult.then((result) => {
-      if (result instanceof Error) {
-        throw result;
-      }
+    return uploadResult.then((downloadUrl) => {
       transaction
         .set(eventRef, {
           ...event,
-          pictureUrl: result,
+          pictureUrl: downloadUrl,
           organiserId: socId
         })
         .update(socRef, {
           eventIds: arrayUnion(eventRef.id)
         });
     });
-  }).catch(() => Error("Event couldn't be created. Try again later."));
+  }).catch(() => {
+    throw Error("Event couldn't be created. Try again later.");
+  });
 }
 
 export function deleteSocEvent(
@@ -55,11 +54,9 @@ export function deleteSocEvent(
       .delete(eventDoc);
 
     return pictureUrl
-      ? deleteImage(eventPicturesRef, eventId).then((result) => {
-          if (result instanceof Error) {
-            throw result;
-          }
-        })
+      ? deleteImage(eventPicturesRef, eventId)
       : Promise.resolve();
-  }).catch(() => Error("Unable to delete event. Try again later."));
+  }).catch(() => {
+    throw Error("Unable to delete event. Try again later.");
+  });
 }

@@ -1,4 +1,13 @@
-import { doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  getCountFromServer,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  updateDoc,
+  where
+} from "firebase/firestore";
 import { societiesCol, societyPicturesRef } from "../config/firebaseConfig";
 import { Society, SocietyData } from "../models/Society";
 import { updateImage, uploadImage } from "./cloudService";
@@ -7,7 +16,9 @@ export function retrieveSocietyData(soc: string) {
   const socDoc = doc(societiesCol, soc);
   return getDoc(socDoc)
     .then((socSnapshot) => <SocietyData>socSnapshot.data())
-    .catch(() => Error("Society couldn't be retrieved. Try again later."));
+    .catch(() => {
+      throw Error("Society couldn't be retrieved. Try again later.");
+    });
 }
 
 export function retrieveSocieties() {
@@ -20,7 +31,9 @@ export function retrieveSocieties() {
         a.data.name.localeCompare(b.data.name)
       );
     })
-    .catch(() => Error("Could not retrieve all societies. Try again later."));
+    .catch(() => {
+      throw Error("Could not retrieve all societies. Try again later.");
+    });
 }
 
 export function createSociety(society: SocietyData) {
@@ -30,14 +43,23 @@ export function createSociety(society: SocietyData) {
     ? uploadImage(societyPicturesRef, society.pictureUrl, socRef.id)
     : Promise.resolve("");
 
-  return uploadResult
-    .then((result) => {
-      if (result instanceof Error) {
-        return result;
-      }
-      setDoc(socRef, { ...society, pictureUrl: result });
+  return societyNameTaken(society.name)
+    .catch((err) => {
+      throw err;
     })
-    .catch(() => Error("Couldn't create society. Try again later."));
+    .then((isSocNameTaken) => {
+      if (isSocNameTaken) {
+        throw Error("Society name taken");
+      }
+      return uploadResult
+        .then((downloadUrl) => {
+          setDoc(socRef, { ...society, pictureUrl: downloadUrl });
+          return socRef.id;
+        })
+        .catch(() => {
+          throw Error("Couldn't create society. Try again later.");
+        });
+    });
 }
 
 export function updateSociety(
@@ -47,11 +69,18 @@ export function updateSociety(
   const societyDoc = doc(societiesCol, societyId);
 
   return updateImage(societyPicturesRef, societyId, updates.pictureUrl)
-    .then((url) => {
-      if (url instanceof Error) {
-        return url;
-      }
-      updateDoc(societyDoc, { ...updates, pictureUrl: url });
+    .then((downloadUrl) => {
+      updateDoc(societyDoc, { ...updates, pictureUrl: downloadUrl });
     })
-    .catch(() => Error("Unable to update society. Try again later."));
+    .catch(() => {
+      throw Error("Unable to update society. Try again later.");
+    });
+}
+
+function societyNameTaken(name: string) {
+  return getCountFromServer(query(societiesCol, where("name", "==", name)))
+    .then((result) => Boolean(result.data().count))
+    .catch(() => {
+      throw Error("Something went wrong. Try again later.");
+    });
 }

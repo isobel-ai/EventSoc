@@ -12,17 +12,13 @@ interface Props {
 export default function EventFeed(props: Props) {
   const { navigate } = useNavigation<NavigationProp<EventsStackParamList>>();
 
-  const handleEventPostPress = (eventId: string) => {
-    navigate("Event", { eventId: eventId });
-  };
-
   return (
     <FlatList
       data={props.feed}
       renderItem={({ item }) => (
         <EventPost
           event={item}
-          onPress={() => handleEventPostPress(item.id)}
+          onPress={() => navigate("Event", { eventId: item.id })}
         />
       )}
       keyboardShouldPersistTaps="always"

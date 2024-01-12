@@ -10,10 +10,10 @@ import { useAppContext } from "../contexts/AppContext";
 export default function MyAccountScreen() {
   const { getUser } = useAppContext();
 
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<User | undefined>(getUser);
 
-  const [errMsg, setErrMsg] = useState<string>("");
-  const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
+  const [logoutErrMsg, setLogoutErrMsg] = useState<string>("");
+  const [showErrorDialog, setShowErrorDialog] = useState<boolean>(false);
 
   const isFocused = useIsFocused();
 
@@ -26,16 +26,18 @@ export default function MyAccountScreen() {
         action={"negative"}
         borderRadius="$none"
         onPress={() =>
-          signOut().then((result) => {
-            if (result instanceof Error) {
-              setErrMsg(result.message);
-              setShowAlertDialog(true);
-            }
+          signOut().catch((err) => {
+            setLogoutErrMsg(err.message);
+            setShowErrorDialog(true);
           })
         }>
         <ButtonText>Logout</ButtonText>
       </Button>
-      <ErrorAlertDialog {...{ showAlertDialog, setShowAlertDialog, errMsg }} />
+      <ErrorAlertDialog
+        isVisible={showErrorDialog}
+        setIsVisible={setShowErrorDialog}
+        errMsg={logoutErrMsg}
+      />
     </ScreenView>
   );
 }

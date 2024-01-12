@@ -16,7 +16,9 @@ export function uploadImage(
     .then((res) => res.blob())
     .then((blob) => uploadBytes(destRef, blob))
     .then((res) => getDownloadURL(res.ref))
-    .catch(() => Error("Unable to upload image. Try again later."));
+    .catch(() => {
+      throw Error("Unable to upload image. Try again later.");
+    });
 }
 
 /**
@@ -38,7 +40,7 @@ export function updateImage(
 
 export function deleteImage(storage: StorageReference, id: string) {
   const picRef = ref(storage, id);
-  return deleteObject(picRef).catch(() =>
-    Error("Unable to delete image. Try again later.")
-  );
+  return deleteObject(picRef).catch(() => {
+    throw Error("Unable to delete image. Try again later.");
+  });
 }

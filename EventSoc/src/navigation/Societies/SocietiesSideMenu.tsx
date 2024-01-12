@@ -28,7 +28,15 @@ export default function SocietiesSideMenu(props: Props) {
 
   const { navigate } = useNavigation<NavigationProp<MainTabParamList>>();
 
-  const [execSocieties, setExecSocieties] = useState<Society[]>([]);
+  const getExecSocieties = () => {
+    const userName = getUser()?.data.name;
+    return userName
+      ? societies.filter((soc) => soc.data.exec.includes(userName))
+      : [];
+  };
+
+  const [execSocieties, setExecSocieties] =
+    useState<Society[]>(getExecSocieties);
 
   const [updateSocsErrMsg, setUpdateSocsErrMsg] = useState<string>("");
 
@@ -36,19 +44,12 @@ export default function SocietiesSideMenu(props: Props) {
 
   useEffect(() => {
     isVisible &&
-      updateSocieties().then((result) => {
-        if (result instanceof Error) {
-          setUpdateSocsErrMsg(result.message);
-        } else {
-          const userName = getUser()?.data.name;
-          setExecSocieties(
-            userName
-              ? societies.filter((soc) => soc.data.exec.includes(userName))
-              : []
-          );
+      updateSocieties()
+        .then(() => {
+          setExecSocieties(getExecSocieties);
           setUpdateSocsErrMsg("");
-        }
-      });
+        })
+        .catch((err) => !societies.length && setUpdateSocsErrMsg(err.message));
   }, [isVisible]);
 
   const goToRegisterSocietyScreen = () => {
@@ -64,7 +65,7 @@ export default function SocietiesSideMenu(props: Props) {
         borderRightColor="black"
         borderRightWidth="$2"
         height="100%"
-        gap={18}>
+        gap={15}>
         {updateSocsErrMsg ? (
           <Alert
             action="error"
@@ -86,14 +87,14 @@ export default function SocietiesSideMenu(props: Props) {
               societies={execSocieties}
               isSideMenuOpen={isVisible}
               setIsSideMenuOpen={setIsVisible}
-              maxHeight="41%"
+              height="30%"
             />
             <SocietyList
               title="All Societies"
               societies={societies}
               isSideMenuOpen={isVisible}
               setIsSideMenuOpen={setIsVisible}
-              maxHeight="47%"
+              height="60%"
             />
           </>
         )}
