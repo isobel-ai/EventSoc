@@ -65,7 +65,7 @@ export default function SocietiesSideMenu(props: Props) {
         borderRightColor="black"
         borderRightWidth="$2"
         height="100%"
-        gap={18}>
+        gap={15}>
         {updateSocsErrMsg ? (
           <Alert
             action="error"
@@ -87,14 +87,14 @@ export default function SocietiesSideMenu(props: Props) {
               societies={execSocieties}
               isSideMenuOpen={isVisible}
               setIsSideMenuOpen={setIsVisible}
-              maxHeight="41%"
+              height="30%"
             />
             <SocietyList
               title="All Societies"
               societies={societies}
               isSideMenuOpen={isVisible}
               setIsSideMenuOpen={setIsVisible}
-              maxHeight="47%"
+              height="60%"
             />
           </>
         )}

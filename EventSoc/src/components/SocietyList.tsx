@@ -19,7 +19,7 @@ interface Props {
   societies: Society[];
   isSideMenuOpen: boolean;
   setIsSideMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  maxHeight?: DimensionValue;
+  height?: DimensionValue;
 }
 
 export default function SocietyList(props: Props) {
@@ -66,7 +66,7 @@ export default function SocietyList(props: Props) {
   return (
     <VStack
       width="100%"
-      maxHeight={props.maxHeight}>
+      height={props.height}>
       <SideMenuHeading heading={props.title} />
       <SearchList
         curvedSearchBar={false}
