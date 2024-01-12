@@ -24,6 +24,7 @@ import {
   validPassword
 } from "../../helpers/AuthInputValidationHelper";
 import { register } from "../../services/authService";
+import { Keyboard } from "react-native";
 
 interface Input {
   value: string;
@@ -178,11 +179,12 @@ export default function RegisterScreen(props: Props) {
           isDisabled={
             name.error || email.error || password.error || confirmPswd.error
           }
-          onPress={() =>
+          onPress={() => {
+            Keyboard.dismiss();
             register(name.value, email.value, password.value).catch((err) =>
               setErrMsg(err.message)
-            )
-          }>
+            );
+          }}>
           <ButtonText>Register</ButtonText>
         </Button>
       </ScrollView>
