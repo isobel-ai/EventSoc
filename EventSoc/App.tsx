@@ -10,10 +10,7 @@ import { useEffect, useState } from "react";
 import AppContext, { AppContent } from "./src/contexts/AppContext";
 import { Society } from "./src/models/Society";
 import { retrieveEvents } from "./src/services/eventsService";
-import {
-  retrieveSocieties,
-  retrieveSocietyData
-} from "./src/services/societiesService";
+import { retrieveSocieties } from "./src/services/societiesService";
 import { retrieveUsers } from "./src/services/usersService";
 import { Event } from "./src/models/Event";
 
@@ -50,16 +47,6 @@ export default function App() {
     });
   };
 
-  const updateSocietyInContext = (id: string) => {
-    return retrieveSocietyData(id).then((socData) => {
-      setSocieties(
-        societies.map((soc) =>
-          soc.id === id ? { ...soc, data: socData } : soc
-        )
-      );
-    });
-  };
-
   const getUser = (): User | undefined => {
     return users.find((user) => user.id === userId);
   };
@@ -71,7 +58,6 @@ export default function App() {
     updateSocieties,
     updateEvents,
     updateUsers,
-    updateSocietyInContext,
     getUser
   };
 
