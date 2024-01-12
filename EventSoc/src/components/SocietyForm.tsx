@@ -31,7 +31,6 @@ import { useEffect, useState } from "react";
 import { config } from "../../config/gluestack-ui.config";
 import { xorBy } from "lodash";
 import SelectBox, { Item } from "../../libs/multi-selectbox";
-import { LogBox } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useAppContext } from "../contexts/AppContext";
 
@@ -90,11 +89,6 @@ export default function SocietyForm(props: Props) {
     }
     setIsSelectExecOpen(false);
   };
-
-  // Suppress error for scrollable modal within scrollview
-  useEffect(() => {
-    LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
-  }, []);
 
   return (
     <ScrollView

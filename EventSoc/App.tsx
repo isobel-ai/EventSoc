@@ -13,6 +13,7 @@ import { retrieveEvents } from "./src/services/eventsService";
 import { retrieveSocieties } from "./src/services/societiesService";
 import { retrieveUsers } from "./src/services/usersService";
 import { Event } from "./src/models/Event";
+import { LogBox } from "react-native";
 
 export default function App() {
   const { loggedIn, userId } = useAuth();
@@ -67,9 +68,7 @@ export default function App() {
     }
   }, [loggedIn]);
 
-  useEffect(() => {
-    updateSocieties(), updateEvents(), updateUsers();
-  }, []);
+  useEffect(LogBox.ignoreAllLogs, []);
 
   return (
     <AppContext.Provider value={appContent}>
