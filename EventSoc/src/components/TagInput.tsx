@@ -27,44 +27,6 @@ export default function TagInput(props: Props) {
     setTag("");
   };
 
-  const renderTag = (tag: string) => {
-    const containerStyle: ViewStyle = {
-      flexDirection: "row",
-      borderRadius: 20,
-      paddingVertical: 5,
-      paddingRight: 5,
-      paddingLeft: 10,
-      marginRight: 4,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: config.tokens.colors.navigationDarkPink,
-      flexGrow: 1
-    };
-
-    const labelStyle: TextStyle = {
-      color: "#fff",
-      fontSize: config.tokens.fontSizes.sm
-    };
-
-    return (
-      <View style={containerStyle}>
-        <Text style={labelStyle}>{tag}</Text>
-        <TouchableOpacity
-          style={{ marginLeft: 15 }}
-          hitSlop={{ top: 14, bottom: 14, left: 14, right: 14 }}
-          onPress={() => props.onChangeTags(tag)}>
-          <Icon
-            as={CloseCircleIcon}
-            fill="$navigationDarkPink"
-            color="white"
-            w={21}
-            h={21}
-          />
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
   return (
     <View>
       <FlatList

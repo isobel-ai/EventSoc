@@ -33,7 +33,11 @@ interface Props {
 export default function EventFilterSideMenu(props: Props) {
   const { updateSocieties, societies } = useAppContext();
 
-  const [socItems, setSocItems] = useState<Item[]>([]);
+  const [socItems, setSocItems] = useState<Item[]>(
+    societies.map((soc) => {
+      return { id: soc.id, item: soc.data.name };
+    })
+  );
 
   const [retrieveSocsErrMsg, setRetrieveSocsErrMsg] = useState<string>("");
 
@@ -54,7 +58,9 @@ export default function EventFilterSideMenu(props: Props) {
           );
           setRetrieveSocsErrMsg("");
         })
-        .catch((err) => setRetrieveSocsErrMsg(err.message));
+        .catch(
+          (err) => !societies.length && setRetrieveSocsErrMsg(err.message)
+        );
   }, [props.isFilterMenuOpen]);
 
   const handleSelectedSocItemsChange = (item: Item) => {

@@ -28,18 +28,20 @@ export default function EventForm(props: Props) {
 
   const scrollViewRef = useRef<ScrollView>(null);
 
+  const handleFormSizeChange = () => {
+    if (isFirstScrollSizeChange) {
+      setIsFirstScrollSizeChange(false);
+    } else {
+      scrollViewRef.current?.scrollToEnd();
+    }
+  };
+
   const dateTimePickerStyle: StyleProp<ViewStyle> = { left: -10 };
 
   return (
     <ScrollView
       ref={scrollViewRef}
-      onContentSizeChange={() => {
-        if (isFirstScrollSizeChange) {
-          setIsFirstScrollSizeChange(false);
-        } else {
-          scrollViewRef.current?.scrollToEnd();
-        }
-      }}
+      onContentSizeChange={handleFormSizeChange}
       automaticallyAdjustKeyboardInsets={true}
       style={{ paddingHorizontal: 20 }}
       contentContainerStyle={{

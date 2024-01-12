@@ -17,15 +17,15 @@ type Props = StackScreenProps<SocietiesStackParamList, "Edit Society">;
 export default function EditSocietyScreen(props: Props) {
   const { societies, updateSocieties } = useAppContext();
 
-  const [errMsg, setErrMsg] = useState<string>("");
-  const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
+  const [editSocErrMsg, setEditSocErrMsg] = useState<string>("");
+  const [showErrorDialog, setShowErrorDialog] = useState<boolean>(false);
 
   const toEditSoc = societies.find(
     (soc) => soc.id === props.route.params.societyId
   )?.data;
   if (!toEditSoc) {
-    setErrMsg("Could not retrieve society details. Try again later.");
-    setShowAlertDialog(true);
+    setEditSocErrMsg("Could not retrieve society details. Try again later.");
+    setShowErrorDialog(true);
   } else {
   }
 
@@ -35,16 +35,16 @@ export default function EditSocietyScreen(props: Props) {
   const editSociety = () => {
     const invalidErrMsg = getSocietyErrMsg(afterSoc);
     if (invalidErrMsg) {
-      setErrMsg(invalidErrMsg);
-      setShowAlertDialog(true);
+      setEditSocErrMsg(invalidErrMsg);
+      setShowErrorDialog(true);
     } else {
       const socUpdates = getUpdates(beforeSoc, afterSoc);
       updateSociety(socUpdates, props.route.params.societyId)
         .then(() => updateSocieties().catch())
         .then(props.navigation.goBack)
         .catch((err) => {
-          setErrMsg(err.message);
-          setShowAlertDialog(true);
+          setEditSocErrMsg(err.message);
+          setShowErrorDialog(true);
         });
     }
   };
@@ -62,7 +62,11 @@ export default function EditSocietyScreen(props: Props) {
         onPress={editSociety}>
         <ButtonText>Update</ButtonText>
       </Button>
-      <ErrorAlertDialog {...{ showAlertDialog, setShowAlertDialog, errMsg }} />
+      <ErrorAlertDialog
+        isVisible={showErrorDialog}
+        setIsVisible={setShowErrorDialog}
+        errMsg={editSocErrMsg}
+      />
     </ScreenView>
   );
 }

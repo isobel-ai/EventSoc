@@ -12,9 +12,15 @@ import { Event } from "../../models/Event";
 export default function EventsScreen() {
   const { events, updateEvents } = useAppContext();
 
-  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
+  const getUpcomingEvents = () => {
+    const now = new Date();
+    return events.filter((event) => event.data.endDate > now);
+  };
 
-  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
+  const [upcomingEvents, setUpcomingEvents] =
+    useState<Event[]>(getUpcomingEvents);
+  const [filteredEvents, setFilteredEvents] =
+    useState<Event[]>(getUpcomingEvents);
 
   const [retrieveEventsErrMsg, setRetrieveEventsErrMsg] = useState<string>("");
 
@@ -24,11 +30,10 @@ export default function EventsScreen() {
     isFocused &&
       updateEvents()
         .then(() => {
-          const now = new Date();
-          setUpcomingEvents(events.filter((event) => event.data.endDate > now));
+          setUpcomingEvents(getUpcomingEvents());
           setRetrieveEventsErrMsg("");
         })
-        .catch((err) => setRetrieveEventsErrMsg(err.message));
+        .catch((err) => !events.length && setRetrieveEventsErrMsg(err.message));
   }, [isFocused]);
 
   return (

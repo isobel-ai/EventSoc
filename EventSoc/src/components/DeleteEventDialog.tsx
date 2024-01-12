@@ -26,18 +26,19 @@ import { useAppContext } from "../contexts/AppContext";
 
 interface Props {
   event: Event;
-  showAlertDialog: boolean;
-  setShowAlertDialog: React.Dispatch<React.SetStateAction<boolean>>;
+
+  isVisible: boolean;
+  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function DeleteEventDialog(props: Props) {
   const { updateSocieties } = useAppContext();
 
-  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [deleteErrorMsg, setDeleteErrorMsg] = useState<string>("");
 
-  const handleAlertDialogClose = () => {
-    props.setShowAlertDialog(false);
-    setErrorMsg("");
+  const handleDialogClose = () => {
+    props.setIsVisible(false);
+    setDeleteErrorMsg("");
   };
 
   const handleDeleteEvent = () => {
@@ -47,16 +48,16 @@ export default function DeleteEventDialog(props: Props) {
       props.event.data.organiserId
     )
       .then(() => updateSocieties().catch())
-      .then(handleAlertDialogClose)
+      .then(handleDialogClose)
       .catch((err) => {
-        setErrorMsg(err.message);
+        setDeleteErrorMsg(err.message);
       });
   };
 
   return (
     <AlertDialog
-      isOpen={props.showAlertDialog}
-      onClose={handleAlertDialogClose}>
+      isOpen={props.isVisible}
+      onClose={handleDialogClose}>
       <AlertDialogBackdrop />
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -86,7 +87,7 @@ export default function DeleteEventDialog(props: Props) {
               <Button
                 variant="outline"
                 action="secondary"
-                onPress={handleAlertDialogClose}>
+                onPress={handleDialogClose}>
                 <ButtonText>Cancel</ButtonText>
               </Button>
               <Button
@@ -95,7 +96,7 @@ export default function DeleteEventDialog(props: Props) {
                 <ButtonText>Delete</ButtonText>
               </Button>
             </HStack>
-            {errorMsg && (
+            {deleteErrorMsg && (
               <Alert
                 action="error"
                 variant="outline"
@@ -106,7 +107,7 @@ export default function DeleteEventDialog(props: Props) {
                   color={config.tokens.colors.error}
                   style={{ paddingRight: 15 }}
                 />
-                <AlertText>{errorMsg}</AlertText>
+                <AlertText>{deleteErrorMsg}</AlertText>
               </Alert>
             )}
           </VStack>

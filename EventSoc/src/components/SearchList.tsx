@@ -17,7 +17,7 @@ interface Props<I> {
   data: I[];
   renderItem: (item: I) => ReactElement;
   searchKeys: string[];
-  clearSearch?: any[];
+  clearSearch: any[];
   curvedSearchBar?: boolean;
   itemSeperator?: ComponentType;
   maxHeight?: DimensionValue;
@@ -28,13 +28,11 @@ export default function SearchList<Item>(props: Props<Item>) {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [filteredData, setFilteredData] = useState<Item[]>(props.data);
 
-  if (props.clearSearch) {
-    useEffect(() => {
-      Keyboard.dismiss(), searchFunction("");
-    }, props.clearSearch);
-  }
+  useEffect(() => {
+    Keyboard.dismiss(), searchFunction("");
+  }, props.clearSearch);
 
-  useEffect(() => searchFunction(searchTerm), [props.data]); // Reload list
+  useEffect(() => searchFunction(searchTerm), [props.data]); // Re-filter on list reload
 
   const searchFunction = (text: string) => {
     setSearchTerm(text);

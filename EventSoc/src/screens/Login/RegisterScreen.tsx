@@ -40,7 +40,7 @@ export default function RegisterScreen(props: Props) {
   const [password, setPassword] = useState<Input>(defaultInput);
   const [confirmPswd, setConfirmPswd] = useState<Input>(defaultInput);
 
-  const [errorMsg, setErrMsg] = useState<string>("");
+  const [registerErrMsg, setRegisterErrMsg] = useState<string>("");
 
   return (
     <ScreenView
@@ -182,13 +182,13 @@ export default function RegisterScreen(props: Props) {
           onPress={() => {
             Keyboard.dismiss();
             register(name.value, email.value, password.value).catch((err) =>
-              setErrMsg(err.message)
+              setRegisterErrMsg(err.message)
             );
           }}>
           <ButtonText>Register</ButtonText>
         </Button>
       </ScrollView>
-      {errorMsg && (
+      {registerErrMsg && (
         <Alert
           action="error"
           variant="solid"
@@ -199,7 +199,7 @@ export default function RegisterScreen(props: Props) {
             color={config.tokens.colors.error}
             style={{ paddingRight: 5 }}
           />
-          <AlertText>{errorMsg}</AlertText>
+          <AlertText>{registerErrMsg}</AlertText>
         </Alert>
       )}
     </ScreenView>

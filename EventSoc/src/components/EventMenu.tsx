@@ -26,14 +26,14 @@ export default function EventMenu(props: Props) {
       NavigationProp<SocietiesStackParamList | EventsStackParamList>
     >();
 
-  const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
 
   const menuSelectionHandler = (keys: Iterable<React.Key> | string) => {
     const keySet = new Set<React.Key>(keys);
     if (keySet.has("edit")) {
       navigate("Edit Event", { eventId: props.event.id });
     } else if (keySet.has("delete")) {
-      setShowAlertDialog(true);
+      setShowDeleteDialog(true);
     }
   };
 
@@ -81,7 +81,8 @@ export default function EventMenu(props: Props) {
       </Menu>
       <DeleteEventDialog
         event={props.event}
-        {...{ showAlertDialog, setShowAlertDialog }}
+        isVisible={showDeleteDialog}
+        setIsVisible={setShowDeleteDialog}
       />
     </>
   );

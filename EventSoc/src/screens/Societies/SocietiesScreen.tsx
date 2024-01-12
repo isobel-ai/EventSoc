@@ -35,39 +35,50 @@ type Props = StackScreenProps<SocietiesStackParamList, "Home">;
 export default function SocietiesScreen(props: Props) {
   const { societies, events, updateEvents, getUser } = useAppContext();
 
-  const [isExec, setIsExec] = useState<boolean>(false);
-
-  const [errMsg, setErrMsg] = useState<string>("");
-
-  const isFocused = useIsFocused();
-
   const [society, setSociety] = useState<SocietyData>();
+
+  const [isExec, setIsExec] = useState<boolean>(false);
 
   const [socEvents, setSocEvents] = useState<Event[]>([]);
 
-  useEffect(() => {
-    const newSoc = societies.find(
-      (soc) => soc.id === props.route.params.societyId
-    )?.data;
-    setSociety(newSoc);
+  const [retrieveSocEventsErrMsg, setRetrieveSocEventsErrMsg] =
+    useState<string>("");
 
-    const userName = getUser()?.data.name;
-    newSoc && userName && setIsExec(newSoc.exec.includes(userName));
-  }, [props.route.params.societyId, isFocused]);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    society &&
-      updateEvents()
-        .then(() => {
-          setErrMsg("");
-          setSocEvents(
-            events
-              .filter((event) => society.eventIds.includes(event.id))
-              .reverse()
+    if (isFocused) {
+      const newSoc =
+        societies.find((soc) => soc.id === props.route.params.societyId)
+          ?.data ?? society;
+      setSociety(newSoc);
+
+      if (newSoc) {
+        updateEvents()
+          .then(() => {
+            setRetrieveSocEventsErrMsg("");
+            setSocEvents(
+              events
+                .filter((event) => newSoc.eventIds.includes(event.id))
+                .reverse()
+            );
+          })
+          .catch(
+            (err) =>
+              !socEvents.length && setRetrieveSocEventsErrMsg(err.message)
           );
-        })
-        .catch((err) => setErrMsg(err.message));
-  }, [society, isFocused, societies]);
+
+        const userName = getUser()?.data.name;
+        if (userName) {
+          setIsExec(newSoc.exec.includes(userName));
+        } else {
+          setIsExec(false);
+        }
+      } else {
+        setIsExec(false);
+      }
+    }
+  }, [props.route.params.societyId, isFocused]);
 
   return (
     <ScreenView>
@@ -143,7 +154,7 @@ export default function SocietiesScreen(props: Props) {
               {society.description}
             </Text>
             <Heading marginLeft={10}>Events:</Heading>
-            {errMsg ? (
+            {retrieveSocEventsErrMsg ? (
               <Alert
                 action="error"
                 variant="outline"
@@ -155,7 +166,7 @@ export default function SocietiesScreen(props: Props) {
                   color={config.tokens.colors.error}
                   style={{ paddingRight: 10 }}
                 />
-                <AlertText>{errMsg}</AlertText>
+                <AlertText>{retrieveSocEventsErrMsg}</AlertText>
               </Alert>
             ) : (
               <SearchList

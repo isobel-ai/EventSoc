@@ -17,21 +17,21 @@ export default function CreateEventScreen(props: Props) {
 
   const [event, setEvent] = useState<EventData>(defaultEventData());
 
-  const [errMsg, setErrMsg] = useState<string>("");
-  const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
+  const [createEventErrMsg, setCreateEventErrMsg] = useState<string>("");
+  const [showErrorDialog, setShowErrorDialog] = useState<boolean>(false);
 
-  const postEvent = () => {
+  const createEvent = () => {
     const invalidErrMsg = getEventErrMsg(event);
     if (invalidErrMsg) {
-      setErrMsg(invalidErrMsg);
-      setShowAlertDialog(true);
+      setCreateEventErrMsg(invalidErrMsg);
+      setShowErrorDialog(true);
     } else {
       createSocEvent(event, props.route.params.organiserId)
         .then(() => updateSocieties().catch())
         .then(props.navigation.goBack)
         .catch((err) => {
-          setErrMsg(err.message);
-          setShowAlertDialog(true);
+          setCreateEventErrMsg(err.message);
+          setShowErrorDialog(true);
         });
     }
   };
@@ -46,10 +46,14 @@ export default function CreateEventScreen(props: Props) {
         size="xl"
         action={"positive"}
         borderRadius="$none"
-        onPress={postEvent}>
+        onPress={createEvent}>
         <ButtonText>Post</ButtonText>
       </Button>
-      <ErrorAlertDialog {...{ showAlertDialog, setShowAlertDialog, errMsg }} />
+      <ErrorAlertDialog
+        isVisible={showErrorDialog}
+        setIsVisible={setShowErrorDialog}
+        errMsg={createEventErrMsg}
+      />
     </ScreenView>
   );
 }

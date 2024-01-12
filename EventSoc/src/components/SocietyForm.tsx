@@ -32,49 +32,51 @@ import { config } from "../../config/gluestack-ui.config";
 import { xorBy } from "lodash";
 import SelectBox, { Item } from "../../libs/multi-selectbox";
 import { LogBox } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useAppContext } from "../contexts/AppContext";
 
 interface Props {
   society: SocietyData;
   setSociety: React.Dispatch<React.SetStateAction<SocietyData>>;
+
   editingForm?: boolean;
 }
 
 export default function SocietyForm(props: Props) {
   const { users, updateUsers, getUser } = useAppContext();
 
-  const [isSelectExecOpen, setIsSelectExecOpen] = useState<boolean>(false);
+  const getUserItems = () =>
+    users.flatMap((user) =>
+      props.editingForm || user.id !== getUser()?.id
+        ? [{ id: user.id, item: user.data.name }]
+        : []
+    );
 
-  const [errMsg, setErrMsg] = useState<string>("");
-
-  const [userItems, setUserItems] = useState<Item[]>([]);
+  const [userItems, setUserItems] = useState<Item[]>(getUserItems);
   const [execItems, setExecItems] = useState<Item[]>([]);
 
-  const isFocused = useIsFocused();
+  const [retrieveUsersErrMsg, setRetrieveUsersErrMsg] = useState<string>("");
+
+  const [isSelectExecOpen, setIsSelectExecOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    updateUsers()
-      .then(() => {
-        const userId = getUser()?.id;
-        setUserItems(
-          users.flatMap((user) =>
-            props.editingForm || user.id !== userId
-              ? [{ id: user.id, item: user.data.name }]
-              : []
-          )
-        );
-        setErrMsg("");
-      })
-      .catch((err) => setErrMsg(err.message));
-  }, [isFocused]);
+    isSelectExecOpen &&
+      updateUsers()
+        .then(() => {
+          setUserItems(getUserItems());
+          setRetrieveUsersErrMsg("");
+        })
+        .catch((err) => !users.length && setRetrieveUsersErrMsg(err.message));
+  }, [isSelectExecOpen]);
 
   useEffect(() => {
-    props.editingForm &&
-      setExecItems(
-        userItems.filter((item) => props.society.exec.includes(item.item))
-      );
+    setExecItems(
+      userItems.filter(
+        (userItem) =>
+          execItems.some((execItem) => execItem.id === userItem.id) ||
+          (props.editingForm && props.society.exec.includes(userItem.item))
+      )
+    );
   }, [userItems]);
 
   const handleExecItemsChange = (item: Item) => {
@@ -82,7 +84,7 @@ export default function SocietyForm(props: Props) {
   };
 
   const setExec = () => {
-    if (!errMsg) {
+    if (!retrieveUsersErrMsg) {
       const exec = execItems.map((i) => i.item);
       props.setSociety({ ...props.society, exec: exec });
     }
@@ -154,7 +156,7 @@ export default function SocietyForm(props: Props) {
         onClose={setExec}>
         <ModalBackdrop />
         <ModalContent
-          height={errMsg ? "35%" : "45%"}
+          height={retrieveUsersErrMsg ? "35%" : "45%"}
           top={-85}>
           <ModalHeader>
             <Heading>Select Exec</Heading>
@@ -163,7 +165,7 @@ export default function SocietyForm(props: Props) {
             </ModalCloseButton>
           </ModalHeader>
           <ModalBody scrollEnabled={false}>
-            {errMsg ? (
+            {retrieveUsersErrMsg ? (
               <Alert
                 action="error"
                 variant="outline"
@@ -176,7 +178,7 @@ export default function SocietyForm(props: Props) {
                   color={config.tokens.colors.error}
                   style={{ paddingRight: 15 }}
                 />
-                <AlertText>{errMsg}</AlertText>
+                <AlertText>{retrieveUsersErrMsg}</AlertText>
               </Alert>
             ) : (
               <>

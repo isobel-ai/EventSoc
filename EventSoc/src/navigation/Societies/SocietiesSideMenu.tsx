@@ -28,7 +28,15 @@ export default function SocietiesSideMenu(props: Props) {
 
   const { navigate } = useNavigation<NavigationProp<MainTabParamList>>();
 
-  const [execSocieties, setExecSocieties] = useState<Society[]>([]);
+  const getExecSocieties = () => {
+    const userName = getUser()?.data.name;
+    return userName
+      ? societies.filter((soc) => soc.data.exec.includes(userName))
+      : [];
+  };
+
+  const [execSocieties, setExecSocieties] =
+    useState<Society[]>(getExecSocieties);
 
   const [updateSocsErrMsg, setUpdateSocsErrMsg] = useState<string>("");
 
@@ -38,15 +46,10 @@ export default function SocietiesSideMenu(props: Props) {
     isVisible &&
       updateSocieties()
         .then(() => {
-          const userName = getUser()?.data.name;
-          setExecSocieties(
-            userName
-              ? societies.filter((soc) => soc.data.exec.includes(userName))
-              : []
-          );
+          setExecSocieties(getExecSocieties);
           setUpdateSocsErrMsg("");
         })
-        .catch((err) => setUpdateSocsErrMsg(err.message));
+        .catch((err) => !societies.length && setUpdateSocsErrMsg(err.message));
   }, [isVisible]);
 
   const goToRegisterSocietyScreen = () => {

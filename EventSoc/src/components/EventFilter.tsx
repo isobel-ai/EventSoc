@@ -20,6 +20,7 @@ import { Item } from "../../libs/multi-selectbox";
 
 interface Props {
   children: ReactNode;
+
   events: Event[];
   setFullyFilteredEvents: React.Dispatch<React.SetStateAction<Event[]>>;
 }
@@ -36,7 +37,7 @@ export default function EventFilter(props: Props) {
 
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  // Reload feed
+  // Re-filter on feed reload
   useEffect(() => filterEvents(), [props.events]);
   useEffect(() => searchFunction(searchTerm), [filteredEvents]);
 
