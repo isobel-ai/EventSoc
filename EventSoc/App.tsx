@@ -15,14 +15,7 @@ import { retrieveUsers } from "./src/services/usersService";
 import { Event } from "./src/models/Event";
 
 export default function App() {
-  // Auth
   const { loggedIn, userId } = useAuth();
-
-  const [isAuthLoading, setIsAuthLoading] = useState<boolean>(
-    loggedIn === undefined
-  );
-
-  useEffect(() => setIsAuthLoading(loggedIn === undefined), [loggedIn]);
 
   // App Context
   const [societies, setSocieties] = useState<Society[]>([]);
@@ -61,6 +54,19 @@ export default function App() {
     getUser
   };
 
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (loggedIn) {
+      updateSocieties()
+        .then(updateEvents)
+        .then(updateUsers)
+        .then(() => setIsLoading(false));
+    } else {
+      setIsLoading(loggedIn === undefined);
+    }
+  }, [loggedIn]);
+
   useEffect(() => {
     updateSocieties(), updateEvents(), updateUsers();
   }, []);
@@ -69,7 +75,7 @@ export default function App() {
     <AppContext.Provider value={appContent}>
       <GluestackUIProvider config={config}>
         <SafeAreaProvider>
-          {isAuthLoading ? (
+          {isLoading ? (
             <></>
           ) : (
             <NavigationContainer>
