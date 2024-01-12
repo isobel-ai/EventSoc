@@ -17,26 +17,30 @@ export function login(email: string, password: string) {
 }
 
 export async function register(name: string, email: string, password: string) {
-  return usernameTaken(name).then((isUserNameTaken) => {
-    if (isUserNameTaken) {
-      throw Error("Username taken.");
-    } else {
-      return createUserWithEmailAndPassword(auth, email, password)
-        .then((userCreds) =>
-          createUser(userCreds.user.uid, name).catch((err) => {
-            deleteUser(userCreds.user);
-            throw err;
-          })
-        )
-        .catch((e) => {
-          if (e.code === "auth/email-already-in-use") {
-            throw Error("Email already linked to an account.");
-          } else {
-            throw Error("Something went wrong. Try again later.");
-          }
-        });
-    }
-  });
+  return usernameTaken(name)
+    .catch((err) => {
+      throw err;
+    })
+    .then((isUserNameTaken) => {
+      if (isUserNameTaken) {
+        throw Error("Username taken.");
+      } else {
+        return createUserWithEmailAndPassword(auth, email, password)
+          .then((userCreds) =>
+            createUser(userCreds.user.uid, name).catch((err) => {
+              deleteUser(userCreds.user);
+              throw err;
+            })
+          )
+          .catch((e) => {
+            if (e.code === "auth/email-already-in-use") {
+              throw Error("Email already linked to an account.");
+            } else {
+              throw Error("Something went wrong. Try again later.");
+            }
+          });
+      }
+    });
 }
 
 export function signOut() {
