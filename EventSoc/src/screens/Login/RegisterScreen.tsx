@@ -54,8 +54,9 @@ export default function RegisterScreen(props: Props) {
       <Button
         variant={"link"}
         size={"lg"}
-        top={-5}
-        left={-100}
+        position="absolute"
+        top={50}
+        left={5}
         onPress={props.navigation.goBack}>
         <ButtonIcon
           as={ArrowLeftIcon}
@@ -65,6 +66,7 @@ export default function RegisterScreen(props: Props) {
       </Button>
       <Heading
         size="2xl"
+        marginTop={80}
         style={{ textAlign: "center" }}>
         Welcome to EventSoc
       </Heading>
