@@ -1,4 +1,13 @@
-import { doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  getCountFromServer,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  updateDoc,
+  where
+} from "firebase/firestore";
 import { societiesCol, societyPicturesRef } from "../config/firebaseConfig";
 import { Society, SocietyData } from "../models/Society";
 import { updateImage, uploadImage } from "./cloudService";
@@ -34,13 +43,22 @@ export function createSociety(society: SocietyData) {
     ? uploadImage(societyPicturesRef, society.pictureUrl, socRef.id)
     : Promise.resolve("");
 
-  return uploadResult
-    .then((downloadUrl) => {
-      setDoc(socRef, { ...society, pictureUrl: downloadUrl });
-      return socRef.id;
+  return societyNameTaken(society.name)
+    .catch((err) => {
+      throw err;
     })
-    .catch(() => {
-      throw Error("Couldn't create society. Try again later.");
+    .then((isSocNameTaken) => {
+      if (isSocNameTaken) {
+        throw Error("Society name taken");
+      }
+      return uploadResult
+        .then((downloadUrl) => {
+          setDoc(socRef, { ...society, pictureUrl: downloadUrl });
+          return socRef.id;
+        })
+        .catch(() => {
+          throw Error("Couldn't create society. Try again later.");
+        });
     });
 }
 
@@ -56,5 +74,13 @@ export function updateSociety(
     })
     .catch(() => {
       throw Error("Unable to update society. Try again later.");
+    });
+}
+
+function societyNameTaken(name: string) {
+  return getCountFromServer(query(societiesCol, where("name", "==", name)))
+    .then((result) => Boolean(result.data().count))
+    .catch(() => {
+      throw Error("Something went wrong. Try again later.");
     });
 }
