@@ -1,9 +1,13 @@
 import PictureUpload from "./PictureUpload";
 import {
   FormControl,
+  FormControlHelper,
+  FormControlHelperText,
   FormControlLabel,
   FormControlLabelText,
   HStack,
+  Icon,
+  InfoIcon,
   Input,
   InputField,
   Textarea,
@@ -15,7 +19,8 @@ import { endOfUniYear, setDate, setTime } from "../helpers/DateTimeHelper";
 import { EventData } from "../models/Event";
 import { useRef, useState } from "react";
 import TagInput from "./TagInput";
-import { xor } from "lodash";
+import { toInteger, xor } from "lodash";
+import { config } from "../../config/gluestack-ui.config";
 
 interface Props {
   event: EventData;
@@ -97,7 +102,7 @@ export default function EventForm(props: Props) {
         </FormControlLabel>
         <Textarea>
           <TextareaInput
-            placeholder="Event Description"
+            placeholder="Event description"
             value={
               props.event.description ? props.event.description : undefined
             }
@@ -109,6 +114,38 @@ export default function EventForm(props: Props) {
             }
           />
         </Textarea>
+      </FormControl>
+      <FormControl>
+        <FormControlLabel>
+          <FormControlLabelText>Event Capacity</FormControlLabelText>
+        </FormControlLabel>
+        <Input>
+          <InputField
+            placeholder="Event capacity"
+            value={
+              props.event.capacity >= 0
+                ? String(props.event.capacity)
+                : undefined
+            }
+            onChangeText={(c) =>
+              props.setEvent({
+                ...props.event,
+                capacity: c ? toInteger(c) : -1
+              })
+            }
+            keyboardType="numeric"
+          />
+        </Input>
+        <FormControlHelper>
+          <Icon
+            as={InfoIcon}
+            color={config.tokens.colors.primary500}
+            marginHorizontal={5}
+          />
+          <FormControlHelperText color={config.tokens.colors.primary500}>
+            Leave blank if unlimited capacity
+          </FormControlHelperText>
+        </FormControlHelper>
       </FormControl>
       <FormControl isRequired={true}>
         <FormControlLabel>
