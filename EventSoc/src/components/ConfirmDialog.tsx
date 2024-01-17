@@ -20,37 +20,32 @@ import {
 import { useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { config } from "../../config/gluestack-ui.config";
-import { deleteSocEvent } from "../services/socEventsService";
-import { Event } from "../models/Event";
-import { useAppContext } from "../contexts/AppContext";
 
 interface Props {
-  event: Event;
+  confirmFunc: () => Promise<any>;
+
+  heading: string;
+  body: string;
+  confirmText?: string;
 
   isVisible: boolean;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function DeleteEventDialog(props: Props) {
-  const { updateSocieties } = useAppContext();
-
-  const [deleteErrorMsg, setDeleteErrorMsg] = useState<string>("");
+export default function ConfirmDialog(props: Props) {
+  const [confirmFuncErrorMsg, setConfirmFuncErrorMsg] = useState<string>("");
 
   const handleDialogClose = () => {
     props.setIsVisible(false);
-    setDeleteErrorMsg("");
+    setConfirmFuncErrorMsg("");
   };
 
-  const handleDeleteEvent = () => {
-    deleteSocEvent(
-      props.event.id,
-      props.event.data.pictureUrl,
-      props.event.data.organiserId
-    )
-      .then(() => updateSocieties().catch())
+  const handleConfirm = () => {
+    props
+      .confirmFunc()
       .then(handleDialogClose)
       .catch((err) => {
-        setDeleteErrorMsg(err.message);
+        setConfirmFuncErrorMsg(err.message);
       });
   };
 
@@ -67,7 +62,7 @@ export default function DeleteEventDialog(props: Props) {
               size={40}
               color={config.tokens.colors.warningYellow}
             />
-            <Heading size="lg">{"Delete Event?"}</Heading>
+            <Heading size="lg">{props.heading}</Heading>
           </HStack>
           <AlertDialogCloseButton>
             <Icon
@@ -77,7 +72,7 @@ export default function DeleteEventDialog(props: Props) {
           </AlertDialogCloseButton>
         </AlertDialogHeader>
         <AlertDialogBody>
-          <Text size="md">Deleting an event cannot be undone.</Text>
+          <Text size="md">{props.body}</Text>
         </AlertDialogBody>
         <AlertDialogFooter>
           <VStack
@@ -92,11 +87,11 @@ export default function DeleteEventDialog(props: Props) {
               </Button>
               <Button
                 action="negative"
-                onPress={handleDeleteEvent}>
-                <ButtonText>Delete</ButtonText>
+                onPress={handleConfirm}>
+                <ButtonText>{props.confirmText ?? "Confirm"}</ButtonText>
               </Button>
             </HStack>
-            {deleteErrorMsg && (
+            {confirmFuncErrorMsg && (
               <Alert
                 action="error"
                 variant="outline"
@@ -107,7 +102,7 @@ export default function DeleteEventDialog(props: Props) {
                   color={config.tokens.colors.error}
                   style={{ paddingRight: 15 }}
                 />
-                <AlertText>{deleteErrorMsg}</AlertText>
+                <AlertText>{confirmFuncErrorMsg}</AlertText>
               </Alert>
             )}
           </VStack>
