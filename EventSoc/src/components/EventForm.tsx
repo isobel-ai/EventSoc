@@ -21,6 +21,7 @@ import { useRef, useState } from "react";
 import TagInput from "./TagInput";
 import { toInteger, xor } from "lodash";
 import { config } from "../../config/gluestack-ui.config";
+import { useScrollOnResize } from "../hooks/useScrollOnResize";
 
 interface Props {
   event: EventData;
@@ -28,18 +29,8 @@ interface Props {
 }
 
 export default function EventForm(props: Props) {
-  const [isFirstScrollSizeChange, setIsFirstScrollSizeChange] =
-    useState<boolean>(true);
-
   const scrollViewRef = useRef<ScrollView>(null);
-
-  const handleFormSizeChange = () => {
-    if (isFirstScrollSizeChange) {
-      setIsFirstScrollSizeChange(false);
-    } else {
-      scrollViewRef.current?.scrollToEnd();
-    }
-  };
+  const handleFormSizeChange = useScrollOnResize(scrollViewRef);
 
   const dateTimePickerStyle: StyleProp<ViewStyle> = { left: -10 };
 
