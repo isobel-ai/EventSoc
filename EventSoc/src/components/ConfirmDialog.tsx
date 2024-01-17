@@ -54,7 +54,7 @@ export default function ConfirmDialog(props: Props) {
       isOpen={props.isVisible}
       onClose={handleDialogClose}>
       <AlertDialogBackdrop />
-      <AlertDialogContent>
+      <AlertDialogContent width="90%">
         <AlertDialogHeader>
           <HStack style={{ gap: 10 }}>
             <MaterialIcons
