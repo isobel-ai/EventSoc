@@ -114,14 +114,12 @@ export default function EventForm(props: Props) {
           <InputField
             placeholder="Event capacity"
             value={
-              props.event.capacity >= 0
-                ? String(props.event.capacity)
-                : undefined
+              props.event.capacity >= 0 ? String(props.event.capacity) : ""
             }
             onChangeText={(c) =>
               props.setEvent({
                 ...props.event,
-                capacity: c ? toInteger(c) : -1
+                capacity: c.replaceAll(".", "") ? toInteger(c) : -1
               })
             }
             keyboardType="numeric"
