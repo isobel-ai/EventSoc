@@ -47,6 +47,7 @@ export default function EventPost(props: Props) {
 
   return (
     <VStack
+      width="100%"
       gap={10}
       paddingBottom={10}>
       <SocietyPressable societyId={props.event.data.organiserId} />
