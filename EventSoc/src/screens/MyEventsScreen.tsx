@@ -71,7 +71,12 @@ export default function MyEventsScreen(props: Props) {
             />
           )}
           searchKeys={["data.name"]}
-          itemSeperator={() => <Divider h="$1" />}
+          itemSeperator={() => (
+            <Divider
+              h="$1"
+              bgColor="transparent"
+            />
+          )}
           maxHeight="102%"
           listEmptyText="No events"
         />

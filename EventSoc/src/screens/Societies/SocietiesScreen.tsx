@@ -178,7 +178,12 @@ export default function SocietiesScreen(props: Props) {
                   />
                 )}
                 searchKeys={["data.name"]}
-                itemSeperator={() => <Divider h="$1" />}
+                itemSeperator={() => (
+                  <Divider
+                    h="$1"
+                    bgColor="transparent"
+                  />
+                )}
                 maxHeight={isExec ? "57%" : "73%"}
                 clearSearch={[society, isFocused, socEvents]}
                 listEmptyText="No events"
