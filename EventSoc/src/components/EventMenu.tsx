@@ -13,8 +13,6 @@ import { useState } from "react";
 import ConfirmDialog from "./ConfirmDialog";
 import { Event } from "../models/Event";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { SocietiesStackParamList } from "../navigation/Societies/SocietiesStackNavigator";
-import { EventsStackParamList } from "../navigation/EventsStackNavigator";
 import { useAppContext } from "../contexts/AppContext";
 import { deleteSocEvent } from "../services/socEventsService";
 
@@ -22,11 +20,14 @@ interface Props {
   event: Event;
 }
 
-export default function EventMenu(props: Props) {
-  const { navigate } =
-    useNavigation<
-      NavigationProp<SocietiesStackParamList | EventsStackParamList>
-    >();
+export default function EventMenu<
+  ParamList extends {
+    "Edit Event": {
+      eventId: string;
+    };
+  }
+>(props: Props) {
+  const { navigate } = useNavigation<NavigationProp<ParamList>>();
 
   const { updateSocieties } = useAppContext();
 

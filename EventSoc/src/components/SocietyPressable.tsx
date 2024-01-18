@@ -7,16 +7,22 @@ import {
   Pressable
 } from "@gluestack-ui/themed";
 import { config } from "../../config/gluestack-ui.config";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { EventsStackParamList } from "../navigation/EventsStackNavigator";
+import {
+  useNavigation,
+  NavigationProp,
+  NavigatorScreenParams
+} from "@react-navigation/native";
 import { useAppContext } from "../contexts/AppContext";
+import { SocietiesStackParamList } from "../navigation/Societies/SocietiesStackNavigator";
 
 interface Props {
   societyId: string;
 }
 
-export default function SocietyPressable(props: Props) {
-  const navigation = useNavigation<NavigationProp<EventsStackParamList>>();
+export default function SocietyPressable<
+  ParamList extends { Society: NavigatorScreenParams<SocietiesStackParamList> }
+>(props: Props) {
+  const navigation = useNavigation<NavigationProp<ParamList>>();
 
   const { societies } = useAppContext();
 
