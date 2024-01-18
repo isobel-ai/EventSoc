@@ -72,7 +72,7 @@ export default function MyEventsScreen(props: Props) {
           )}
           searchKeys={["data.name"]}
           itemSeperator={() => <Divider h="$1" />}
-          maxHeight="103%"
+          maxHeight="102%"
           listEmptyText="No events"
         />
       )}

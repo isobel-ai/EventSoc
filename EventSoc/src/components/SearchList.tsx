@@ -42,7 +42,8 @@ export default function SearchList<Item>(props: Props<Item>) {
   return (
     <View
       width="100%"
-      maxHeight={props.maxHeight}>
+      maxHeight={props.maxHeight}
+      gap={5}>
       <Input borderRadius={props.curvedSearchBar ? "$sm" : "$none"}>
         <InputField
           value={searchTerm}
