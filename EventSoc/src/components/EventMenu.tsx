@@ -10,23 +10,36 @@ import {
   TrashIcon
 } from "@gluestack-ui/themed";
 import { useState } from "react";
-import DeleteEventDialog from "./DeleteEventDialog";
+import ConfirmDialog from "./ConfirmDialog";
 import { Event } from "../models/Event";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { SocietiesStackParamList } from "../navigation/Societies/SocietiesStackNavigator";
-import { EventsStackParamList } from "../navigation/EventsStackNavigator";
+import { useAppContext } from "../contexts/AppContext";
+import { deleteSocEvent } from "../services/socEventsService";
 
 interface Props {
   event: Event;
 }
 
-export default function EventMenu(props: Props) {
-  const { navigate } =
-    useNavigation<
-      NavigationProp<SocietiesStackParamList | EventsStackParamList>
-    >();
+export default function EventMenu<
+  ParamList extends {
+    "Edit Event": {
+      eventId: string;
+    };
+  }
+>(props: Props) {
+  const { navigate } = useNavigation<NavigationProp<ParamList>>();
+
+  const { updateSocieties } = useAppContext();
 
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
+
+  const handleDeleteEvent = () => {
+    return deleteSocEvent(
+      props.event.id,
+      props.event.data.pictureUrl,
+      props.event.data.organiserId
+    ).then(() => updateSocieties().catch());
+  };
 
   const menuSelectionHandler = (keys: Iterable<React.Key> | string) => {
     const keySet = new Set<React.Key>(keys);
@@ -52,6 +65,7 @@ export default function EventMenu(props: Props) {
               <ButtonIcon
                 as={ThreeDotsIcon}
                 size="xl"
+                color="black"
               />
             </Button>
           );
@@ -79,8 +93,11 @@ export default function EventMenu(props: Props) {
           <MenuItemLabel size="sm">Delete Event</MenuItemLabel>
         </MenuItem>
       </Menu>
-      <DeleteEventDialog
-        event={props.event}
+      <ConfirmDialog
+        confirmFunc={handleDeleteEvent}
+        heading="Delete Event?"
+        body="Deleting an event cannot be undone."
+        confirmText="Delete"
         isVisible={showDeleteDialog}
         setIsVisible={setShowDeleteDialog}
       />

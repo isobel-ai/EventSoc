@@ -1,9 +1,13 @@
 import PictureUpload from "./PictureUpload";
 import {
   FormControl,
+  FormControlHelper,
+  FormControlHelperText,
   FormControlLabel,
   FormControlLabelText,
   HStack,
+  Icon,
+  InfoIcon,
   Input,
   InputField,
   Textarea,
@@ -13,9 +17,11 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { ScrollView, StyleProp, ViewStyle } from "react-native";
 import { endOfUniYear, setDate, setTime } from "../helpers/DateTimeHelper";
 import { EventData } from "../models/Event";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import TagInput from "./TagInput";
-import { xor } from "lodash";
+import { toInteger, xor } from "lodash";
+import { config } from "../../config/gluestack-ui.config";
+import { useScrollOnResize } from "../hooks/useScrollOnResize";
 
 interface Props {
   event: EventData;
@@ -23,18 +29,8 @@ interface Props {
 }
 
 export default function EventForm(props: Props) {
-  const [isFirstScrollSizeChange, setIsFirstScrollSizeChange] =
-    useState<boolean>(true);
-
   const scrollViewRef = useRef<ScrollView>(null);
-
-  const handleFormSizeChange = () => {
-    if (isFirstScrollSizeChange) {
-      setIsFirstScrollSizeChange(false);
-    } else {
-      scrollViewRef.current?.scrollToEnd();
-    }
-  };
+  const handleFormSizeChange = useScrollOnResize(scrollViewRef);
 
   const dateTimePickerStyle: StyleProp<ViewStyle> = { left: -10 };
 
@@ -97,7 +93,7 @@ export default function EventForm(props: Props) {
         </FormControlLabel>
         <Textarea>
           <TextareaInput
-            placeholder="Event Description"
+            placeholder="Event description"
             value={
               props.event.description ? props.event.description : undefined
             }
@@ -109,6 +105,36 @@ export default function EventForm(props: Props) {
             }
           />
         </Textarea>
+      </FormControl>
+      <FormControl>
+        <FormControlLabel>
+          <FormControlLabelText>Event Capacity</FormControlLabelText>
+        </FormControlLabel>
+        <Input>
+          <InputField
+            placeholder="Event capacity"
+            value={
+              props.event.capacity >= 0 ? String(props.event.capacity) : ""
+            }
+            onChangeText={(c) =>
+              props.setEvent({
+                ...props.event,
+                capacity: c.replaceAll(".", "") ? toInteger(c) : -1
+              })
+            }
+            keyboardType="numeric"
+          />
+        </Input>
+        <FormControlHelper>
+          <Icon
+            as={InfoIcon}
+            color={config.tokens.colors.primary500}
+            marginHorizontal={5}
+          />
+          <FormControlHelperText color={config.tokens.colors.primary500}>
+            Leave blank if unlimited capacity
+          </FormControlHelperText>
+        </FormControlHelper>
       </FormControl>
       <FormControl isRequired={true}>
         <FormControlLabel>

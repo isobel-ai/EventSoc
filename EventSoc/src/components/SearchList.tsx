@@ -17,7 +17,7 @@ interface Props<I> {
   data: I[];
   renderItem: (item: I) => ReactElement;
   searchKeys: string[];
-  clearSearch: any[];
+  clearSearch?: any[];
   curvedSearchBar?: boolean;
   itemSeperator?: ComponentType;
   maxHeight?: DimensionValue;
@@ -30,7 +30,7 @@ export default function SearchList<Item>(props: Props<Item>) {
 
   useEffect(() => {
     Keyboard.dismiss(), searchFunction("");
-  }, props.clearSearch);
+  }, props.clearSearch ?? []);
 
   useEffect(() => searchFunction(searchTerm), [props.data]); // Re-filter on list reload
 
@@ -42,7 +42,8 @@ export default function SearchList<Item>(props: Props<Item>) {
   return (
     <View
       width="100%"
-      maxHeight={props.maxHeight}>
+      maxHeight={props.maxHeight}
+      gap={5}>
       <Input borderRadius={props.curvedSearchBar ? "$sm" : "$none"}>
         <InputField
           value={searchTerm}

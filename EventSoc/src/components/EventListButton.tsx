@@ -18,9 +18,8 @@ export default function EventListButton(props: Props) {
       onPress={() => navigate("Event", { eventId: props.event.id })}
       backgroundColor={config.tokens.colors.eventButtonGray}
       height={100}
-      width="100%"
-      alignSelf="center"
-      borderRadius="$none">
+      width="95%"
+      alignSelf="center">
       {props.event.data.pictureUrl && (
         <Image
           size="md"
@@ -30,6 +29,7 @@ export default function EventListButton(props: Props) {
         />
       )}
       <ButtonText
+        color="black"
         numberOfLines={2}
         ellipsizeMode="tail"
         lineBreakStrategyIOS="standard">

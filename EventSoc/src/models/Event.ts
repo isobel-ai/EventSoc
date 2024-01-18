@@ -14,6 +14,8 @@ export interface EventData {
   pictureUrl: string;
   tags: string[];
   organiserId: string;
+  capacity: number; // -1 = unlimited capacity
+  attendeeIds: string[];
 }
 
 export const defaultEventData: () => EventData = () => {
@@ -25,6 +27,8 @@ export const defaultEventData: () => EventData = () => {
     endDate: defaultDate(),
     pictureUrl: "",
     tags: <string[]>[],
-    organiserId: ""
+    organiserId: "",
+    capacity: -1,
+    attendeeIds: <string[]>[]
   };
 };

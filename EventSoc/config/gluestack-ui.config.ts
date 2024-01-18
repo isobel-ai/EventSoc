@@ -29,7 +29,7 @@ export const gluestackUIConfig = createConfig({
     colors: {
       navigationLightPink: "#f472b6",
       navigationDarkPink: "#ec4899",
-      eventButtonGray: "#a8a29e",
+      eventButtonGray: "#CCC9CC",
       warningYellow: "#facc15",
       inputSectionPink: "#fdc6ef",
       tintBlack: "rgba(0,0,0,0.5)",
