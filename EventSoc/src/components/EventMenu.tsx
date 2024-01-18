@@ -65,6 +65,7 @@ export default function EventMenu<
               <ButtonIcon
                 as={ThreeDotsIcon}
                 size="xl"
+                color="black"
               />
             </Button>
           );
