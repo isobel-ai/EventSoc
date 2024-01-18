@@ -3,7 +3,6 @@ import {
   createBottomTabNavigator
 } from "@react-navigation/bottom-tabs";
 import MyAccountScreen from "../screens/MyAccountScreen";
-import MyEventsScreen from "../screens/MyEventsScreen";
 import NotificationScreen from "../screens/NotificationScreen";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { config } from "../../config/gluestack-ui.config";
@@ -13,10 +12,13 @@ import EventsStackNavigator, {
 } from "./EventsStackNavigator";
 import { NavigatorScreenParams } from "@react-navigation/native";
 import { SocietiesStackParamList } from "./Societies/SocietiesStackNavigator";
+import MyEventsStackNavigator, {
+  MyEventsStackParamList
+} from "./MyEventsStackNavigator";
 
 export type MainTabParamList = {
   Events: NavigatorScreenParams<EventsStackParamList>;
-  "My Events": undefined;
+  "My Events": NavigatorScreenParams<MyEventsStackParamList>;
   "My Account": undefined;
   Notifications: undefined;
   Societies: NavigatorScreenParams<SocietiesStackParamList>;
@@ -50,7 +52,7 @@ export default function MainTabNavigator() {
       />
       <Tab.Screen
         name="My Events"
-        component={MyEventsScreen}
+        component={MyEventsStackNavigator}
         options={{
           tabBarIcon: ({ size }) => (
             <MaterialCommunityIcons
