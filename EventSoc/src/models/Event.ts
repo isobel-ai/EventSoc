@@ -16,6 +16,7 @@ export interface EventData {
   organiserId: string;
   capacity: number; // -1 = unlimited capacity
   attendeeIds: string[];
+  commentIds: string[];
 }
 
 export const defaultEventData: () => EventData = () => {
@@ -29,6 +30,7 @@ export const defaultEventData: () => EventData = () => {
     tags: <string[]>[],
     organiserId: "",
     capacity: -1,
-    attendeeIds: <string[]>[]
+    attendeeIds: <string[]>[],
+    commentIds: <string[]>[]
   };
 };
