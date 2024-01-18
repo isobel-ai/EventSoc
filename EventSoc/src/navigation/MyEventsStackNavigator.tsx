@@ -4,7 +4,7 @@ import {
 } from "@react-navigation/stack";
 import { config } from "../../config/gluestack-ui.config";
 import { ArrowLeftIcon, Icon } from "@gluestack-ui/themed";
-import EventScreen from "../screens/Events/EventScreen";
+import EventScreen from "../screens/Event/EventScreen";
 import {
   NavigatorScreenParams,
   getFocusedRouteNameFromRoute
@@ -12,15 +12,17 @@ import {
 import SocietiesStackNavigator, {
   SocietiesStackParamList
 } from "./Societies/SocietiesStackNavigator";
-import EditEventScreen from "../screens/Societies/EditEventScreen";
+import EditEventScreen from "../screens/Event/EditEventScreen";
 import MyEventsScreen from "../screens/MyEventsScreen";
+import {
+  EventStackParamList,
+  EventStackScreens
+} from "./CrossTabStackScreens/EventStackScreens";
 
 export type MyEventsStackParamList = {
   Home: undefined;
-  Event: { eventId: string };
-  "Edit Event": { eventId: string };
   Society: NavigatorScreenParams<SocietiesStackParamList>;
-};
+} & EventStackParamList;
 
 export default function MyEventsStackNavigator() {
   const Stack = createStackNavigator<MyEventsStackParamList>();
@@ -53,14 +55,6 @@ export default function MyEventsStackNavigator() {
         }}
       />
       <Stack.Screen
-        name="Event"
-        component={EventScreen}
-      />
-      <Stack.Screen
-        name="Edit Event"
-        component={EditEventScreen}
-      />
-      <Stack.Screen
         name="Society"
         component={SocietiesStackNavigator}
         options={({ route }) => {
@@ -70,6 +64,12 @@ export default function MyEventsStackNavigator() {
           };
         }}
       />
+      {EventStackScreens.map((screenInfo, index) => (
+        <Stack.Screen
+          key={index}
+          {...screenInfo}
+        />
+      ))}
     </Stack.Navigator>
   );
 }

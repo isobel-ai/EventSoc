@@ -10,7 +10,6 @@ import {
 import EventPost from "../../components/EventPost";
 import ScreenView from "../../components/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
-import { EventsStackParamList } from "../../navigation/EventsStackNavigator";
 import { config } from "../../../config/gluestack-ui.config";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useAppContext } from "../../contexts/AppContext";
@@ -24,8 +23,9 @@ import DismissableToast, {
   DismissableToastHookProps
 } from "../../components/DismissableToast";
 import useDismissableToast from "../../hooks/useDismissableToast";
+import { EventStackParamList } from "../../navigation/CrossTabStackScreens/EventStackScreens";
 
-type Props = StackScreenProps<EventsStackParamList, "Event">;
+type Props = StackScreenProps<EventStackParamList, "Event">;
 
 export default function EventScreen(props: Props) {
   const { events, getUser, updateEvents, societies, updateUsers } =

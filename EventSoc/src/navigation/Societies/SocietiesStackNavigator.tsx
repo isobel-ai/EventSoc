@@ -5,20 +5,20 @@ import {
 import SocietiesScreen from "../../screens/Societies/SocietiesScreen";
 import { config } from "../../../config/gluestack-ui.config";
 import CreateEventScreen from "../../screens/Societies/CreateEventScreen";
-import EditEventScreen from "../../screens/Societies/EditEventScreen";
 import { CloseIcon, Icon } from "@gluestack-ui/themed";
 import RegisterSocietyScreen from "../../screens/Societies/RegisterSocietyScreen";
 import EditSocietyScreen from "../../screens/Societies/EditSocietyScreen";
-import EventScreen from "../../screens/Events/EventScreen";
+import {
+  EventStackParamList,
+  EventStackScreens
+} from "../CrossTabStackScreens/EventStackScreens";
 
 export type SocietiesStackParamList = {
   Home: { societyId: string };
   "Register Society": undefined;
   "Edit Society": { societyId: string };
   "Create Event": { organiserId: string };
-  "Edit Event": { eventId: string };
-  Event: { eventId: string };
-};
+} & EventStackParamList;
 
 export default function SocietiesStackNavigator() {
   const Stack = createStackNavigator<SocietiesStackParamList>();
@@ -64,14 +64,12 @@ export default function SocietiesStackNavigator() {
         name="Create Event"
         component={CreateEventScreen}
       />
-      <Stack.Screen
-        name="Edit Event"
-        component={EditEventScreen}
-      />
-      <Stack.Screen
-        name="Event"
-        component={EventScreen}
-      />
+      {EventStackScreens.map((screenInfo, index) => (
+        <Stack.Screen
+          key={index}
+          {...screenInfo}
+        />
+      ))}
     </Stack.Navigator>
   );
 }
