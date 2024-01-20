@@ -29,9 +29,9 @@ export default function SocietiesSideMenu(props: Props) {
   const { navigate } = useNavigation<NavigationProp<MainTabParamList>>();
 
   const getExecSocieties = () => {
-    const userName = getUser()?.data.name;
-    return userName
-      ? societies.filter((soc) => soc.data.exec.includes(userName))
+    const userId = getUser()?.id;
+    return userId
+      ? societies.filter((soc) => soc.data.execIds.includes(userId))
       : [];
   };
 

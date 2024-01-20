@@ -7,7 +7,7 @@ export interface SocietyData {
   name: string;
   description: string;
   pictureUrl: string;
-  exec: string[];
+  execIds: string[];
   eventIds: string[];
 }
 
@@ -16,7 +16,7 @@ export const defaultSocietyData: () => SocietyData = () => {
     name: "",
     description: "",
     pictureUrl: "",
-    exec: [],
+    execIds: [],
     eventIds: []
   };
 };

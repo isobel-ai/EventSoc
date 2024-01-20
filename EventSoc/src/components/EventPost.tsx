@@ -33,7 +33,7 @@ export default function EventPost(props: Props) {
       const society = societies.find(
         (soc) => soc.id === props.event.data.organiserId
       );
-      setIsExec(society?.data.exec.includes(user.data.name) ?? false);
+      setIsExec(society?.data.execIds.includes(user.id) ?? false);
     } else {
       setIsExec(false);
     }

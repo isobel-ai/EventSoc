@@ -68,9 +68,9 @@ export default function SocietiesScreen(props: Props) {
               !socEvents.length && setRetrieveSocEventsErrMsg(err.message)
           );
 
-        const userName = getUser()?.data.name;
-        if (userName) {
-          setIsExec(newSoc.exec.includes(userName));
+        const userId = getUser()?.id;
+        if (userId) {
+          setIsExec(newSoc.execIds.includes(userId));
         } else {
           setIsExec(false);
         }

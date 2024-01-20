@@ -22,10 +22,10 @@ export default function RegisterScreen(props: Props) {
 
   const registerSociety = () => {
     // Add user to exec
-    const userName = getUser()?.data.name;
-    const fullExec = society.exec.slice();
-    if (userName) {
-      fullExec.push(userName);
+    const userId = getUser()?.id;
+    const fullExec = society.execIds.slice();
+    if (userId) {
+      fullExec.push(userId);
     }
     const fullSoc = { ...society, exec: fullExec };
 

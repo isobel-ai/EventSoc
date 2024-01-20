@@ -44,7 +44,7 @@ export default function EventScreenHeader(props: Props) {
     : undefined;
   const isExec =
     props.user && eventOrganiser
-      ? eventOrganiser.data.exec.includes(props.user.data.name)
+      ? eventOrganiser.data.execIds.includes(props.user.data.name)
       : false;
 
   const isSignedUp =

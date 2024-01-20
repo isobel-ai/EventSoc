@@ -73,7 +73,8 @@ export default function SocietyForm(props: Props) {
       userItems.filter(
         (userItem) =>
           execItems.some((execItem) => execItem.id === userItem.id) ||
-          (props.editingForm && props.society.exec.includes(userItem.item))
+          (props.editingForm &&
+            props.society.execIds.includes(String(userItem.id)))
       )
     );
   }, [userItems]);
@@ -85,7 +86,7 @@ export default function SocietyForm(props: Props) {
   const setExec = () => {
     if (!retrieveUsersErrMsg) {
       const exec = execItems.map((i) => i.item);
-      props.setSociety({ ...props.society, exec: exec });
+      props.setSociety({ ...props.society, execIds: exec });
     }
     setIsSelectExecOpen(false);
   };

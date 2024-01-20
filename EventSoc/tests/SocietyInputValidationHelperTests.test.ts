@@ -6,7 +6,7 @@ describe("getSocietyErrMsg", () => {
     const soc: SocietyData = {
       ...defaultSocietyData(),
       name: "name",
-      exec: ["a"]
+      execIds: ["a"]
     };
 
     expect(getSocietyErrMsg(soc)).toBe("");
@@ -15,7 +15,7 @@ describe("getSocietyErrMsg", () => {
   test("it should return an appropriate error message if the society's name is empty", () => {
     const soc: SocietyData = {
       ...defaultSocietyData(),
-      exec: ["a"]
+      execIds: ["a"]
     };
 
     expect(getSocietyErrMsg(soc)).toBe("Your society must have a name.");

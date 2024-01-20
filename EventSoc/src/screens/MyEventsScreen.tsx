@@ -39,7 +39,7 @@ export default function MyEventsScreen(props: Props) {
         (society) => society.id === eventOrganiserId
       );
       if (society) {
-        return society.data.exec.includes(user.data.name);
+        return society.data.execIds.includes(user.id);
       }
     }
     return false;
