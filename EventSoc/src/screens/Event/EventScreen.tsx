@@ -21,10 +21,10 @@ import CommentButton from "../../components/CommentButton";
 type Props = StackScreenProps<EventStackParamList, "Event">;
 
 export default function EventScreen(props: Props) {
-  const { events, getUser } = useAppContext();
+  const { events, userId, users } = useAppContext();
 
   const event = events.find((event) => event.id === props.route.params.eventId);
-  const user = getUser();
+  const user = users.find((user) => user.id === userId);
 
   const [comments, setComments] = useState<Comment[]>([]);
 

@@ -23,12 +23,12 @@ interface Props {
 }
 
 export default function EventPost(props: Props) {
-  const { societies, getUser } = useAppContext();
+  const { societies, userId, users } = useAppContext();
 
   const [isExec, setIsExec] = useState<boolean>(false);
 
   useEffect(() => {
-    const user = getUser();
+    const user = users.find((user) => user.id === userId);
     if (user) {
       const society = societies.find(
         (soc) => soc.id === props.event.data.organiserId

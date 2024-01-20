@@ -24,16 +24,12 @@ interface Props {
 }
 
 export default function SocietiesSideMenu(props: Props) {
-  const { societies, updateSocieties, getUser } = useAppContext();
+  const { societies, updateSocieties, userId } = useAppContext();
 
   const { navigate } = useNavigation<NavigationProp<MainTabParamList>>();
 
-  const getExecSocieties = () => {
-    const userId = getUser()?.id;
-    return userId
-      ? societies.filter((soc) => soc.data.execIds.includes(userId))
-      : [];
-  };
+  const getExecSocieties = () =>
+    societies.filter((soc) => soc.data.execIds.includes(userId));
 
   const [execSocieties, setExecSocieties] =
     useState<Society[]>(getExecSocieties);

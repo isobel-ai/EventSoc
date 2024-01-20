@@ -13,12 +13,11 @@ import { MyEventsStackParamList } from "../navigation/MyEventsStackNavigator";
 type Props = StackScreenProps<MyEventsStackParamList, "Home">;
 
 export default function MyEventsScreen(props: Props) {
-  const { events, getUser, updateEvents, societies } = useAppContext();
+  const { events, userId, updateEvents, societies } = useAppContext();
 
-  const user = getUser();
-  const myEvents = user
-    ? events.filter((event) => event.data.attendeeIds.includes(user.id))
-    : [];
+  const myEvents = events.filter((event) =>
+    event.data.attendeeIds.includes(userId)
+  );
 
   const [retrieveEventsErrMsg, setRetrieveEventsErrMsg] = useState<string>("");
 
@@ -34,13 +33,11 @@ export default function MyEventsScreen(props: Props) {
   }, [isFocused]);
 
   const isExec = (eventOrganiserId: string) => {
-    if (user) {
-      const society = societies.find(
-        (society) => society.id === eventOrganiserId
-      );
-      if (society) {
-        return society.data.execIds.includes(user.id);
-      }
+    const society = societies.find(
+      (society) => society.id === eventOrganiserId
+    );
+    if (society) {
+      return society.data.execIds.includes(userId);
     }
     return false;
   };

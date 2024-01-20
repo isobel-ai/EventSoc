@@ -41,18 +41,14 @@ export default function App() {
     });
   };
 
-  const getUser = (): User | undefined => {
-    return users.find((user) => user.id === userId);
-  };
-
   const appContent: AppContent = {
     societies,
     events,
     users,
+    userId,
     updateSocieties,
     updateEvents,
-    updateUsers,
-    getUser
+    updateUsers
   };
 
   const [isLoading, setIsLoading] = useState<boolean>(true);

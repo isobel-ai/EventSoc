@@ -42,11 +42,11 @@ interface Props {
 }
 
 export default function SocietyForm(props: Props) {
-  const { users, updateUsers, getUser } = useAppContext();
+  const { users, updateUsers, userId } = useAppContext();
 
   const getUserItems = () =>
     users.flatMap((user) =>
-      props.editingForm || user.id !== getUser()?.id
+      props.editingForm || user.id !== userId
         ? [{ id: user.id, item: user.data.name }]
         : []
     );
