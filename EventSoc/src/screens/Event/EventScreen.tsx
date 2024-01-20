@@ -45,7 +45,12 @@ export default function EventScreen(props: Props) {
       <FlatList
         ListHeaderComponent={<EventScreenHeader {...{ event, user }} />}
         data={comments}
-        renderItem={({ item }) => <CommentButton comment={item as Comment} />}
+        renderItem={({ item }) => (
+          <CommentButton
+            comment={item as Comment}
+            eventOrganiserId={event?.data.organiserId}
+          />
+        )}
         ListEmptyComponent={
           showRetrieveCommentError ? (
             <Alert

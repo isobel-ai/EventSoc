@@ -32,15 +32,10 @@ export default function MyEventsScreen(props: Props) {
         .catch((err) => !events.length && setRetrieveEventsErrMsg(err.message));
   }, [isFocused]);
 
-  const isExec = (eventOrganiserId: string) => {
-    const society = societies.find(
-      (society) => society.id === eventOrganiserId
-    );
-    if (society) {
-      return society.data.execIds.includes(userId);
-    }
-    return false;
-  };
+  const isExec = (eventOrganiserId: string) =>
+    societies
+      .find((soc) => soc.id === eventOrganiserId)
+      ?.data.execIds.includes(userId) ?? false;
 
   return (
     <ScreenView>

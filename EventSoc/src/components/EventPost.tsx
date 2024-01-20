@@ -28,15 +28,11 @@ export default function EventPost(props: Props) {
   const [isExec, setIsExec] = useState<boolean>(false);
 
   useEffect(() => {
-    const user = users.find((user) => user.id === userId);
-    if (user) {
-      const society = societies.find(
-        (soc) => soc.id === props.event.data.organiserId
-      );
-      setIsExec(society?.data.execIds.includes(user.id) ?? false);
-    } else {
-      setIsExec(false);
-    }
+    setIsExec(
+      societies
+        .find((soc) => soc.id === props.event.data.organiserId)
+        ?.data.execIds.includes(userId) ?? false
+    );
   }, [societies]);
 
   const iconTextContainerStyle: StyleProp<ViewStyle> = {

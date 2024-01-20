@@ -39,12 +39,11 @@ export default function EventScreenHeader(props: Props) {
       props.event.data.capacity <= props.event.data.attendeeIds.length
     : false;
 
-  const eventOrganiser = props.event
-    ? societies.find((society) => society.id === props.event?.data.organiserId)
-    : undefined;
   const isExec =
-    props.user && eventOrganiser
-      ? eventOrganiser.data.execIds.includes(props.user.data.name)
+    props.event && props.user
+      ? societies
+          .find((soc) => soc.id === props.event.data.organiserId)
+          ?.data.execIds.includes(props.user.id) ?? false
       : false;
 
   const isSignedUp =
