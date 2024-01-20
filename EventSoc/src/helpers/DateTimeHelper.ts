@@ -93,3 +93,23 @@ export function endOfUniYear() {
 
   return end;
 }
+export function dateInRange(date: Date, rangeStart?: Date, rangeEnd?: Date) {
+  if (!rangeStart) {
+    // No range
+    return true;
+  }
+
+  const normalizedRangeStart = new Date(rangeStart);
+  normalizedRangeStart.setHours(0, 0, 0, 0);
+
+  if (date >= normalizedRangeStart) {
+    const normalizedRangeEnd = rangeEnd
+      ? new Date(rangeEnd)
+      : new Date(rangeStart);
+    normalizedRangeEnd.setHours(23, 59, 59, 999);
+
+    return date <= normalizedRangeEnd;
+  }
+
+  return false;
+}

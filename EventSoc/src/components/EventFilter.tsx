@@ -11,7 +11,8 @@ import {
 } from "@gluestack-ui/themed";
 import { ReactNode, useEffect, useState } from "react";
 import { Keyboard } from "react-native";
-import { dateInRange, searchFilter } from "../helpers/SearchSortHelper";
+import { searchFilter } from "../helpers/SearchHelper";
+import { dateInRange } from "../helpers/DateTimeHelper";
 import { MaterialIcons } from "@expo/vector-icons";
 import ScreenView from "./ScreenView";
 import { Event } from "../models/Event";
