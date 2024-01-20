@@ -1,4 +1,10 @@
-import { Text, Pressable, Icon, MessageCircleIcon } from "@gluestack-ui/themed";
+import {
+  Text,
+  Pressable,
+  Icon,
+  MessageCircleIcon,
+  HStack
+} from "@gluestack-ui/themed";
 import { config } from "../../config/gluestack-ui.config";
 import { Comment } from "../models/Comment";
 import { useAppContext } from "../contexts/AppContext";
@@ -6,19 +12,26 @@ import { StyleProp, TextStyle } from "react-native";
 
 interface Props {
   comment: Comment;
+  eventOrganiserId?: string;
 }
 
 export default function CommentButton(props: Props) {
-  const { users } = useAppContext();
+  const { users, societies } = useAppContext();
 
   const authorName = users.find(
     (user) => user.id === props.comment.data.authorId
   )?.data.name;
 
+  const isExec = props.eventOrganiserId
+    ? societies
+        .find((soc) => soc.id === props.eventOrganiserId)
+        ?.data.execIds.includes(props.comment.data.authorId) ?? false
+    : false;
+
   const buttonTextStyle: StyleProp<TextStyle> = {
     color: "black",
     fontSize: config.tokens.fontSizes.sm,
-    lineHeight: 16,
+    lineHeight: 20,
     fontWeight: "normal"
   };
 
@@ -29,12 +42,27 @@ export default function CommentButton(props: Props) {
       width="93%"
       alignSelf="center"
       padding={10}>
-      {authorName && (
-        <Text
-          style={[buttonTextStyle, { fontWeight: "bold", marginBottom: -15 }]}>
-          {`${authorName}\n`}
-        </Text>
-      )}
+      <HStack>
+        {authorName && (
+          <Text style={[buttonTextStyle, { fontWeight: "bold" }]}>
+            {authorName}
+          </Text>
+        )}
+        {isExec && (
+          <Text
+            style={[
+              buttonTextStyle,
+              {
+                fontWeight: "bold",
+                color: config.tokens.colors.navigationDarkPink,
+                position: "absolute",
+                right: 0
+              }
+            ]}>
+            EXEC
+          </Text>
+        )}
+      </HStack>
       <Text
         style={buttonTextStyle}
         numberOfLines={5}
@@ -42,19 +70,17 @@ export default function CommentButton(props: Props) {
         lineBreakStrategyIOS="standard">
         {props.comment.data.contents}
       </Text>
-      <Text
-        style={[
-          buttonTextStyle,
-          { marginTop: 5, color: config.tokens.colors.primary500 }
-        ]}>
+      <HStack alignItems="center">
         <Icon
           as={MessageCircleIcon}
           color={config.tokens.colors.primary400}
           marginRight={5}
-          justifyContent="center"
         />
-        {props.comment.data.replyIds.length}
-      </Text>
+        <Text
+          style={[buttonTextStyle, { color: config.tokens.colors.primary500 }]}>
+          {props.comment.data.replyIds.length}
+        </Text>
+      </HStack>
     </Pressable>
   );
 }
