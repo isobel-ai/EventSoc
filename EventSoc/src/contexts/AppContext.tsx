@@ -8,11 +8,11 @@ export type AppContent = {
   events: Event[];
   users: User[];
 
+  userId: string;
+
   updateSocieties: () => Promise<void>;
   updateEvents: () => Promise<void>;
   updateUsers: () => Promise<void>;
-
-  getUser: () => User | undefined;
 };
 
 const AppContext = createContext<AppContent>({
@@ -20,11 +20,11 @@ const AppContext = createContext<AppContent>({
   events: [],
   users: [],
 
+  userId: "",
+
   updateSocieties: () => Promise.resolve(),
   updateEvents: () => Promise.resolve(),
-  updateUsers: () => Promise.resolve(),
-
-  getUser: () => undefined
+  updateUsers: () => Promise.resolve()
 });
 export default AppContext;
 

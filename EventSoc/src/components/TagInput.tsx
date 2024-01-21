@@ -1,15 +1,5 @@
-import {
-  FlatList,
-  Input,
-  InputField,
-  View,
-  Text,
-  Icon,
-  CloseCircleIcon
-} from "@gluestack-ui/themed";
+import { FlatList, Input, InputField, View } from "@gluestack-ui/themed";
 import { useState } from "react";
-import { config } from "../../config/gluestack-ui.config";
-import { TextStyle, TouchableOpacity, ViewStyle } from "react-native";
 import Tag from "./Tag";
 
 interface Props {

@@ -33,7 +33,7 @@ import { Event } from "../../models/Event";
 type Props = StackScreenProps<SocietiesStackParamList, "Home">;
 
 export default function SocietiesScreen(props: Props) {
-  const { societies, events, updateEvents, getUser } = useAppContext();
+  const { societies, events, updateEvents, userId } = useAppContext();
 
   const [society, setSociety] = useState<SocietyData>();
 
@@ -68,12 +68,7 @@ export default function SocietiesScreen(props: Props) {
               !socEvents.length && setRetrieveSocEventsErrMsg(err.message)
           );
 
-        const userName = getUser()?.data.name;
-        if (userName) {
-          setIsExec(newSoc.exec.includes(userName));
-        } else {
-          setIsExec(false);
-        }
+        setIsExec(newSoc.execIds.includes(userId));
       } else {
         setIsExec(false);
       }

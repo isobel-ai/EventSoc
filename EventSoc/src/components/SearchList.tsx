@@ -11,7 +11,7 @@ import {
 } from "@gluestack-ui/themed";
 import { ComponentType, ReactElement, useEffect, useState } from "react";
 import { DimensionValue, Keyboard } from "react-native";
-import { searchFilter } from "../helpers/SearchSortHelper";
+import { searchFilter } from "../helpers/SearchHelper";
 
 interface Props<I> {
   data: I[];

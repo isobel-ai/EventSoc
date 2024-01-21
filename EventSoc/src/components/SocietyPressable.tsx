@@ -20,9 +20,13 @@ interface Props {
 }
 
 export default function SocietyPressable<
-  ParamList extends { Society: NavigatorScreenParams<SocietiesStackParamList> }
+  NestedSocietiesStackParamList extends {
+    Society: NavigatorScreenParams<SocietiesStackParamList>;
+  }
 >(props: Props) {
-  const navigation = useNavigation<NavigationProp<ParamList>>();
+  const navigation = useNavigation<NavigationProp<SocietiesStackParamList>>();
+  const nestedNavigation =
+    useNavigation<NavigationProp<NestedSocietiesStackParamList>>();
 
   const { societies } = useAppContext();
 
@@ -35,11 +39,12 @@ export default function SocietyPressable<
       paddingHorizontal={15}
       paddingVertical={5}
       onPress={() => {
-        navigation.getId() !== "Societies" &&
-          navigation.navigate("Society", {
-            screen: "Home",
-            params: { societyId: props.societyId }
-          });
+        navigation.getId() === "Societies"
+          ? navigation.navigate("Home", { societyId: props.societyId })
+          : nestedNavigation.navigate("Society", {
+              screen: "Home",
+              params: { societyId: props.societyId }
+            });
       }}>
       <HStack
         gap={15}

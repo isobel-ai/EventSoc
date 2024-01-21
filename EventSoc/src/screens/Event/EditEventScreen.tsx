@@ -1,6 +1,5 @@
 import ScreenView from "../../components/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
-import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { EventData, defaultEventData } from "../../models/Event";
 import { useState } from "react";
 import { getEventErrMsg } from "../../helpers/EventInputValidationHelper";
@@ -11,8 +10,9 @@ import { useAppContext } from "../../contexts/AppContext";
 import { getUpdates } from "../../helpers/UpdateHelper";
 import { updateEvent } from "../../services/eventsService";
 import { cloneDeep } from "lodash";
+import { EventStackParamList } from "../../navigation/CrossTabStackScreens/EventStackScreens";
 
-type Props = StackScreenProps<SocietiesStackParamList, "Edit Event">;
+type Props = StackScreenProps<EventStackParamList, "Edit Event">;
 
 export default function EditEventScreen(props: Props) {
   const { events } = useAppContext();

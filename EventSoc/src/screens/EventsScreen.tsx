@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { Alert, AlertText } from "@gluestack-ui/themed";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { config } from "../../../config/gluestack-ui.config";
-import ScreenView from "../../components/ScreenView";
-import EventFilter from "../../components/EventFilter";
-import EventFeed from "../../components/EventFeed";
-import { useAppContext } from "../../contexts/AppContext";
-import { Event } from "../../models/Event";
+import { config } from "../../config/gluestack-ui.config";
+import ScreenView from "../components/ScreenView";
+import EventFilter from "../components/EventFilter";
+import EventFeed from "../components/EventFeed";
+import { useAppContext } from "../contexts/AppContext";
+import { Event } from "../models/Event";
 
 export default function EventsScreen() {
   const { events, updateEvents } = useAppContext();

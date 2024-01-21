@@ -8,7 +8,9 @@ import ErrorAlertDialog from "../components/ErrorAlertDialog";
 import { useAppContext } from "../contexts/AppContext";
 
 export default function MyAccountScreen() {
-  const { getUser } = useAppContext();
+  const { users, userId } = useAppContext();
+
+  const getUser = () => users.find((user) => user.id === userId);
 
   const [user, setUser] = useState<User | undefined>(getUser);
 

@@ -13,7 +13,7 @@ import { useAppContext } from "../../contexts/AppContext";
 type Props = StackScreenProps<SocietiesStackParamList, "Register Society">;
 
 export default function RegisterScreen(props: Props) {
-  const { getUser, updateSocieties } = useAppContext();
+  const { userId, updateSocieties } = useAppContext();
 
   const [society, setSociety] = useState<SocietyData>(defaultSocietyData);
 
@@ -22,11 +22,8 @@ export default function RegisterScreen(props: Props) {
 
   const registerSociety = () => {
     // Add user to exec
-    const userName = getUser()?.data.name;
-    const fullExec = society.exec.slice();
-    if (userName) {
-      fullExec.push(userName);
-    }
+    const fullExec = society.execIds.slice();
+    fullExec.push(userId);
     const fullSoc = { ...society, exec: fullExec };
 
     const invalidErrMsg = getSocietyErrMsg(fullSoc);

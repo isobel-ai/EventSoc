@@ -23,20 +23,16 @@ interface Props {
 }
 
 export default function EventPost(props: Props) {
-  const { societies, getUser } = useAppContext();
+  const { societies, userId, users } = useAppContext();
 
   const [isExec, setIsExec] = useState<boolean>(false);
 
   useEffect(() => {
-    const user = getUser();
-    if (user) {
-      const society = societies.find(
-        (soc) => soc.id === props.event.data.organiserId
-      );
-      setIsExec(society?.data.exec.includes(user.data.name) ?? false);
-    } else {
-      setIsExec(false);
-    }
+    setIsExec(
+      societies
+        .find((soc) => soc.id === props.event.data.organiserId)
+        ?.data.execIds.includes(userId) ?? false
+    );
   }, [societies]);
 
   const iconTextContainerStyle: StyleProp<ViewStyle> = {
