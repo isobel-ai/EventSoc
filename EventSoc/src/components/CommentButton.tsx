@@ -10,13 +10,19 @@ import { Comment } from "../models/Comment";
 import { useAppContext } from "../contexts/AppContext";
 import { StyleProp, TextStyle } from "react-native";
 import { toTimeAgoString } from "../helpers/DateTimeHelper";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { EventStackParamList } from "../navigation/CrossTabStackScreens/EventStackScreens";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 interface Props {
   comment: Comment;
   eventOrganiserId?: string;
+  disableButton?: boolean;
 }
 
 export default function CommentButton(props: Props) {
+  const { push } = useNavigation<StackNavigationProp<EventStackParamList>>();
+
   const { users, societies } = useAppContext();
 
   const authorName = users.find(
@@ -38,7 +44,13 @@ export default function CommentButton(props: Props) {
 
   return (
     <Pressable
-      onPress={() => {}}
+      onPress={() =>
+        push("Reply", {
+          commentId: props.comment.id,
+          eventOrganiserId: props.eventOrganiserId
+        })
+      }
+      disabled={props.disableButton}
       backgroundColor={config.tokens.colors.eventButtonGray}
       width="93%"
       alignSelf="center"

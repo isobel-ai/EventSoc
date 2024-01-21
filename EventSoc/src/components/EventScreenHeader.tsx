@@ -195,7 +195,8 @@ export default function EventScreenHeader(props: Props) {
                 <CommentInputModal
                   showModal={showPostCommentModal}
                   setShowModal={setShowPostCommentModal}
-                  eventId={props.event.id}
+                  parentType="EVENT"
+                  parentId={props.event.id}
                   authorId={props.user.id}
                 />
               </>

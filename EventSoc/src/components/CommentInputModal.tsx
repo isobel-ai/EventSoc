@@ -24,12 +24,14 @@ import { config } from "../../config/gluestack-ui.config";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { postComment } from "../services/eventCommentService";
 import { useAppContext } from "../contexts/AppContext";
+import { postReply } from "../services/commentsService";
 
 interface Props {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 
-  eventId: string;
+  parentType: "EVENT" | "COMMENT";
+  parentId: string;
   authorId: string;
 }
 
@@ -43,8 +45,14 @@ export default function CommentInputModal(props: Props) {
   useEffect(() => setComment(""), [props.showModal]);
 
   const handlePostComment = () => {
-    postComment(props.eventId, props.authorId, comment)
-      .then(() => updateEvents().catch())
+    const postAttempt =
+      props.parentType === "EVENT"
+        ? postComment(props.parentId, props.authorId, comment).then(() =>
+            updateEvents().catch()
+          )
+        : postReply(props.parentId, props.authorId, comment);
+
+    postAttempt
       .then(() => props.setShowModal(false))
       .catch((err) => setPostCommentErrMsg(err.message));
   };

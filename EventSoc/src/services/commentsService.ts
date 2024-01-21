@@ -1,8 +1,24 @@
-import { doc, getDoc } from "firebase/firestore";
-import { commentsCol } from "../config/firebaseConfig";
-import { Comment } from "../models/Comment";
+import { arrayUnion, doc, getDoc, runTransaction } from "firebase/firestore";
+import { commentsCol, db } from "../config/firebaseConfig";
+import { Comment, CommentData, defaultCommentData } from "../models/Comment";
 
-export function retrieveComments(commentIds: string[]) {
+export function retrieveCommentData(id: string) {
+  return getDoc(doc(commentsCol, id))
+    .then((commentSnapshot) => {
+      if (!commentSnapshot.exists()) {
+        throw Error;
+      }
+      return {
+        ...commentSnapshot.data(),
+        timestamp: commentSnapshot.data().timestamp.toDate()
+      } as CommentData;
+    })
+    .catch(() => {
+      throw Error("Could not retrieve comment. Try again later.");
+    });
+}
+
+export function retrieveComments(commentIds: string[], isReplies?: boolean) {
   const commentPromises = commentIds.map((commentId) =>
     getDoc(doc(commentsCol, commentId)).then((commentSnapshot) => {
       if (!commentSnapshot.exists()) {
@@ -29,6 +45,35 @@ export function retrieveComments(commentIds: string[]) {
       );
     })
     .catch(() => {
-      throw Error("Unable to retreive comments. Try again later.");
+      throw Error(
+        `Unable to retreive ${
+          isReplies ? "replies" : "comments"
+        }. Try again later.`
+      );
     });
+}
+
+export function postReply(
+  commentId: string,
+  authorId: string,
+  contents: string
+) {
+  return runTransaction(db, (transaction) => {
+    const commentDoc = doc(commentsCol, commentId);
+    const replyDoc = doc(commentsCol);
+
+    const reply: CommentData = {
+      ...defaultCommentData(),
+      authorId: authorId,
+      contents: contents
+    };
+
+    transaction
+      .set(replyDoc, reply)
+      .update(commentDoc, { replyIds: arrayUnion(replyDoc.id) });
+
+    return Promise.resolve();
+  }).catch(() => {
+    throw Error("Unable to post reply. Try again later.");
+  });
 }

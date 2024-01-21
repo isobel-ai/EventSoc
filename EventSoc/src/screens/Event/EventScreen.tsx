@@ -10,6 +10,7 @@ import { Comment } from "../../models/Comment";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { config } from "../../../config/gluestack-ui.config";
 import CommentButton from "../../components/CommentButton";
+import { useIsFocused } from "@react-navigation/native";
 
 type Props = StackScreenProps<EventStackParamList, "Event">;
 
@@ -24,14 +25,16 @@ export default function EventScreen(props: Props) {
   const [showRetrieveCommentError, setShowRetrieveCommentError] =
     useState<boolean>(false);
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    if (event) {
+    if (event && isFocused) {
       retrieveComments(event.data.commentIds)
         .then((newComments) => setComments(newComments))
         .then(() => setShowRetrieveCommentError(false))
         .catch(() => setShowRetrieveCommentError(true));
     }
-  }, [event]);
+  }, [event, isFocused]);
 
   return (
     <ScreenView extraStyle={{ height: "107%" }}>
