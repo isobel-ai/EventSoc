@@ -113,3 +113,25 @@ export function dateInRange(date: Date, rangeStart?: Date, rangeEnd?: Date) {
 
   return false;
 }
+
+export function toTimeAgoString(timestamp: Date) {
+  const secondsSince = (new Date().getTime() - timestamp.getTime()) / 1000;
+
+  if (secondsSince < 60) {
+    return `${Math.floor(secondsSince)}s`;
+  }
+  if (secondsSince < 60 * 60) {
+    return `${Math.floor(secondsSince / 60)}m`;
+  }
+  if (secondsSince < 60 * 60 * 24) {
+    return `${Math.floor(secondsSince / (60 * 60))}h`;
+  }
+  if (secondsSince <= 60 * 60 * 24 * 6) {
+    return `${Math.floor(secondsSince / (60 * 60 * 24))}d`;
+  }
+  return timestamp.toLocaleString("default", {
+    day: "numeric",
+    month: "numeric",
+    year: "numeric"
+  });
+}

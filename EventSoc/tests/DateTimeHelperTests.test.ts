@@ -5,7 +5,8 @@ import {
   setDate,
   setTime,
   toDateRangeString,
-  toDateTimeRangeString
+  toDateTimeRangeString,
+  toTimeAgoString
 } from "../src/helpers/DateTimeHelper";
 
 describe("setDate", () => {
@@ -198,5 +199,42 @@ describe("dateInRange", () => {
     const rangeEnd: Date | undefined = undefined;
 
     expect(dateInRange(date, rangeStart, rangeEnd)).toBe(false);
+  });
+});
+
+describe("toTimeAgoString", () => {
+  test("it should return an appropriate string (seconds ago)", () => {
+    jest.useFakeTimers().setSystemTime(new Date(2000, 7, 1, 12, 0, 0));
+
+    expect(toTimeAgoString(new Date(2000, 7, 1, 11, 59, 1))).toBe("59s");
+  });
+
+  test("it should return an appropriate string (minutes ago)", () => {
+    jest.useFakeTimers().setSystemTime(new Date(2000, 7, 1, 12, 0, 0));
+
+    expect(toTimeAgoString(new Date(2000, 7, 1, 11, 59, 0))).toBe("1m");
+    expect(toTimeAgoString(new Date(2000, 7, 1, 11, 0, 1))).toBe("59m");
+  });
+
+  test("it should return an appropriate string (hours ago)", () => {
+    jest.useFakeTimers().setSystemTime(new Date(2000, 7, 2, 12, 0, 0));
+
+    expect(toTimeAgoString(new Date(2000, 7, 2, 11, 0, 0))).toBe("1h");
+    expect(toTimeAgoString(new Date(2000, 7, 1, 12, 0, 1))).toBe("23h");
+  });
+
+  test("it should return an appropriate string (up to 6 days ago)", () => {
+    jest.useFakeTimers().setSystemTime(new Date(2000, 7, 10, 12, 0, 0));
+
+    expect(toTimeAgoString(new Date(2000, 7, 9, 12, 0, 0))).toBe("1d");
+    expect(toTimeAgoString(new Date(2000, 7, 4, 12, 0, 0))).toBe("6d");
+  });
+
+  test("it should return an appropriate string (over 6 days ago)", () => {
+    jest.useFakeTimers().setSystemTime(new Date(2000, 7, 10, 12, 0, 0));
+
+    expect(toTimeAgoString(new Date(2000, 7, 4, 11, 59, 59))).toBe(
+      "04/08/2000"
+    );
   });
 });

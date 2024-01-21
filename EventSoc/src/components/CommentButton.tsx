@@ -9,6 +9,7 @@ import { config } from "../../config/gluestack-ui.config";
 import { Comment } from "../models/Comment";
 import { useAppContext } from "../contexts/AppContext";
 import { StyleProp, TextStyle } from "react-native";
+import { toTimeAgoString } from "../helpers/DateTimeHelper";
 
 interface Props {
   comment: Comment;
@@ -79,6 +80,17 @@ export default function CommentButton(props: Props) {
         <Text
           style={[buttonTextStyle, { color: config.tokens.colors.primary500 }]}>
           {props.comment.data.replyIds.length}
+        </Text>
+        <Text
+          style={[
+            buttonTextStyle,
+            {
+              color: config.tokens.colors.secondary500,
+              position: "absolute",
+              right: 0
+            }
+          ]}>
+          {toTimeAgoString(props.comment.data.timestamp)}
         </Text>
       </HStack>
     </Pressable>

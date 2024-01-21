@@ -34,7 +34,7 @@ export default function EventScreen(props: Props) {
   useEffect(() => {
     if (event) {
       retrieveComments(event.data.commentIds)
-        .then((newComments) => setComments(newComments.reverse()))
+        .then((newComments) => setComments(newComments))
         .then(() => setShowRetrieveCommentError(false))
         .catch(() => setShowRetrieveCommentError(true));
     }

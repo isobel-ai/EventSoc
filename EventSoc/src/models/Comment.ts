@@ -6,9 +6,15 @@ export interface Comment {
 export interface CommentData {
   authorId: string;
   contents: string;
+  timestamp: Date;
   replyIds: string[];
 }
 
 export const defaultCommentData: () => CommentData = () => {
-  return { authorId: "", contents: "", replyIds: <string[]>[] };
+  return {
+    authorId: "",
+    contents: "",
+    timestamp: new Date(),
+    replyIds: <string[]>[]
+  };
 };
