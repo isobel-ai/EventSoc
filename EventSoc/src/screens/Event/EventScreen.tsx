@@ -2,14 +2,7 @@ import ScreenView from "../../components/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
 import { EventStackParamList } from "../../navigation/CrossTabStackScreens/EventStackScreens";
 import EventScreenHeader from "../../components/EventScreenHeader";
-import {
-  Alert,
-  AlertText,
-  Button,
-  FlatList,
-  ButtonText,
-  Text
-} from "@gluestack-ui/themed";
+import { Alert, AlertText, FlatList, Text } from "@gluestack-ui/themed";
 import { useAppContext } from "../../contexts/AppContext";
 import React, { useEffect, useState } from "react";
 import { retrieveComments } from "../../services/commentsService";
