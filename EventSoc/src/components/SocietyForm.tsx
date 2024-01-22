@@ -104,6 +104,7 @@ export default function SocietyForm(props: Props) {
             pictureUrl: u
           })
         }
+        circular
       />
       <FormControl isRequired={true}>
         <FormControlLabel>

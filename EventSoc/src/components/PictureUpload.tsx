@@ -6,6 +6,7 @@ import uploadPictureImage from "../assets/images/photoUpload.png";
 interface Props {
   image: string;
   setImage: (url: string) => void;
+  circular?: boolean;
 }
 
 export default function PictureUpload(props: Props) {
@@ -20,6 +21,8 @@ export default function PictureUpload(props: Props) {
     props.setImage(source);
   };
 
+  const borderRadius = props.circular ? 500 : undefined;
+
   return (
     <>
       <TouchableOpacity
@@ -27,16 +30,19 @@ export default function PictureUpload(props: Props) {
         style={{
           alignSelf: "center",
           height: 250,
-          width: 250
+          width: 250,
+          borderRadius: borderRadius
         }}>
         <ImageBackground
           style={{ height: "100%", width: "100%" }}
+          imageStyle={{ borderRadius: borderRadius }}
           source={props.image ? { uri: props.image } : uploadPictureImage}>
           <Button
             action="negative"
             size="xl"
             width="10%"
             margin={5}
+            left={props.circular ? -40 : undefined}
             onPress={() => props.setImage("")}>
             <ButtonIcon>
               <Icon
