@@ -50,19 +50,20 @@ export default function EventPost(props: Props) {
       {isExec && <EventMenu event={props.event} />}
       <Pressable onPress={props.onPress}>
         <VStack
-          gap={10}
-          width="100%">
+          gap={15}
+          width="100%"
+          paddingHorizontal={5}>
           <VStack
-            marginHorizontal={5}
-            alignItems="flex-start"
-            gap={5}>
+            gap={5}
+            width="100%"
+            alignItems="flex-start">
             <Heading>{props.event.data.name}</Heading>
             <HStack style={iconTextContainerStyle}>
               <Icon
                 as={CalendarDaysIcon}
                 size="lg"
               />
-              <Text>
+              <Text width="100%">
                 {toDateTimeRangeString(
                   props.event.data.startDate,
                   props.event.data.endDate
