@@ -68,10 +68,17 @@ export function updateSociety(
 ) {
   const societyDoc = doc(societiesCol, societyId);
 
-  return updateImage(societyPicturesRef, societyId, updates.pictureUrl)
-    .then((downloadUrl) => {
-      updateDoc(societyDoc, { ...updates, pictureUrl: downloadUrl });
-    })
+  const getFullUpdates =
+    updates.pictureUrl === undefined
+      ? Promise.resolve(updates)
+      : updateImage(societyPicturesRef, societyId, updates.pictureUrl).then(
+          (downloadUrl) => {
+            return { ...updates, pictureUrl: downloadUrl };
+          }
+        );
+
+  return getFullUpdates
+    .then((fullUpdates) => updateDoc(societyDoc, fullUpdates))
     .catch(() => {
       throw Error("Unable to update society. Try again later.");
     });

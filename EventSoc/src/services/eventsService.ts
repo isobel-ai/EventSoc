@@ -60,11 +60,18 @@ export function updateEvent(updates: Partial<EventData>, eventId: string) {
         })
       : Promise.resolve();
 
+  const getFullUpdates =
+    updates.pictureUrl === undefined
+      ? Promise.resolve(updates)
+      : updateImage(eventPicturesRef, eventId, updates.pictureUrl).then(
+          (downloadUrl) => {
+            return { ...updates, pictureUrl: downloadUrl };
+          }
+        );
+
   return updatedCapacityCheck
-    .then(() => updateImage(eventPicturesRef, eventId, updates.pictureUrl))
-    .then((downloadUrl) => {
-      updateDoc(eventDoc, { ...updates, pictureUrl: downloadUrl });
-    })
+    .then(() => getFullUpdates)
+    .then((fullUpdates) => updateDoc(eventDoc, fullUpdates))
     .catch((err) => {
       throw err.message === updatedCapacityErrMsg
         ? err

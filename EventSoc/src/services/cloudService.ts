@@ -22,16 +22,13 @@ export function uploadImage(
 }
 
 /**
- * @param url if undefined, do nothing. If empty string, delete image. Otherwise upload image.
+ * @param url if empty string, delete image. Otherwise upload image.
  */
 export function updateImage(
   storage: StorageReference,
   id: string,
-  url?: string
+  url: string
 ) {
-  if (url === undefined) {
-    return Promise.resolve("");
-  }
   if (url) {
     return uploadImage(storage, url, id);
   }
