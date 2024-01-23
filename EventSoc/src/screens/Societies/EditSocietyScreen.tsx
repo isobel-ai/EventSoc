@@ -26,7 +26,6 @@ export default function EditSocietyScreen(props: Props) {
   if (!toEditSoc) {
     setEditSocErrMsg("Could not retrieve society details. Try again later.");
     setShowErrorDialog(true);
-  } else {
   }
 
   const beforeSoc = toEditSoc ?? defaultSocietyData();
