@@ -12,8 +12,8 @@ import { societiesCol, societyPicturesRef } from "../config/firebaseConfig";
 import { Society, SocietyData } from "../models/Society";
 import { updateImage, uploadImage } from "./cloudService";
 
-export function retrieveSocietyData(soc: string) {
-  const socDoc = doc(societiesCol, soc);
+export function retrieveSocietyData(id: string) {
+  const socDoc = doc(societiesCol, id);
   return getDoc(socDoc)
     .then((socSnapshot) => <SocietyData>socSnapshot.data())
     .catch(() => {
