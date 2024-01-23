@@ -23,7 +23,7 @@ interface Props {
 }
 
 export default function EventPost(props: Props) {
-  const { societies, userId, users } = useAppContext();
+  const { societies, userId } = useAppContext();
 
   const [isExec, setIsExec] = useState<boolean>(false);
 
