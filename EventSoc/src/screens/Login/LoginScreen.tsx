@@ -31,12 +31,7 @@ export default function LoginScreen(props: Props) {
 
   const [loginErrMsg, setLoginErrMsg] = useState<string>("");
 
-  const [validEntries, setValidEntries] = useState<boolean>(false);
-
-  useEffect(
-    () => setValidEntries(validEmail(email) && validPassword(password)),
-    [email, password]
-  );
+  const validEntries = validEmail(email) && validPassword(password);
 
   const handleRegistration = () => {
     props.navigation.navigate("Register");

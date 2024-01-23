@@ -34,29 +34,20 @@ export default function EventFilter(props: Props) {
   const [filterStartDate, setFilterStartDate] = useState<Date>();
   const [filterEndDate, setFilterEndDate] = useState<Date>();
 
-  const [filteredEvents, setFilteredEvents] = useState<Event[]>(props.events);
-
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  // Re-filter on feed reload
-  useEffect(() => filterEvents(), [props.events]);
-  useEffect(() => searchFunction(searchTerm), [filteredEvents]);
+  const filteredEvents = props.events.filter(
+    (event) =>
+      dateInRange(event.data.startDate, filterStartDate, filterEndDate) &&
+      (selectedSocItems.length === 0 ||
+        selectedSocItems.some(
+          (socItem) => socItem.id === event.data.organiserId
+        ))
+  );
 
   useEffect(() => {
-    !isFilterMenuOpen && filterEvents();
+    !isFilterMenuOpen && searchFunction(searchTerm);
   }, [isFilterMenuOpen]);
-
-  const filterEvents = () => {
-    const newFilteredEvents = props.events.filter(
-      (event) =>
-        dateInRange(event.data.startDate, filterStartDate, filterEndDate) &&
-        (selectedSocItems.length === 0 ||
-          selectedSocItems.some(
-            (socItem) => socItem.id === event.data.organiserId
-          ))
-    );
-    setFilteredEvents(newFilteredEvents);
-  };
 
   const searchFunction = (text: string) => {
     setSearchTerm(text);

@@ -26,9 +26,7 @@ export default function MyEventsScreen(props: Props) {
   useEffect(() => {
     isFocused &&
       updateEvents()
-        .then(() => {
-          setRetrieveEventsErrMsg("");
-        })
+        .then(() => setRetrieveEventsErrMsg(""))
         .catch((err) => !events.length && setRetrieveEventsErrMsg(err.message));
   }, [isFocused]);
 

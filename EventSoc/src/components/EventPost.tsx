@@ -25,15 +25,10 @@ interface Props {
 export default function EventPost(props: Props) {
   const { societies, userId } = useAppContext();
 
-  const [isExec, setIsExec] = useState<boolean>(false);
-
-  useEffect(() => {
-    setIsExec(
-      societies
-        .find((soc) => soc.id === props.event.data.organiserId)
-        ?.data.execIds.includes(userId) ?? false
-    );
-  }, [societies]);
+  const isExec =
+    societies
+      .find((soc) => soc.id === props.event.data.organiserId)
+      ?.data.execIds.includes(userId) ?? false;
 
   const iconTextContainerStyle: StyleProp<ViewStyle> = {
     width: "90%",

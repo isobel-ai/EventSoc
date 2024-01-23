@@ -27,11 +27,9 @@ export default function SocietiesSideMenu(props: Props) {
 
   const { navigate } = useNavigation<NavigationProp<MainTabParamList>>();
 
-  const getExecSocieties = () =>
-    societies.filter((soc) => soc.data.execIds.includes(userId));
-
-  const [execSocieties, setExecSocieties] =
-    useState<Society[]>(getExecSocieties);
+  const execSocieties = societies.filter((soc) =>
+    soc.data.execIds.includes(userId)
+  );
 
   const [updateSocsErrMsg, setUpdateSocsErrMsg] = useState<string>("");
 
@@ -40,10 +38,7 @@ export default function SocietiesSideMenu(props: Props) {
   useEffect(() => {
     isVisible &&
       updateSocieties()
-        .then(() => {
-          setExecSocieties(getExecSocieties);
-          setUpdateSocsErrMsg("");
-        })
+        .then(() => setUpdateSocsErrMsg(""))
         .catch((err) => !societies.length && setUpdateSocsErrMsg(err.message));
   }, [isVisible]);
 
