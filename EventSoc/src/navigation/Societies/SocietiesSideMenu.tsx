@@ -1,5 +1,4 @@
 import { ReactNode, useEffect, useState } from "react";
-import { Society } from "../../models/Society";
 import {
   AddIcon,
   Alert,
