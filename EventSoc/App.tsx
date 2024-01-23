@@ -55,10 +55,11 @@ export default function App() {
 
   useEffect(() => {
     if (loggedIn) {
-      updateSocieties()
-        .then(updateEvents)
-        .then(updateUsers)
-        .then(() => setIsLoading(false));
+      Promise.allSettled([
+        updateSocieties(),
+        updateEvents(),
+        updateUsers()
+      ]).then(() => setIsLoading(false));
     } else {
       setIsLoading(loggedIn === undefined);
     }
