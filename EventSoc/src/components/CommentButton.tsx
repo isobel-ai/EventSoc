@@ -10,7 +10,7 @@ import { Comment } from "../models/Comment";
 import { useAppContext } from "../contexts/AppContext";
 import { StyleProp, TextStyle } from "react-native";
 import { toTimeAgoString } from "../helpers/DateTimeHelper";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { EventStackParamList } from "../navigation/CrossTabStackScreens/EventStackScreens";
 import { StackNavigationProp } from "@react-navigation/stack";
 
