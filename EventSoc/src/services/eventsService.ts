@@ -10,7 +10,7 @@ import { eventPicturesRef, eventsCol } from "../config/firebaseConfig";
 import { EventData, Event } from "../models/Event";
 import { updateImage } from "./cloudService";
 
-function retrieveEventData(id: string) {
+export function retrieveEventData(id: string) {
   return getDoc(doc(eventsCol, id))
     .then((eventSnapshot) => {
       if (!eventSnapshot.exists()) {

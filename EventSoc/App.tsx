@@ -9,16 +9,21 @@ import { User } from "./src/models/User";
 import { useEffect, useState } from "react";
 import AppContext, { AppContent } from "./src/contexts/AppContext";
 import { Society } from "./src/models/Society";
-import { retrieveEvents } from "./src/services/eventsService";
-import { retrieveSocieties } from "./src/services/societiesService";
-import { retrieveUsers } from "./src/services/usersService";
+import {
+  retrieveEventData,
+  retrieveEvents
+} from "./src/services/eventsService";
+import {
+  retrieveSocieties,
+  retrieveSocietyData
+} from "./src/services/societiesService";
+import { retrieveUserData, retrieveUsers } from "./src/services/usersService";
 import { Event } from "./src/models/Event";
 import { LogBox } from "react-native";
 
 export default function App() {
   const { loggedIn, userId } = useAuth();
 
-  // App Context
   const [societies, setSocieties] = useState<Society[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -29,16 +34,46 @@ export default function App() {
     });
   };
 
+  const updateSocietyData = (socId: string) => {
+    return retrieveSocietyData(socId).then((updatedData) =>
+      setSocieties(
+        societies.map((soc) =>
+          soc.id === socId ? { id: soc.id, data: updatedData } : soc
+        )
+      )
+    );
+  };
+
   const updateEvents = () => {
     return retrieveEvents().then((newEvents) => {
       setEvents(newEvents);
     });
   };
 
+  const updateEventData = (eventId: string) => {
+    return retrieveEventData(eventId).then((updatedData) =>
+      setEvents(
+        events.map((event) =>
+          event.id === eventId ? { id: event.id, data: updatedData } : event
+        )
+      )
+    );
+  };
+
   const updateUsers = () => {
     return retrieveUsers().then((newUsers) => {
       setUsers(newUsers);
     });
+  };
+
+  const updateUserData = (userId: string) => {
+    return retrieveUserData(userId).then((updatedData) =>
+      setUsers(
+        users.map((user) =>
+          user.id === userId ? { id: user.id, data: updatedData } : user
+        )
+      )
+    );
   };
 
   const appContent: AppContent = {
@@ -48,7 +83,10 @@ export default function App() {
     userId,
     updateSocieties,
     updateEvents,
-    updateUsers
+    updateUsers,
+    updateSocietyData,
+    updateEventData,
+    updateUserData
   };
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
