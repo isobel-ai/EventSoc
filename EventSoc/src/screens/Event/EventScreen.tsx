@@ -15,7 +15,8 @@ import { useIsFocused } from "@react-navigation/native";
 type Props = StackScreenProps<EventStackParamList, "Event">;
 
 export default function EventScreen(props: Props) {
-  const { events, userId, users } = useAppContext();
+  const { events, updateEventData, userId, users, updateUserData } =
+    useAppContext();
 
   const event = events.find((event) => event.id === props.route.params.eventId);
   const user = users.find((user) => user.id === userId);
@@ -26,6 +27,13 @@ export default function EventScreen(props: Props) {
     useState<boolean>(false);
 
   const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      updateEventData(props.route.params.eventId).catch();
+      updateUserData(userId).catch();
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     if (event && isFocused) {

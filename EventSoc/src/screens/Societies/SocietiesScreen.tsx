@@ -33,7 +33,8 @@ import { Event } from "../../models/Event";
 type Props = StackScreenProps<SocietiesStackParamList, "Home">;
 
 export default function SocietiesScreen(props: Props) {
-  const { societies, events, updateEvents, userId } = useAppContext();
+  const { societies, updateSocietyData, events, updateEvents, userId } =
+    useAppContext();
 
   const society = societies.find(
     (soc) => soc.id === props.route.params.societyId
@@ -52,6 +53,7 @@ export default function SocietiesScreen(props: Props) {
 
   useEffect(() => {
     if (isFocused && society) {
+      updateSocietyData(props.route.params.societyId).catch();
       updateEvents()
         .then(() => setRetrieveSocEventsErrMsg(""))
         .catch(

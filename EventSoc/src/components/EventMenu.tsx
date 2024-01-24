@@ -15,21 +15,16 @@ import { Event } from "../models/Event";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { useAppContext } from "../contexts/AppContext";
 import { deleteSocEvent } from "../services/socEventsService";
+import { EventStackParamList } from "../navigation/CrossTabStackScreens/EventStackScreens";
 
 interface Props {
   event: Event;
 }
 
-export default function EventMenu<
-  ParamList extends {
-    "Edit Event": {
-      eventId: string;
-    };
-  }
->(props: Props) {
-  const { navigate } = useNavigation<NavigationProp<ParamList>>();
+export default function EventMenu(props: Props) {
+  const { navigate } = useNavigation<NavigationProp<EventStackParamList>>();
 
-  const { updateSocieties } = useAppContext();
+  const { updateSocieties, updateEvents } = useAppContext();
 
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
 
@@ -38,7 +33,9 @@ export default function EventMenu<
       props.event.id,
       props.event.data.pictureUrl,
       props.event.data.organiserId
-    ).then(() => updateSocieties().catch());
+    )
+      .then(() => updateSocieties().catch())
+      .then(() => updateEvents().catch());
   };
 
   const menuSelectionHandler = (keys: Iterable<React.Key> | string) => {

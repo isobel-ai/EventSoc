@@ -23,7 +23,11 @@ interface Props {
 }
 
 export default function EventPost(props: Props) {
-  const { societies, userId } = useAppContext();
+  const { societies, updateSocietyData, userId } = useAppContext();
+
+  useEffect(() => {
+    updateSocietyData(props.event.data.organiserId).catch();
+  }, []);
 
   const isExec =
     societies

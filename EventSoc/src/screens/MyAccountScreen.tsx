@@ -1,12 +1,19 @@
 import { Button, ButtonText, Heading } from "@gluestack-ui/themed";
 import ScreenView from "../components/ScreenView";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signOut } from "../services/authService";
 import ErrorAlertDialog from "../components/ErrorAlertDialog";
 import { useAppContext } from "../contexts/AppContext";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function MyAccountScreen() {
-  const { users, userId } = useAppContext();
+  const { users, updateUserData, userId } = useAppContext();
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    isFocused && updateUserData(userId).catch();
+  }, [isFocused]);
 
   const user = users.find((user) => user.id === userId);
 

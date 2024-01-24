@@ -18,6 +18,7 @@ import ScreenView from "./ScreenView";
 import { Event } from "../models/Event";
 import EventFilterSideMenu from "./EventFilterSideMenu";
 import { Item } from "../../libs/multi-selectbox";
+import { useAppContext } from "../contexts/AppContext";
 
 interface Props {
   children: ReactNode;
@@ -27,6 +28,8 @@ interface Props {
 }
 
 export default function EventFilter(props: Props) {
+  const { events } = useAppContext();
+
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState<boolean>(false);
 
   const [selectedSocItems, setSelectedSocItems] = useState<Item[]>([]);
@@ -47,7 +50,7 @@ export default function EventFilter(props: Props) {
 
   useEffect(() => {
     !isFilterMenuOpen && searchFunction(searchTerm);
-  }, [isFilterMenuOpen]);
+  }, [isFilterMenuOpen, events]);
 
   const searchFunction = (text: string) => {
     setSearchTerm(text);

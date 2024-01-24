@@ -15,7 +15,7 @@ import { updateSociety } from "../../services/societiesService";
 type Props = StackScreenProps<SocietiesStackParamList, "Edit Society">;
 
 export default function EditSocietyScreen(props: Props) {
-  const { societies, updateSocieties } = useAppContext();
+  const { societies } = useAppContext();
 
   const [editSocErrMsg, setEditSocErrMsg] = useState<string>("");
   const [showErrorDialog, setShowErrorDialog] = useState<boolean>(false);
@@ -39,7 +39,6 @@ export default function EditSocietyScreen(props: Props) {
     } else {
       const socUpdates = getUpdates(beforeSoc, afterSoc);
       updateSociety(socUpdates, props.route.params.societyId)
-        .then(() => updateSocieties().catch())
         .then(props.navigation.goBack)
         .catch((err) => {
           setEditSocErrMsg(err.message);

@@ -13,6 +13,7 @@ import { toTimeAgoString } from "../helpers/DateTimeHelper";
 import { useNavigation } from "@react-navigation/native";
 import { EventStackParamList } from "../navigation/CrossTabStackScreens/EventStackScreens";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useEffect } from "react";
 
 interface Props {
   comment: Comment;
@@ -23,7 +24,13 @@ interface Props {
 export default function CommentButton(props: Props) {
   const { push } = useNavigation<StackNavigationProp<EventStackParamList>>();
 
-  const { users, societies } = useAppContext();
+  const { users, updateUserData, societies, updateSocietyData } =
+    useAppContext();
+
+  useEffect(() => {
+    updateUserData(props.comment.data.authorId).catch();
+    props.eventOrganiserId && updateSocietyData(props.eventOrganiserId).catch();
+  }, []);
 
   const authorName = users.find(
     (user) => user.id === props.comment.data.authorId

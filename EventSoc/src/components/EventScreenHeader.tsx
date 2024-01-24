@@ -32,7 +32,12 @@ interface Props {
 }
 
 export default function EventScreenHeader(props: Props) {
-  const { updateEvents, societies, updateUsers } = useAppContext();
+  const { updateEventData, societies, updateSocietyData, updateUserData } =
+    useAppContext();
+
+  useEffect(() => {
+    props.event && updateSocietyData(props.event.data.organiserId).catch();
+  }, []);
 
   const isEventFull = props.event?.data.capacity
     ? props.event.data.capacity >= 0 &&
@@ -70,16 +75,19 @@ export default function EventScreenHeader(props: Props) {
     signUpErrMsg && showSignUpErrToast();
   }, [signUpErrMsg]);
 
+  const doSignUpUpdates = () => {
+    props.event && updateEventData(props.event.id).catch();
+    props.user && updateUserData(props.user.id).catch();
+  };
+
   const signUp = () => {
     if (props.event && props.user) {
       eventSignUp(props.user.id, props.event.id)
         .then((signUpSuccessful) =>
           setSignUpErrMsg(signUpSuccessful ? "" : "Event full")
         )
-        .catch((err) => setSignUpErrMsg(err.message))
-        .then(updateEvents)
-        .then(updateUsers)
-        .catch();
+        .then(doSignUpUpdates)
+        .catch((err) => setSignUpErrMsg(err.message));
     } else {
       setSignUpErrMsg("Unable to sign-up. Try again later.");
     }
@@ -89,15 +97,19 @@ export default function EventScreenHeader(props: Props) {
     if (props.event && props.user) {
       return withdrawEventSignUp(props.user.id, props.event.id)
         .then(() => setSignUpErrMsg(""))
-        .then(updateEvents)
-        .then(updateUsers)
-        .catch();
+        .then(doSignUpUpdates);
     }
     throw Error("Unable to withdraw sign-up. Try again later.");
   };
 
   const [showPostCommentModal, setShowPostCommentModal] =
     useState<boolean>(false);
+
+  useEffect(() => {
+    !showPostCommentModal &&
+      props.event &&
+      updateEventData(props.event.id).catch();
+  }, [showPostCommentModal]);
 
   return (
     <>
