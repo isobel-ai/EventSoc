@@ -51,16 +51,20 @@ export default function EditEventScreen(props: Props) {
 
   return (
     <ScreenView hasNavHeader>
-      <EventForm
-        event={afterEvent}
-        setEvent={setAfterEvent}
-      />
-      <Button
-        size="xl"
-        action={"positive"}
-        onPress={editEvent}>
-        <ButtonText>Update</ButtonText>
-      </Button>
+      {toEditEvent && (
+        <>
+          <EventForm
+            event={afterEvent}
+            setEvent={setAfterEvent}
+          />
+          <Button
+            size="xl"
+            action={"positive"}
+            onPress={editEvent}>
+            <ButtonText>Update</ButtonText>
+          </Button>
+        </>
+      )}
       <ErrorAlertDialog
         isVisible={showErrorDialog}
         setIsVisible={setShowErrorDialog}

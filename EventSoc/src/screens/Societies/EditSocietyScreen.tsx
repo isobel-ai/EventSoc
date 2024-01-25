@@ -49,17 +49,21 @@ export default function EditSocietyScreen(props: Props) {
 
   return (
     <ScreenView hasNavHeader>
-      <SocietyForm
-        society={afterSoc}
-        setSociety={setAfterSoc}
-        editingForm
-      />
-      <Button
-        size="xl"
-        action={"positive"}
-        onPress={editSociety}>
-        <ButtonText>Update</ButtonText>
-      </Button>
+      {toEditSoc && (
+        <>
+          <SocietyForm
+            society={afterSoc}
+            setSociety={setAfterSoc}
+            editingForm
+          />
+          <Button
+            size="xl"
+            action={"positive"}
+            onPress={editSociety}>
+            <ButtonText>Update</ButtonText>
+          </Button>
+        </>
+      )}
       <ErrorAlertDialog
         isVisible={showErrorDialog}
         setIsVisible={setShowErrorDialog}
