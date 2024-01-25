@@ -15,19 +15,18 @@ import { updateSociety } from "../../services/societiesService";
 type Props = StackScreenProps<SocietiesStackParamList, "Edit Society">;
 
 export default function EditSocietyScreen(props: Props) {
-  const { societies, updateSocieties } = useAppContext();
-
-  const [editSocErrMsg, setEditSocErrMsg] = useState<string>("");
-  const [showErrorDialog, setShowErrorDialog] = useState<boolean>(false);
+  const { societies } = useAppContext();
 
   const toEditSoc = societies.find(
     (soc) => soc.id === props.route.params.societyId
   )?.data;
-  if (!toEditSoc) {
-    setEditSocErrMsg("Could not retrieve society details. Try again later.");
-    setShowErrorDialog(true);
-  } else {
-  }
+
+  const [editSocErrMsg, setEditSocErrMsg] = useState<string>(
+    toEditSoc ? "" : "Could not retrieve society details. Try again later."
+  );
+  const [showErrorDialog, setShowErrorDialog] = useState<boolean>(
+    toEditSoc === undefined
+  );
 
   const beforeSoc = toEditSoc ?? defaultSocietyData();
   const [afterSoc, setAfterSoc] = useState<SocietyData>(cloneDeep(beforeSoc));
@@ -40,7 +39,6 @@ export default function EditSocietyScreen(props: Props) {
     } else {
       const socUpdates = getUpdates(beforeSoc, afterSoc);
       updateSociety(socUpdates, props.route.params.societyId)
-        .then(() => updateSocieties().catch())
         .then(props.navigation.goBack)
         .catch((err) => {
           setEditSocErrMsg(err.message);
@@ -51,21 +49,26 @@ export default function EditSocietyScreen(props: Props) {
 
   return (
     <ScreenView hasNavHeader>
-      <SocietyForm
-        society={afterSoc}
-        setSociety={setAfterSoc}
-        editingForm
-      />
-      <Button
-        size="xl"
-        action={"positive"}
-        onPress={editSociety}>
-        <ButtonText>Update</ButtonText>
-      </Button>
+      {toEditSoc && (
+        <>
+          <SocietyForm
+            society={afterSoc}
+            setSociety={setAfterSoc}
+            editingForm
+          />
+          <Button
+            size="xl"
+            action={"positive"}
+            onPress={editSociety}>
+            <ButtonText>Update</ButtonText>
+          </Button>
+        </>
+      )}
       <ErrorAlertDialog
         isVisible={showErrorDialog}
         setIsVisible={setShowErrorDialog}
         errMsg={editSocErrMsg}
+        onClose={!toEditSoc ? props.navigation.goBack : undefined}
       />
     </ScreenView>
   );

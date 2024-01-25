@@ -4,10 +4,20 @@ import {
   query,
   where,
   setDoc,
-  getDocs
+  getDocs,
+  getDoc
 } from "firebase/firestore";
 import { usersCol } from "../config/firebaseConfig";
-import { User, defaultUserData } from "../models/User";
+import { User, UserData, defaultUserData } from "../models/User";
+
+export function retrieveUserData(id: string) {
+  const userDoc = doc(usersCol, id);
+  return getDoc(userDoc)
+    .then((userSnapshot) => <UserData>userSnapshot.data())
+    .catch(() => {
+      throw Error("User couldn't be retrieved. Try again later.");
+    });
+}
 
 export function retrieveUsers() {
   return getDocs(usersCol)

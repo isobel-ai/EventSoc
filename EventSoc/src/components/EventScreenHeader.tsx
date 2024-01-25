@@ -1,7 +1,5 @@
 import {
   AddIcon,
-  Alert,
-  AlertText,
   Button,
   ButtonText,
   Divider,
@@ -11,87 +9,84 @@ import {
   VStack,
   View
 } from "@gluestack-ui/themed";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useState, useEffect } from "react";
 import { useAppContext } from "../contexts/AppContext";
 import useDismissableToast from "../hooks/useDismissableToast";
 import { eventSignUp, withdrawEventSignUp } from "../services/userEventService";
 import ConfirmDialog from "./ConfirmDialog";
-import DismissableToast, {
-  DismissableToastHookProps
-} from "./DismissableToast";
 import EventPost from "./EventPost";
 import { config } from "../../config/gluestack-ui.config";
 import { Event } from "../models/Event";
 import { User } from "../models/User";
 import CommentInputModal from "./CommentInputModal";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { EventsStackParamList } from "../navigation/EventsStackNavigator";
+import DeleteEventContext, {
+  DeleteEventContent
+} from "../contexts/DeleteEventContext";
 
 interface Props {
-  event?: Event;
+  event: Event;
   user?: User;
 }
 
 export default function EventScreenHeader(props: Props) {
-  const { updateEvents, societies, updateUsers } = useAppContext();
+  const { goBack } = useNavigation<NavigationProp<EventsStackParamList>>();
 
-  const isEventFull = props.event?.data.capacity
-    ? props.event.data.capacity >= 0 &&
-      props.event.data.capacity <= props.event.data.attendeeIds.length
+  const { updateEventData, societies, updateSocietyData, updateUserData } =
+    useAppContext();
+
+  useEffect(() => {
+    updateSocietyData(props.event.data.organiserId).catch();
+  }, []);
+
+  const isEventFull =
+    props.event.data.capacity >= 0 &&
+    props.event.data.capacity <= props.event.data.attendeeIds.length;
+  const isExec = props.user
+    ? societies
+        .find((soc) => soc.id === props.event.data.organiserId)
+        ?.data.execIds.includes(props.user.id) ?? false
     : false;
 
-  const isExec =
-    props.event && props.user
-      ? societies
-          .find((soc) => soc.id === props.event.data.organiserId)
-          ?.data.execIds.includes(props.user.id) ?? false
-      : false;
-
-  const isSignedUp =
-    props.event && props.user
-      ? props.user.data.eventAttendingIds.includes(props.event.id)
-      : false;
+  const isSignedUp = props.user
+    ? props.user.data.eventAttendingIds.includes(props.event.id)
+    : false;
 
   const [showWithdrawSignUpDialog, setShowWithdrawSignUpDialog] =
     useState<boolean>(false);
 
   const [signUpErrMsg, setSignUpErrMsg] = useState<string>("");
 
-  const showSignUpErrToast = useDismissableToast(
-    ({ id, close }: DismissableToastHookProps) => (
-      <DismissableToast
-        id={id}
-        close={close}
-        title={signUpErrMsg}
-      />
-    )
-  );
+  const showSignUpErrToast = useDismissableToast({ title: signUpErrMsg });
 
   useEffect(() => {
     signUpErrMsg && showSignUpErrToast();
   }, [signUpErrMsg]);
 
+  const doSignUpUpdates = () => {
+    updateEventData(props.event.id).catch();
+    props.user && updateUserData(props.user.id).catch();
+  };
+
   const signUp = () => {
-    if (props.event && props.user) {
+    if (props.user) {
       eventSignUp(props.user.id, props.event.id)
         .then((signUpSuccessful) =>
           setSignUpErrMsg(signUpSuccessful ? "" : "Event full")
         )
-        .catch((err) => setSignUpErrMsg(err.message))
-        .then(updateEvents)
-        .then(updateUsers)
-        .catch();
+        .then(doSignUpUpdates)
+        .catch((err) => setSignUpErrMsg(err.message));
     } else {
       setSignUpErrMsg("Unable to sign-up. Try again later.");
     }
   };
 
   const withdrawSignUp = () => {
-    if (props.event && props.user) {
+    if (props.user) {
       return withdrawEventSignUp(props.user.id, props.event.id)
         .then(() => setSignUpErrMsg(""))
-        .then(updateEvents)
-        .then(updateUsers)
-        .catch();
+        .then(doSignUpUpdates);
     }
     throw Error("Unable to withdraw sign-up. Try again later.");
   };
@@ -99,111 +94,98 @@ export default function EventScreenHeader(props: Props) {
   const [showPostCommentModal, setShowPostCommentModal] =
     useState<boolean>(false);
 
+  useEffect(() => {
+    !showPostCommentModal && updateEventData(props.event.id).catch();
+  }, [showPostCommentModal]);
+
+  const deleteEventContent: DeleteEventContent = { onDeleteEvent: goBack };
+
   return (
-    <>
-      {!props.event ? (
-        <Alert
-          action="error"
-          variant="outline"
-          width="80%"
-          marginTop={20}
-          alignSelf="center">
-          <MaterialIcons
-            name="error-outline"
-            size={40}
-            color={config.tokens.colors.error}
-            style={{ paddingRight: 10 }}
-          />
-          <AlertText>
-            Could not retrieve event details. Try again later.
-          </AlertText>
-        </Alert>
-      ) : (
-        <View gap={10}>
-          <EventPost event={props.event} />
-          <VStack
-            paddingHorizontal={15}
-            alignItems="flex-start">
-            {props.event.data.description && (
+    <DeleteEventContext.Provider value={deleteEventContent}>
+      <View gap={10}>
+        <EventPost event={props.event} />
+        <VStack
+          paddingHorizontal={15}
+          alignItems="flex-start">
+          {props.event.data.description && (
+            <Text>
+              <Text fontWeight="$bold">Description: </Text>
+              <Text>{props.event.data.description}</Text>
+            </Text>
+          )}
+          {props.event.data.tags.length > 0 && (
+            <Text>
+              <Text fontWeight="$bold">Tags: </Text>
+              <Text>{props.event.data.tags.join(", ")}</Text>
+            </Text>
+          )}
+          {isExec && (
+            <Text>
+              <Text fontWeight="$bold">Sign-ups: </Text>
               <Text>
-                <Text fontWeight="$bold">Description: </Text>
-                <Text>{props.event.data.description}</Text>
+                {props.event.data.attendeeIds.length +
+                  (props.event.data.capacity >= 0
+                    ? `/${props.event.data.capacity}`
+                    : "")}
               </Text>
-            )}
-            {props.event.data.tags.length > 0 && (
-              <Text>
-                <Text fontWeight="$bold">Tags: </Text>
-                <Text>{props.event.data.tags.join(", ")}</Text>
-              </Text>
-            )}
-            {isExec && (
-              <Text>
-                <Text fontWeight="$bold">Sign-ups: </Text>
-                <Text>
-                  {props.event.data.attendeeIds.length +
-                    (props.event.data.capacity >= 0
-                      ? `/${props.event.data.capacity}`
-                      : "")}
-                </Text>
-              </Text>
-            )}
-          </VStack>
-          <Button
-            action={
-              isSignedUp ? "negative" : isEventFull ? "secondary" : "positive"
-            }
-            onPress={
-              isSignedUp ? () => setShowWithdrawSignUpDialog(true) : signUp
-            }
-            isDisabled={!isSignedUp && isEventFull}
-            alignSelf="center"
-            width="80%">
-            <ButtonText>
-              {isSignedUp
-                ? "Withdraw Sign-up"
-                : isEventFull
-                ? "Event Full"
-                : "Sign-up"}
-            </ButtonText>
-          </Button>
-          <ConfirmDialog
-            confirmFunc={withdrawSignUp}
-            heading="Withdraw Sign-up?"
-            body="Press confirm to withdraw."
-            isVisible={showWithdrawSignUpDialog}
-            setIsVisible={setShowWithdrawSignUpDialog}
-          />
-          <VStack
-            paddingHorizontal={15}
-            marginTop={10}
-            alignContent="center">
-            <Divider bgColor={config.tokens.colors.eventButtonGray} />
-            <Heading alignSelf="flex-start">Comments:</Heading>
-            {props.user && props.event && (
-              <>
-                <Button
-                  width="100%"
-                  onPress={() => setShowPostCommentModal(true)}>
-                  <Icon
-                    as={AddIcon}
-                    marginRight={5}
-                    color="white"
-                    size="lg"
-                  />
-                  <ButtonText>Post Comment</ButtonText>
-                </Button>
-                <CommentInputModal
-                  showModal={showPostCommentModal}
-                  setShowModal={setShowPostCommentModal}
-                  parentType="EVENT"
-                  parentId={props.event.id}
-                  authorId={props.user.id}
+            </Text>
+          )}
+        </VStack>
+        <Button
+          action={
+            isSignedUp ? "negative" : isEventFull ? "secondary" : "positive"
+          }
+          onPress={
+            isSignedUp ? () => setShowWithdrawSignUpDialog(true) : signUp
+          }
+          isDisabled={!isSignedUp && isEventFull}
+          alignSelf="center"
+          width="80%">
+          <ButtonText>
+            {isSignedUp
+              ? "Withdraw Sign-up"
+              : isEventFull
+              ? "Event Full"
+              : "Sign-up"}
+          </ButtonText>
+        </Button>
+        <ConfirmDialog
+          confirmFunc={withdrawSignUp}
+          heading="Withdraw Sign-up?"
+          body="Press confirm to withdraw."
+          isVisible={showWithdrawSignUpDialog}
+          setIsVisible={setShowWithdrawSignUpDialog}
+        />
+        <VStack
+          paddingHorizontal={15}
+          marginTop={10}
+          alignContent="center">
+          <Divider bgColor={config.tokens.colors.eventButtonGray} />
+          <Heading alignSelf="flex-start">Comments:</Heading>
+          {props.user && (
+            <>
+              <Button
+                width="100%"
+                onPress={() => setShowPostCommentModal(true)}>
+                <Icon
+                  as={AddIcon}
+                  marginRight={5}
+                  color="white"
+                  size="lg"
                 />
-              </>
-            )}
-          </VStack>
-        </View>
-      )}
-    </>
+                <ButtonText>Post Comment</ButtonText>
+              </Button>
+              <CommentInputModal
+                showModal={showPostCommentModal}
+                setShowModal={setShowPostCommentModal}
+                parentType="EVENT"
+                parentId={props.event.id}
+                authorId={props.user.id}
+              />
+            </>
+          )}
+        </VStack>
+      </View>
+    </DeleteEventContext.Provider>
   );
 }

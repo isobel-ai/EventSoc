@@ -33,11 +33,12 @@ interface Props {
 export default function EventFilterSideMenu(props: Props) {
   const { updateSocieties, societies } = useAppContext();
 
-  const [socItems, setSocItems] = useState<Item[]>(
+  const getSocItems = () =>
     societies.map((soc) => {
       return { id: soc.id, item: soc.data.name };
-    })
-  );
+    });
+
+  const [socItems, setSocItems] = useState<Item[]>(getSocItems);
 
   const [retrieveSocsErrMsg, setRetrieveSocsErrMsg] = useState<string>("");
 
@@ -45,23 +46,25 @@ export default function EventFilterSideMenu(props: Props) {
     props.isFilterMenuOpen &&
       updateSocieties()
         .then(() => {
-          const items = societies.map((soc) => {
-            return { id: soc.id, item: soc.data.name };
-          });
-          setSocItems(items);
-          props.setSelectedSocItems(
-            items.filter((item) =>
-              props.selectedSocItems.some((selectedItem) =>
-                isEqual(item, selectedItem)
-              )
-            )
-          );
+          setSocItems(getSocItems);
           setRetrieveSocsErrMsg("");
         })
         .catch(
           (err) => !societies.length && setRetrieveSocsErrMsg(err.message)
         );
   }, [props.isFilterMenuOpen]);
+
+  useEffect(
+    () =>
+      props.setSelectedSocItems(
+        socItems.filter((item) =>
+          props.selectedSocItems.some((selectedItem) =>
+            isEqual(item, selectedItem)
+          )
+        )
+      ),
+    [socItems]
+  );
 
   const handleSelectedSocItemsChange = (item: Item) => {
     props.setSelectedSocItems(xorBy(props.selectedSocItems, [item], "id"));

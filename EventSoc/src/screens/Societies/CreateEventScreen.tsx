@@ -7,14 +7,11 @@ import { useState } from "react";
 import { getEventErrMsg } from "../../helpers/EventInputValidationHelper";
 import { EventData, defaultEventData } from "../../models/Event";
 import ErrorAlertDialog from "../../components/ErrorAlertDialog";
-import { useAppContext } from "../../contexts/AppContext";
 import { createSocEvent } from "../../services/socEventsService";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Create Event">;
 
 export default function CreateEventScreen(props: Props) {
-  const { updateSocieties } = useAppContext();
-
   const [event, setEvent] = useState<EventData>(defaultEventData());
 
   const [createEventErrMsg, setCreateEventErrMsg] = useState<string>("");
@@ -27,7 +24,6 @@ export default function CreateEventScreen(props: Props) {
       setShowErrorDialog(true);
     } else {
       createSocEvent(event, props.route.params.organiserId)
-        .then(() => updateSocieties().catch())
         .then(props.navigation.goBack)
         .catch((err) => {
           setCreateEventErrMsg(err.message);

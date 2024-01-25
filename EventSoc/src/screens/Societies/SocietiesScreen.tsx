@@ -23,23 +23,26 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { useIsFocused } from "@react-navigation/native";
 import { useAppContext } from "../../contexts/AppContext";
-import { SocietyData } from "../../models/Society";
 import { config } from "../../../config/gluestack-ui.config";
 import SearchList from "../../components/SearchList";
 import EventListButton from "../../components/EventListButton";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Event } from "../../models/Event";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Home">;
 
 export default function SocietiesScreen(props: Props) {
-  const { societies, events, updateEvents, userId } = useAppContext();
+  const { societies, updateSocietyData, events, updateEvents, userId } =
+    useAppContext();
 
-  const [society, setSociety] = useState<SocietyData>();
+  const society = societies.find(
+    (soc) => soc.id === props.route.params.societyId
+  )?.data;
 
-  const [isExec, setIsExec] = useState<boolean>(false);
+  const isExec = society?.execIds.includes(userId) ?? false;
 
-  const [socEvents, setSocEvents] = useState<Event[]>([]);
+  const socEvents = society
+    ? events.filter((event) => society.eventIds.includes(event.id)).reverse()
+    : [];
 
   const [retrieveSocEventsErrMsg, setRetrieveSocEventsErrMsg] =
     useState<string>("");
@@ -47,31 +50,13 @@ export default function SocietiesScreen(props: Props) {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (isFocused) {
-      const newSoc =
-        societies.find((soc) => soc.id === props.route.params.societyId)
-          ?.data ?? society;
-      setSociety(newSoc);
-
-      if (newSoc) {
-        updateEvents()
-          .then(() => {
-            setRetrieveSocEventsErrMsg("");
-            setSocEvents(
-              events
-                .filter((event) => newSoc.eventIds.includes(event.id))
-                .reverse()
-            );
-          })
-          .catch(
-            (err) =>
-              !socEvents.length && setRetrieveSocEventsErrMsg(err.message)
-          );
-
-        setIsExec(newSoc.execIds.includes(userId));
-      } else {
-        setIsExec(false);
-      }
+    if (isFocused && society) {
+      updateSocietyData(props.route.params.societyId).catch();
+      updateEvents()
+        .then(() => setRetrieveSocEventsErrMsg(""))
+        .catch(
+          (err) => !socEvents.length && setRetrieveSocEventsErrMsg(err.message)
+        );
     }
   }, [props.route.params.societyId, isFocused]);
 

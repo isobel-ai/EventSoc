@@ -13,6 +13,10 @@ export type AppContent = {
   updateSocieties: () => Promise<void>;
   updateEvents: () => Promise<void>;
   updateUsers: () => Promise<void>;
+
+  updateSocietyData: (id: string) => Promise<void>;
+  updateEventData: (id: string) => Promise<void>;
+  updateUserData: (id: string) => Promise<void>;
 };
 
 const AppContext = createContext<AppContent>({
@@ -24,7 +28,11 @@ const AppContext = createContext<AppContent>({
 
   updateSocieties: () => Promise.resolve(),
   updateEvents: () => Promise.resolve(),
-  updateUsers: () => Promise.resolve()
+  updateUsers: () => Promise.resolve(),
+
+  updateSocietyData: () => Promise.resolve(),
+  updateEventData: () => Promise.resolve(),
+  updateUserData: () => Promise.resolve()
 });
 export default AppContext;
 

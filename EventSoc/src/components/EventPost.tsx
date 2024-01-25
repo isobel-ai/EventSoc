@@ -14,7 +14,7 @@ import { toDateTimeRangeString } from "../helpers/DateTimeHelper";
 import { StyleProp, ViewStyle } from "react-native";
 import { Event } from "../models/Event";
 import EventMenu from "./EventMenu";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAppContext } from "../contexts/AppContext";
 
 interface Props {
@@ -23,17 +23,16 @@ interface Props {
 }
 
 export default function EventPost(props: Props) {
-  const { societies, userId, users } = useAppContext();
-
-  const [isExec, setIsExec] = useState<boolean>(false);
+  const { societies, updateSocietyData, userId } = useAppContext();
 
   useEffect(() => {
-    setIsExec(
-      societies
-        .find((soc) => soc.id === props.event.data.organiserId)
-        ?.data.execIds.includes(userId) ?? false
-    );
-  }, [societies]);
+    updateSocietyData(props.event.data.organiserId).catch();
+  }, []);
+
+  const isExec =
+    societies
+      .find((soc) => soc.id === props.event.data.organiserId)
+      ?.data.execIds.includes(userId) ?? false;
 
   const iconTextContainerStyle: StyleProp<ViewStyle> = {
     width: "90%",
@@ -50,19 +49,20 @@ export default function EventPost(props: Props) {
       {isExec && <EventMenu event={props.event} />}
       <Pressable onPress={props.onPress}>
         <VStack
-          gap={10}
-          width="100%">
+          gap={15}
+          width="100%"
+          paddingHorizontal={5}>
           <VStack
-            marginHorizontal={5}
-            alignItems="flex-start"
-            gap={5}>
+            gap={5}
+            width="100%"
+            alignItems="flex-start">
             <Heading>{props.event.data.name}</Heading>
             <HStack style={iconTextContainerStyle}>
               <Icon
                 as={CalendarDaysIcon}
                 size="lg"
               />
-              <Text>
+              <Text width="100%">
                 {toDateTimeRangeString(
                   props.event.data.startDate,
                   props.event.data.endDate

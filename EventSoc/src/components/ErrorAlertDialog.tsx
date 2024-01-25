@@ -22,13 +22,20 @@ interface Props {
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 
   errMsg: string;
+
+  onClose?: () => void;
 }
 
 export default function ErrorAlertDialog(props: Props) {
+  const handleClose = () => {
+    props.setIsVisible(false);
+    props.onClose && props.onClose();
+  };
+
   return (
     <AlertDialog
       isOpen={props.isVisible}
-      onClose={() => props.setIsVisible(false)}>
+      onClose={handleClose}>
       <AlertDialogBackdrop />
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -55,7 +62,7 @@ export default function ErrorAlertDialog(props: Props) {
           <Button
             variant="outline"
             action="secondary"
-            onPress={() => props.setIsVisible(false)}>
+            onPress={handleClose}>
             <ButtonText>OK</ButtonText>
           </Button>
         </AlertDialogFooter>

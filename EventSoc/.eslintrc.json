@@ -16,7 +16,8 @@
     },
     "plugins": [
         "@typescript-eslint",
-        "react"
+        "react",
+        "unused-imports"
     ],
     "settings": {
         "react": {
@@ -34,6 +35,7 @@
         "eqeqeq": ["error", "smart"],
         "react/react-in-jsx-scope": "off",
         "@typescript-eslint/no-explicit-any": ["off"],
-        "@typescript-eslint/ban-ts-comment":"off"
+        "@typescript-eslint/ban-ts-comment":"off",
+        "unused-imports/no-unused-imports": "error"
     }   
 }

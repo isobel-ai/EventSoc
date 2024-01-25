@@ -26,18 +26,12 @@ interface Props<I> {
 
 export default function SearchList<Item>(props: Props<Item>) {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredData, setFilteredData] = useState<Item[]>(props.data);
 
   useEffect(() => {
-    Keyboard.dismiss(), searchFunction("");
+    Keyboard.dismiss(), setSearchTerm("");
   }, props.clearSearch ?? []);
 
-  useEffect(() => searchFunction(searchTerm), [props.data]); // Re-filter on list reload
-
-  const searchFunction = (text: string) => {
-    setSearchTerm(text);
-    setFilteredData(searchFilter(text, props.data, props.searchKeys));
-  };
+  const filteredData = searchFilter(searchTerm, props.data, props.searchKeys);
 
   return (
     <View
@@ -48,7 +42,7 @@ export default function SearchList<Item>(props: Props<Item>) {
         <InputField
           value={searchTerm}
           placeholder="Search"
-          onChangeText={(t) => searchFunction(t)}
+          onChangeText={(t) => setSearchTerm(t)}
         />
         <InputSlot paddingRight={"$1.5"}>
           <InputIcon>

@@ -7,13 +7,10 @@ import SearchList from "../components/SearchList";
 import { useAppContext } from "../contexts/AppContext";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { config } from "../../config/gluestack-ui.config";
-import { StackScreenProps } from "@react-navigation/stack";
-import { MyEventsStackParamList } from "../navigation/MyEventsStackNavigator";
 
-type Props = StackScreenProps<MyEventsStackParamList, "Home">;
-
-export default function MyEventsScreen(props: Props) {
-  const { events, userId, updateEvents, societies } = useAppContext();
+export default function MyEventsScreen() {
+  const { events, userId, updateEvents, societies, updateSocieties } =
+    useAppContext();
 
   const myEvents = events.filter((event) =>
     event.data.attendeeIds.includes(userId)
@@ -24,12 +21,12 @@ export default function MyEventsScreen(props: Props) {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    isFocused &&
+    if (isFocused) {
       updateEvents()
-        .then(() => {
-          setRetrieveEventsErrMsg("");
-        })
+        .then(() => setRetrieveEventsErrMsg(""))
         .catch((err) => !events.length && setRetrieveEventsErrMsg(err.message));
+      updateSocieties().catch();
+    }
   }, [isFocused]);
 
   const isExec = (eventOrganiserId: string) =>

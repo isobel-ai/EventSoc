@@ -12,7 +12,7 @@ import {
 } from "@gluestack-ui/themed";
 import ScreenView from "../../components/ScreenView";
 import { config } from "../../../config/gluestack-ui.config";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { login } from "../../services/authService";
 import { StackScreenProps } from "@react-navigation/stack";
@@ -31,12 +31,7 @@ export default function LoginScreen(props: Props) {
 
   const [loginErrMsg, setLoginErrMsg] = useState<string>("");
 
-  const [validEntries, setValidEntries] = useState<boolean>(false);
-
-  useEffect(
-    () => setValidEntries(validEmail(email) && validPassword(password)),
-    [email, password]
-  );
+  const validEntries = validEmail(email) && validPassword(password);
 
   const handleRegistration = () => {
     props.navigation.navigate("Register");

@@ -4,7 +4,6 @@ import {
 } from "@react-navigation/stack";
 import { config } from "../../config/gluestack-ui.config";
 import { ArrowLeftIcon, Icon } from "@gluestack-ui/themed";
-import EventScreen from "../screens/Event/EventScreen";
 import {
   NavigatorScreenParams,
   getFocusedRouteNameFromRoute
@@ -12,7 +11,6 @@ import {
 import SocietiesStackNavigator, {
   SocietiesStackParamList
 } from "./Societies/SocietiesStackNavigator";
-import EditEventScreen from "../screens/Event/EditEventScreen";
 import MyEventsScreen from "../screens/MyEventsScreen";
 import {
   EventStackParamList,
