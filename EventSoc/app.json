@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "EventSoc",
-    "slug": "EventSoc",
+    "slug": "eventsoc",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6c5edfa0-46ca-475b-910a-db888b020a4e"
+      }
+    },
+    "owner": "isobel_ai"
   }
 }
