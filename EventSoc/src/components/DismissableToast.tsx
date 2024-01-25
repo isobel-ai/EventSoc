@@ -11,14 +11,14 @@ import {
   useToast
 } from "@gluestack-ui/themed";
 
-export interface DismissableToastHookProps {
-  id: any;
-  close: () => void;
-}
-
-interface Props extends DismissableToastHookProps {
+export interface DismissableToastProps {
   title: string;
   description?: string;
+}
+
+interface Props extends DismissableToastProps {
+  id: any;
+  close: () => void;
 }
 
 export default function DismissableToast(props: Props) {

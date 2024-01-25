@@ -17,9 +17,6 @@ import { useAppContext } from "../contexts/AppContext";
 import useDismissableToast from "../hooks/useDismissableToast";
 import { eventSignUp, withdrawEventSignUp } from "../services/userEventService";
 import ConfirmDialog from "./ConfirmDialog";
-import DismissableToast, {
-  DismissableToastHookProps
-} from "./DismissableToast";
 import EventPost from "./EventPost";
 import { config } from "../../config/gluestack-ui.config";
 import { Event } from "../models/Event";
@@ -64,15 +61,7 @@ export default function EventScreenHeader(props: Props) {
 
   const [signUpErrMsg, setSignUpErrMsg] = useState<string>("");
 
-  const showSignUpErrToast = useDismissableToast(
-    ({ id, close }: DismissableToastHookProps) => (
-      <DismissableToast
-        id={id}
-        close={close}
-        title={signUpErrMsg}
-      />
-    )
-  );
+  const showSignUpErrToast = useDismissableToast({ title: signUpErrMsg });
 
   useEffect(() => {
     signUpErrMsg && showSignUpErrToast();
