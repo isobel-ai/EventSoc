@@ -24,7 +24,7 @@ export default function RegisterScreen(props: Props) {
     // Add user to exec
     const fullExec = society.execIds.slice();
     fullExec.push(userId);
-    const fullSoc = { ...society, exec: fullExec };
+    const fullSoc = { ...society, execIds: fullExec };
 
     const invalidErrMsg = getSocietyErrMsg(fullSoc);
     if (invalidErrMsg) {
