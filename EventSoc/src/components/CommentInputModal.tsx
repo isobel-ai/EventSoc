@@ -6,7 +6,6 @@ import {
   ButtonText,
   CloseIcon,
   HStack,
-  Heading,
   Icon,
   Modal,
   ModalBackdrop,
@@ -23,7 +22,6 @@ import { useEffect, useState } from "react";
 import { config } from "../../config/gluestack-ui.config";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { postComment } from "../services/eventCommentService";
-import { useAppContext } from "../contexts/AppContext";
 import { postReply } from "../services/commentsService";
 
 interface Props {

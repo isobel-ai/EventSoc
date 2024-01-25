@@ -12,7 +12,7 @@ import {
 } from "@gluestack-ui/themed";
 import ScreenView from "../../components/ScreenView";
 import { config } from "../../../config/gluestack-ui.config";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { login } from "../../services/authService";
 import { StackScreenProps } from "@react-navigation/stack";

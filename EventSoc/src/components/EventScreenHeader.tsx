@@ -1,7 +1,5 @@
 import {
   AddIcon,
-  Alert,
-  AlertText,
   Button,
   ButtonText,
   Divider,
@@ -11,7 +9,6 @@ import {
   VStack,
   View
 } from "@gluestack-ui/themed";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useState, useEffect } from "react";
 import { useAppContext } from "../contexts/AppContext";
 import useDismissableToast from "../hooks/useDismissableToast";

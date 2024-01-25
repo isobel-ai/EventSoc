@@ -14,7 +14,7 @@ import { toDateTimeRangeString } from "../helpers/DateTimeHelper";
 import { StyleProp, ViewStyle } from "react-native";
 import { Event } from "../models/Event";
 import EventMenu from "./EventMenu";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAppContext } from "../contexts/AppContext";
 
 interface Props {

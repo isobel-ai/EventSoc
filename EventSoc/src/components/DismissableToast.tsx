@@ -1,14 +1,11 @@
 import {
-  CheckIcon,
   CloseCircleIcon,
-  CloseIcon,
   Icon,
   Pressable,
   Toast,
   ToastDescription,
   ToastTitle,
-  VStack,
-  useToast
+  VStack
 } from "@gluestack-ui/themed";
 
 export interface DismissableToastProps {

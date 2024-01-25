@@ -1,7 +1,7 @@
 import ScreenView from "../../components/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import ErrorAlertDialog from "../../components/ErrorAlertDialog";
 import { useAppContext } from "../../contexts/AppContext";

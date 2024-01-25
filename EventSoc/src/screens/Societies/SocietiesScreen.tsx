@@ -23,12 +23,10 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
 import { useIsFocused } from "@react-navigation/native";
 import { useAppContext } from "../../contexts/AppContext";
-import { SocietyData } from "../../models/Society";
 import { config } from "../../../config/gluestack-ui.config";
 import SearchList from "../../components/SearchList";
 import EventListButton from "../../components/EventListButton";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Event } from "../../models/Event";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Home">;
 

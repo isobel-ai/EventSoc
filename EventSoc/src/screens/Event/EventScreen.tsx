@@ -74,7 +74,7 @@ export default function EventScreen(props: Props) {
                   style={{ paddingRight: 15 }}
                 />
                 <AlertText>
-                  Couldn't retrieve comments. Try again later.
+                  Couldn&apos;t retrieve comments. Try again later.
                 </AlertText>
               </Alert>
             ) : (
