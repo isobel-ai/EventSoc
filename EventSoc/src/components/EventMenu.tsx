@@ -16,6 +16,7 @@ import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { useAppContext } from "../contexts/AppContext";
 import { deleteSocEvent } from "../services/socEventsService";
 import { EventStackParamList } from "../navigation/CrossTabStackScreens/EventStackScreens";
+import { useDeleteEventContext } from "../contexts/DeleteEventContext";
 
 interface Props {
   event: Event;
@@ -26,6 +27,8 @@ export default function EventMenu(props: Props) {
 
   const { updateSocieties, updateEvents } = useAppContext();
 
+  const { onDeleteEvent } = useDeleteEventContext();
+
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
 
   const handleDeleteEvent = () => {
@@ -35,7 +38,8 @@ export default function EventMenu(props: Props) {
       props.event.data.organiserId
     )
       .then(() => updateSocieties().catch())
-      .then(() => updateEvents().catch());
+      .then(() => updateEvents().catch())
+      .then(onDeleteEvent);
   };
 
   const menuSelectionHandler = (keys: Iterable<React.Key> | string) => {
