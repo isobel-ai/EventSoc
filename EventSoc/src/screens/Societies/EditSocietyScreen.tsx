@@ -1,7 +1,7 @@
 import ScreenView from "../../components/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesStackNavigator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import ErrorAlertDialog from "../../components/ErrorAlertDialog";
 import { useAppContext } from "../../contexts/AppContext";
@@ -17,16 +17,16 @@ type Props = StackScreenProps<SocietiesStackParamList, "Edit Society">;
 export default function EditSocietyScreen(props: Props) {
   const { societies } = useAppContext();
 
-  const [editSocErrMsg, setEditSocErrMsg] = useState<string>("");
-  const [showErrorDialog, setShowErrorDialog] = useState<boolean>(false);
-
   const toEditSoc = societies.find(
     (soc) => soc.id === props.route.params.societyId
   )?.data;
-  if (!toEditSoc) {
-    setEditSocErrMsg("Could not retrieve society details. Try again later.");
-    setShowErrorDialog(true);
-  }
+
+  const [editSocErrMsg, setEditSocErrMsg] = useState<string>(
+    toEditSoc ? "" : "Could not retrieve society details. Try again later."
+  );
+  const [showErrorDialog, setShowErrorDialog] = useState<boolean>(
+    toEditSoc === undefined
+  );
 
   const beforeSoc = toEditSoc ?? defaultSocietyData();
   const [afterSoc, setAfterSoc] = useState<SocietyData>(cloneDeep(beforeSoc));
@@ -64,6 +64,7 @@ export default function EditSocietyScreen(props: Props) {
         isVisible={showErrorDialog}
         setIsVisible={setShowErrorDialog}
         errMsg={editSocErrMsg}
+        onClose={!toEditSoc ? props.navigation.goBack : undefined}
       />
     </ScreenView>
   );

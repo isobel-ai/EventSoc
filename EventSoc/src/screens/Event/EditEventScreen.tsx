@@ -17,16 +17,16 @@ type Props = StackScreenProps<EventStackParamList, "Edit Event">;
 export default function EditEventScreen(props: Props) {
   const { events } = useAppContext();
 
-  const [editEventErrMsg, setEditEventErrMsg] = useState<string>("");
-  const [showErrorDialog, setShowErrorDialog] = useState<boolean>(false);
-
   const toEditEvent = events.find(
     (event) => event.id === props.route.params.eventId
   )?.data;
-  if (!toEditEvent) {
-    setEditEventErrMsg("Could not retrieve event details. Try again later.");
-    setShowErrorDialog(true);
-  }
+
+  const [editEventErrMsg, setEditEventErrMsg] = useState<string>(
+    toEditEvent ? "" : "Could not retrieve event details. Try again later."
+  );
+  const [showErrorDialog, setShowErrorDialog] = useState<boolean>(
+    toEditEvent === undefined
+  );
 
   const beforeEvent = toEditEvent ?? defaultEventData();
   const [afterEvent, setAfterEvent] = useState<EventData>(
@@ -65,6 +65,7 @@ export default function EditEventScreen(props: Props) {
         isVisible={showErrorDialog}
         setIsVisible={setShowErrorDialog}
         errMsg={editEventErrMsg}
+        onClose={!toEditEvent ? props.navigation.goBack : undefined}
       />
     </ScreenView>
   );
