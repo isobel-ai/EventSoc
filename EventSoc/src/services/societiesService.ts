@@ -9,7 +9,7 @@ import {
   where
 } from "firebase/firestore";
 import { societiesCol, societyPicturesRef } from "../config/firebaseConfig";
-import { Society, SocietyData } from "../models/Society";
+import { Society, SocietyData } from "../../../Models/Society";
 import { updateImage, uploadImage } from "./cloudService";
 
 export function retrieveSocietyData(id: string) {

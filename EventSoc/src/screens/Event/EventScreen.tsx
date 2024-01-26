@@ -6,7 +6,7 @@ import { Alert, AlertText, FlatList, Text } from "@gluestack-ui/themed";
 import { useAppContext } from "../../contexts/AppContext";
 import React, { useEffect, useState } from "react";
 import { retrieveComments } from "../../services/commentsService";
-import { Comment } from "../../models/Comment";
+import { Comment } from "../../../../Models/Comment";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { config } from "../../../config/gluestack-ui.config";
 import CommentButton from "../../components/CommentButton";

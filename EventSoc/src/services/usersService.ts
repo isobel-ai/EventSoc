@@ -8,7 +8,7 @@ import {
   getDoc
 } from "firebase/firestore";
 import { usersCol } from "../config/firebaseConfig";
-import { User, UserData, defaultUserData } from "../models/User";
+import { User, UserData, defaultUserData } from "../../../Models/User";
 
 export function retrieveUserData(id: string) {
   const userDoc = doc(usersCol, id);

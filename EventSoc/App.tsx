@@ -5,10 +5,10 @@ import MainTabNavigator from "./src/navigation/MainTabNavigator";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useAuth } from "./src/hooks/useAuth";
 import LoginStackNavigator from "./src/navigation/LoginStackNavigator";
-import { User } from "./src/models/User";
+import { User } from "../Models/User";
 import { useEffect, useState } from "react";
 import AppContext, { AppContent } from "./src/contexts/AppContext";
-import { Society } from "./src/models/Society";
+import { Society } from "../Models/Society";
 import {
   retrieveEventData,
   retrieveEvents
@@ -18,8 +18,7 @@ import {
   retrieveSocietyData
 } from "./src/services/societiesService";
 import { retrieveUserData, retrieveUsers } from "./src/services/usersService";
-import { Event } from "./src/models/Event";
-import { LogBox } from "react-native";
+import { Event } from "../Models/Event";
 
 export default function App() {
   const { loggedIn, userId } = useAuth();

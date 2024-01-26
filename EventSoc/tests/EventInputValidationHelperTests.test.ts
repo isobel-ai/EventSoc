@@ -1,5 +1,5 @@
 import { getEventErrMsg } from "../src/helpers/EventInputValidationHelper";
-import { EventData, defaultEventData } from "../src/models/Event";
+import { EventData, defaultEventData } from "../../Models/Event";
 
 describe("getEventErrMsg", () => {
   test("it should return an empty string if event is valid", () => {

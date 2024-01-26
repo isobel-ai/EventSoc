@@ -1,5 +1,5 @@
 import { Button, ButtonText, Image } from "@gluestack-ui/themed";
-import { Event } from "../models/Event";
+import { Event } from "../../../Models/Event";
 import { config } from "../../config/gluestack-ui.config";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { SocietiesStackParamList } from "../navigation/Societies/SocietiesStackNavigator";

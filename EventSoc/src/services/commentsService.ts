@@ -5,7 +5,7 @@ import {
   CommentAncestry,
   CommentData,
   defaultCommentData
-} from "../models/Comment";
+} from "../../../Models/Comment";
 
 export function retrieveCommentData(id: string) {
   return getDoc(doc(commentsCol, id))

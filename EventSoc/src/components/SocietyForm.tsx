@@ -26,7 +26,7 @@ import {
   Alert,
   AlertText
 } from "@gluestack-ui/themed";
-import { SocietyData } from "../models/Society";
+import { SocietyData } from "../../../Models/Society";
 import { useEffect, useState } from "react";
 import { config } from "../../config/gluestack-ui.config";
 import { xorBy } from "lodash";

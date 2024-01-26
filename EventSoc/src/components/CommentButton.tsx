@@ -6,7 +6,7 @@ import {
   HStack
 } from "@gluestack-ui/themed";
 import { config } from "../../config/gluestack-ui.config";
-import { Comment } from "../models/Comment";
+import { Comment } from "../../../Models/Comment";
 import { useAppContext } from "../contexts/AppContext";
 import { StyleProp, TextStyle } from "react-native";
 import { toTimeAgoString } from "../helpers/DateTimeHelper";

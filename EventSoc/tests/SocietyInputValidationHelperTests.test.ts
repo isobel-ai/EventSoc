@@ -1,5 +1,5 @@
 import { getSocietyErrMsg } from "../src/helpers/SocietyInputValidationHelper";
-import { SocietyData, defaultSocietyData } from "../src/models/Society";
+import { SocietyData, defaultSocietyData } from "../../Models/Society";
 
 describe("getSocietyErrMsg", () => {
   test("it should return an empty string if the society is valid", () => {

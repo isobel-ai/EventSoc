@@ -1,6 +1,5 @@
 import {
   dateInRange,
-  defaultDate,
   endOfUniYear,
   setDate,
   setTime,
@@ -48,15 +47,6 @@ describe("setTime", () => {
     setTime(afterDate, time);
 
     expect(beforeDate.toTimeString()).toBe(afterDate.toTimeString());
-  });
-});
-
-describe("defaultDate", () => {
-  test("it should return a date with 0 seconds and milliseconds", () => {
-    const date = defaultDate();
-
-    expect(date.getSeconds()).toBe(0);
-    expect(date.getMilliseconds()).toBe(0);
   });
 });
 

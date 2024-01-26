@@ -1,6 +1,6 @@
 import ScreenView from "../../components/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
-import { EventData, defaultEventData } from "../../models/Event";
+import { EventData, defaultEventData } from "../../../../Models/Event";
 import { useState } from "react";
 import { getEventErrMsg } from "../../helpers/EventInputValidationHelper";
 import EventForm from "../../components/EventForm";

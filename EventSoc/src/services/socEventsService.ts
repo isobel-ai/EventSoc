@@ -10,7 +10,7 @@ import {
   societiesCol,
   db
 } from "../config/firebaseConfig";
-import { EventData } from "../models/Event";
+import { EventData } from "../../../Models/Event";
 import { deleteImage, uploadImage } from "./cloudService";
 
 export function createSocEvent(event: EventData, socId: string) {

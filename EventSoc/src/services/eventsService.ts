@@ -7,7 +7,7 @@ import {
   getDoc
 } from "firebase/firestore";
 import { eventPicturesRef, eventsCol } from "../config/firebaseConfig";
-import { EventData, Event } from "../models/Event";
+import { EventData, Event } from "../../../Models/Event";
 import { updateImage } from "./cloudService";
 
 export function retrieveEventData(id: string) {

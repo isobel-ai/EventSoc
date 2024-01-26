@@ -1,5 +1,3 @@
-import { defaultDate } from "../helpers/DateTimeHelper";
-
 export interface Event {
   id: string;
   data: EventData;
@@ -31,6 +29,12 @@ export const defaultEventData: () => EventData = () => {
     organiserId: "",
     capacity: -1,
     attendeeIds: <string[]>[],
-    commentIds: <string[]>[]
+    commentIds: <string[]>[],
   };
 };
+
+function defaultDate() {
+  const date = new Date();
+  date.setSeconds(0, 0);
+  return date;
+}

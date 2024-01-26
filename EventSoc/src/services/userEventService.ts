@@ -6,7 +6,7 @@ import {
   arrayRemove
 } from "firebase/firestore";
 import { db, eventsCol, usersCol } from "../config/firebaseConfig";
-import { EventData } from "../models/Event";
+import { EventData } from "../../../Models/Event";
 
 /**
  * @returns whether the sign-up is successful

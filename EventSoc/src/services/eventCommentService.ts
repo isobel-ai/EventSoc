@@ -1,6 +1,6 @@
 import { arrayUnion, doc, runTransaction } from "firebase/firestore";
 import { commentsCol, db, eventsCol } from "../config/firebaseConfig";
-import { CommentData, defaultCommentData } from "../models/Comment";
+import { CommentData, defaultCommentData } from "../../../Models/Comment";
 
 export function postComment(
   eventId: string,

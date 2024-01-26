@@ -1,4 +1,4 @@
-import { SocietyData } from "../models/Society";
+import { SocietyData } from "../../../Models/Society";
 
 /**
  * Returns an empty string if the society is valid, and an appropriate error message otherwise

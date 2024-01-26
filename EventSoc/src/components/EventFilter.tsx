@@ -15,7 +15,7 @@ import { searchFilter } from "../helpers/SearchHelper";
 import { dateInRange } from "../helpers/DateTimeHelper";
 import { MaterialIcons } from "@expo/vector-icons";
 import ScreenView from "./ScreenView";
-import { Event } from "../models/Event";
+import { Event } from "../../../Models/Event";
 import EventFilterSideMenu from "./EventFilterSideMenu";
 import { Item } from "../../libs/multi-selectbox";
 import { useAppContext } from "../contexts/AppContext";
