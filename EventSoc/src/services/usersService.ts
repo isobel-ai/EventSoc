@@ -5,7 +5,8 @@ import {
   where,
   setDoc,
   getDocs,
-  getDoc
+  getDoc,
+  updateDoc
 } from "firebase/firestore";
 import { usersCol } from "../config/firebaseConfig";
 import { User, UserData, defaultUserData } from "../../../Models/User";
@@ -40,6 +41,12 @@ export function createUser(id: string, name: string) {
       throw Error("Unable to create user. Try again later.");
     }
   );
+}
+
+export function updateUser(updates: Partial<UserData>, userId: string) {
+  return updateDoc(doc(usersCol, userId), updates).catch(() => {
+    throw Error("Unable to update user. Try again later.");
+  });
 }
 
 export function usernameTaken(name: string) {

@@ -17,7 +17,11 @@ import {
   retrieveSocieties,
   retrieveSocietyData
 } from "./src/services/societiesService";
-import { retrieveUserData, retrieveUsers } from "./src/services/usersService";
+import {
+  retrieveUserData,
+  retrieveUsers,
+  updateUser
+} from "./src/services/usersService";
 import { Event } from "../Models/Event";
 import { LogBox } from "react-native";
 import * as Notifications from "expo-notifications";
@@ -110,7 +114,10 @@ export default function App() {
       ]).then(() => setIsLoading(false));
 
       registerForPushNotifications().then((token) => {
-        console.log(token);
+        token &&
+          updateUser({ notificationToken: token }, userId).catch((err) =>
+            console.log(err.message)
+          );
       });
 
       const notificationListener =
