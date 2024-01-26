@@ -109,7 +109,7 @@ export default function App() {
     if (loggedIn) {
       registerForPushNotifications()
         .then((token) => {
-          token &&
+          token !== undefined &&
             updateUser({ notificationToken: token }, userId).catch((err) =>
               console.log(err.message)
             );
