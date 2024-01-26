@@ -45,8 +45,6 @@ export function retrieveEvents() {
 }
 
 export function updateEvent(updates: Partial<EventData>, eventId: string) {
-  const eventDoc = doc(eventsCol, eventId);
-
   const updatedCapacityErrMsg =
     "Updated capacity must not be smaller than number of sign-ups.";
 
@@ -71,7 +69,7 @@ export function updateEvent(updates: Partial<EventData>, eventId: string) {
 
   return updatedCapacityCheck
     .then(() => getFullUpdates)
-    .then((fullUpdates) => updateDoc(eventDoc, fullUpdates))
+    .then((fullUpdates) => updateDoc(doc(eventsCol, eventId), fullUpdates))
     .catch((err) => {
       throw err.message === updatedCapacityErrMsg
         ? err

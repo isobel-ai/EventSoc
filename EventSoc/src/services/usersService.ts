@@ -12,8 +12,7 @@ import { usersCol } from "../config/firebaseConfig";
 import { User, UserData, defaultUserData } from "../../../Models/User";
 
 export function retrieveUserData(id: string) {
-  const userDoc = doc(usersCol, id);
-  return getDoc(userDoc)
+  return getDoc(doc(usersCol, id))
     .then((userSnapshot) => <UserData>userSnapshot.data())
     .catch(() => {
       throw Error("User couldn't be retrieved. Try again later.");
