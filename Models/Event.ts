@@ -18,12 +18,15 @@ export interface EventData {
 }
 
 export const defaultEventData: () => EventData = () => {
+  const defaultDate = new Date();
+  defaultDate.setSeconds(0, 0);
+
   return {
     name: "",
     location: "",
     description: "",
-    startDate: defaultDate(),
-    endDate: defaultDate(),
+    startDate: defaultDate,
+    endDate: defaultDate,
     pictureUrl: "",
     tags: <string[]>[],
     organiserId: "",
@@ -32,9 +35,3 @@ export const defaultEventData: () => EventData = () => {
     commentIds: <string[]>[],
   };
 };
-
-function defaultDate() {
-  const date = new Date();
-  date.setSeconds(0, 0);
-  return date;
-}
