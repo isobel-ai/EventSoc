@@ -107,18 +107,17 @@ export default function App() {
 
   useEffect(() => {
     if (loggedIn) {
-      Promise.allSettled([
-        updateSocieties(),
-        updateEvents(),
-        updateUsers()
-      ]).then(() => setIsLoading(false));
-
-      registerForPushNotifications().then((token) => {
-        token &&
-          updateUser({ notificationToken: token }, userId).catch((err) =>
-            console.log(err.message)
-          );
-      });
+      registerForPushNotifications()
+        .then((token) => {
+          token &&
+            updateUser({ notificationToken: token }, userId).catch((err) =>
+              console.log(err.message)
+            );
+        })
+        .then(() =>
+          Promise.allSettled([updateSocieties(), updateEvents(), updateUsers()])
+        )
+        .then(() => setIsLoading(false));
 
       const notificationListener =
         Notifications.addNotificationReceivedListener((notification) => {
