@@ -19,6 +19,17 @@ import {
 } from "./src/services/societiesService";
 import { retrieveUserData, retrieveUsers } from "./src/services/usersService";
 import { Event } from "../Models/Event";
+import { LogBox } from "react-native";
+import * as Notifications from "expo-notifications";
+import { registerForPushNotifications } from "./src/services/notificationsService";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false
+  })
+});
 
 export default function App() {
   const { loggedIn, userId } = useAuth();
@@ -97,6 +108,25 @@ export default function App() {
         updateEvents(),
         updateUsers()
       ]).then(() => setIsLoading(false));
+
+      registerForPushNotifications().then((token) => {
+        console.log(token);
+      });
+
+      const notificationListener =
+        Notifications.addNotificationReceivedListener((notification) => {
+          console.log(notification);
+        });
+
+      const responseListener =
+        Notifications.addNotificationResponseReceivedListener((response) => {
+          console.log(response);
+        });
+
+      return () => {
+        Notifications.removeNotificationSubscription(notificationListener);
+        Notifications.removeNotificationSubscription(responseListener);
+      };
     } else {
       setIsLoading(loggedIn === undefined);
     }
