@@ -3,12 +3,12 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 
 export function useAuth() {
-  const [loggedIn, setLoggedIn] = useState<boolean>();
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [userId, setUserId] = useState<string>("");
 
   useEffect(() => {
     const unsubscribeFromAuthStateChanged = onAuthStateChanged(auth, (user) => {
-      setLoggedIn(Boolean(user)), setUserId(user ? user.uid : "");
+      setUserId(user?.uid ?? ""), setLoggedIn(Boolean(user?.uid));
     });
     return unsubscribeFromAuthStateChanged;
   }, []);
