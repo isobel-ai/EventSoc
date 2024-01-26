@@ -3,6 +3,7 @@ export interface Event {
   data: EventData;
 }
 
+// If this changes, update eventDetailKeys accordingly
 export interface EventData {
   name: string;
   location: string;
@@ -16,6 +17,15 @@ export interface EventData {
   attendeeIds: string[];
   commentIds: string[];
 }
+
+export const eventDetailKeys = [
+  "name",
+  "location",
+  "description",
+  "startDate",
+  "endDate",
+  "pictureUrl",
+];
 
 export const defaultEventData: () => EventData = () => {
   const defaultDate = new Date();
