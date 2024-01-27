@@ -7,6 +7,7 @@ export interface CommentData {
   authorId: string;
   contents: string;
   timestamp: Date;
+  parentId: string;
   replyIds: string[];
 }
 
@@ -15,6 +16,7 @@ export const defaultCommentData: () => CommentData = () => {
     authorId: "",
     contents: "",
     timestamp: new Date(),
+    parentId: "",
     replyIds: <string[]>[]
   };
 };
