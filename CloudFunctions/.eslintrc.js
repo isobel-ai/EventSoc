@@ -36,6 +36,7 @@ module.exports = {
     "dot-notation": "error",
     "eqeqeq": ["error", "smart"],
     "@typescript-eslint/no-explicit-any": ["off"],
-    "@typescript-eslint/ban-ts-comment":"off"
+    "@typescript-eslint/ban-ts-comment":"off",
+    "require-jsdoc":"off"
   },
 };
