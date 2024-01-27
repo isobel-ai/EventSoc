@@ -63,11 +63,9 @@ export default function CommentButton(props: Props) {
       alignSelf="center"
       padding={10}>
       <HStack>
-        {authorName && (
-          <Text style={[buttonTextStyle, { fontWeight: "bold" }]}>
-            {authorName}
-          </Text>
-        )}
+        <Text style={[buttonTextStyle, { fontWeight: "bold" }]}>
+          {authorName ?? "User Not Found"}
+        </Text>
         {isExec && (
           <Text
             style={[
