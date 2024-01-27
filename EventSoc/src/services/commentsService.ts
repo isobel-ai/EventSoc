@@ -65,7 +65,8 @@ export function postReply(
     const reply: CommentData = {
       ...defaultCommentData(),
       authorId: authorId,
-      contents: contents
+      contents: contents,
+      parentId: commentId
     };
 
     transaction
