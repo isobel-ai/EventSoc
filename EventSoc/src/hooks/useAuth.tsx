@@ -3,7 +3,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 
 export function useAuth() {
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>();
   const [userId, setUserId] = useState<string>("");
 
   useEffect(() => {
