@@ -6,7 +6,9 @@ import {
   setDoc,
   getDocs,
   getDoc,
-  updateDoc
+  updateDoc,
+  arrayUnion,
+  arrayRemove
 } from "firebase/firestore";
 import { usersCol } from "../config/firebaseConfig";
 import { User, UserData, defaultUserData } from "../../../Models/User";
@@ -45,6 +47,22 @@ export function createUser(id: string, name: string) {
 export function updateUser(updates: Partial<UserData>, userId: string) {
   return updateDoc(doc(usersCol, userId), updates).catch(() => {
     throw Error("Unable to update user. Try again later.");
+  });
+}
+
+export function addNotificationToken(userId: string, token: string) {
+  return updateDoc(doc(usersCol, userId), {
+    notificationTokens: arrayUnion(token)
+  }).catch(() => {
+    throw Error("Unable to add notification token. Try again later.");
+  });
+}
+
+export function removeNotificationToken(userId: string, token: string) {
+  return updateDoc(doc(usersCol, userId), {
+    notificationTokens: arrayRemove(token)
+  }).catch(() => {
+    throw Error("Unable to remove notification token. Try again later.");
   });
 }
 

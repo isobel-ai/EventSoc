@@ -6,9 +6,9 @@ export interface User {
 export interface UserData {
   name: string;
   eventAttendingIds: string[];
-  notificationToken: string;
+  notificationTokens: string[];
 }
 
 export const defaultUserData: () => UserData = () => {
-  return { name: "", eventAttendingIds: <string[]>[], notificationToken: "" };
+  return { name: "", eventAttendingIds: <string[]>[], notificationTokens: [] };
 };

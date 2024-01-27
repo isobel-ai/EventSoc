@@ -6,7 +6,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useAuth } from "./src/hooks/useAuth";
 import LoginStackNavigator from "./src/navigation/LoginStackNavigator";
 import { User } from "../Models/User";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AppContext, { AppContent } from "./src/contexts/AppContext";
 import { Society } from "../Models/Society";
 import {
@@ -18,9 +18,10 @@ import {
   retrieveSocietyData
 } from "./src/services/societiesService";
 import {
+  addNotificationToken,
+  removeNotificationToken,
   retrieveUserData,
-  retrieveUsers,
-  updateUser
+  retrieveUsers
 } from "./src/services/usersService";
 import { Event } from "../Models/Event";
 import { LogBox } from "react-native";
@@ -105,12 +106,17 @@ export default function App() {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const [notifToken, setNotifToken] = useState<string>();
+  const notificationListener = useRef<Notifications.Subscription>();
+  const responseListener = useRef<Notifications.Subscription>();
+
   useEffect(() => {
     if (loggedIn) {
       registerForPushNotifications()
         .then((token) => {
+          setNotifToken(token);
           token !== undefined &&
-            updateUser({ notificationToken: token }, userId).catch((err) =>
+            addNotificationToken(userId, token).catch((err) =>
               console.log(err.message)
             );
         })
@@ -119,22 +125,34 @@ export default function App() {
         )
         .then(() => setIsLoading(false));
 
-      const notificationListener =
+      notificationListener.current =
         Notifications.addNotificationReceivedListener((notification) => {
           console.log(notification);
         });
 
-      const responseListener =
+      responseListener.current =
         Notifications.addNotificationResponseReceivedListener((response) => {
           console.log(response);
         });
 
       return () => {
-        Notifications.removeNotificationSubscription(notificationListener);
-        Notifications.removeNotificationSubscription(responseListener);
+        notificationListener.current &&
+          Notifications.removeNotificationSubscription(
+            notificationListener.current
+          );
+        responseListener.current &&
+          Notifications.removeNotificationSubscription(
+            responseListener.current
+          );
       };
+    } else if (loggedIn === false) {
+      notifToken && removeNotificationToken(userId, notifToken);
+      notificationListener.current?.remove();
+      responseListener.current?.remove();
+      setIsLoading(false);
     } else {
-      setIsLoading(loggedIn === undefined);
+      // loggedIn === undefined
+      setIsLoading(true);
     }
   }, [loggedIn]);
 
