@@ -15,10 +15,12 @@ import {
   VStack
 } from "@gluestack-ui/themed";
 import { useAppContext } from "../../contexts/AppContext";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   retrieveCommentData,
-  retrieveComments
+  retrieveComments,
+  retrieveReplies,
+  retrieveReplyAncestry
 } from "../../services/commentsService";
 import { Comment, CommentData } from "../../models/Comment";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -26,137 +28,124 @@ import { config } from "../../../config/gluestack-ui.config";
 import CommentButton from "../../components/CommentButton";
 import CommentInputModal from "../../components/CommentInputModal";
 import { useIsFocused } from "@react-navigation/native";
+import { SectionList } from "react-native";
 
 type Props = StackScreenProps<EventStackParamList, "Reply">;
 
 export default function ReplyScreen(props: Props) {
   const { userId } = useAppContext();
 
-  const [comment, setComment] = useState<CommentData>();
-  const [replies, setReplies] = useState<Comment[]>([]);
-
-  const [retrieveCommentErrMsg, setRetrieveCommentErrMsg] =
-    useState<string>("");
-  const [retrieveRepliesErrMsg, setRetrieveRepliesErrMsg] =
-    useState<string>("");
+  const [commentAncestry, setCommentAncestry] = useState<(Comment | Error)[]>(
+    []
+  );
+  const [replies, setReplies] = useState<(Comment | Error)[]>([]);
 
   const [showPostCommentModal, setShowPostCommentModal] =
     useState<boolean>(false);
 
   const isFocused = useIsFocused();
 
-  useEffect(() => {
-    !showPostCommentModal &&
-      isFocused &&
-      retrieveCommentData(props.route.params.commentId)
-        .then((newComment) => setComment(newComment))
-        .then(() => setRetrieveCommentErrMsg(""))
-        .catch((err) => !comment && setRetrieveCommentErrMsg(err.message));
-  }, [showPostCommentModal, isFocused]);
+  const sectionListRef = useRef<SectionList>(null);
 
   useEffect(() => {
-    comment &&
-      retrieveComments(comment.replyIds, true)
-        .then((newReplies) => setReplies(newReplies))
-        .then(() => setRetrieveRepliesErrMsg(""))
-        .catch(
-          (err) => !replies.length && setRetrieveRepliesErrMsg(err.message)
-        );
-  }, [comment]);
+    isFocused &&
+      retrieveReplyAncestry(props.route.params.commentId).then((newAncestory) =>
+        setCommentAncestry(newAncestory.reverse())
+      );
+  }, [isFocused]);
+
+  useEffect(() => {
+    !showPostCommentModal &&
+      commentAncestry.length &&
+      retrieveCommentData(props.route.params.commentId)
+        .then((newCommentData) => {
+          setCommentAncestry(
+            commentAncestry.splice(commentAncestry.length - 1, 1, {
+              id: props.route.params.commentId,
+              data: newCommentData
+            })
+          );
+        })
+        .catch();
+  }, [showPostCommentModal]);
+
+  useEffect(() => {
+    retrieveReplies(props.route.params.commentId)
+      .then((newReplies) => setReplies(newReplies))
+      .catch((err) => !replies.length && setReplies([Error(err)]));
+  }, [commentAncestry.at(-1)]);
+
+  // Fix when loading is added
+  useEffect(() => {
+    commentAncestry.length &&
+      sectionListRef.current?.scrollToLocation({
+        sectionIndex: 0,
+        itemIndex: commentAncestry.length - 1
+      });
+  }, [commentAncestry.length]);
 
   return (
     <ScreenView extraStyle={{ height: "107%" }}>
-      <FlatList
-        ListHeaderComponent={
-          <VStack
-            gap={5}
-            marginTop={10}
-            alignContent="center">
-            {!retrieveCommentErrMsg ? (
-              comment && (
-                <CommentButton
-                  comment={{ id: props.route.params.commentId, data: comment }}
-                  eventOrganiserId={props.route.params.eventOrganiserId}
-                  disableButton
-                />
-              )
-            ) : (
-              <Alert
-                action="error"
-                variant="outline"
-                width="100%"
-                alignSelf="center">
-                <MaterialIcons
-                  name="error-outline"
-                  size={40}
-                  color={config.tokens.colors.error}
-                  style={{ paddingRight: 15 }}
-                />
-                <AlertText>{retrieveCommentErrMsg}</AlertText>
-              </Alert>
-            )}
-            <Divider
-              alignSelf="center"
-              width="95%"
-              marginTop={5}
-              marginBottom={-5}
-              bgColor={config.tokens.colors.eventButtonGray}
+      <SectionList
+        ref={sectionListRef}
+        sections={[
+          { title: "ancestors", data: commentAncestry },
+          { title: "replies", data: replies }
+        ]}
+        renderItem={({ item }) => {
+          const comment = item as Comment;
+          return (
+            <CommentButton
+              comment={comment}
+              eventOrganiserId={props.route.params.eventOrganiserId}
+              disableButton={comment.id === props.route.params.commentId}
             />
-            <Heading
-              alignSelf="flex-start"
-              paddingHorizontal={15}>
-              Replies:
-            </Heading>
-            <Button
-              width="93%"
-              onPress={() => setShowPostCommentModal(true)}>
-              <Icon
-                as={AddIcon}
-                marginRight={5}
-                color="white"
-                size="lg"
+          );
+        }}
+        onScrollToIndexFailed={() => console.log("fail")}
+        stickySectionHeadersEnabled={true}
+        renderSectionHeader={({ section: { title } }) =>
+          title === "replies" ? (
+            <VStack
+              backgroundColor={config.tokens.colors.backgroundLight100}
+              gap={5}
+              paddingBottom={10}
+              alignContent="center">
+              <Divider
+                alignSelf="center"
+                width="95%"
+                marginBottom={-5}
+                bgColor={config.tokens.colors.eventButtonGray}
               />
-              <ButtonText>Post Reply</ButtonText>
-            </Button>
-            <CommentInputModal
-              showModal={showPostCommentModal}
-              setShowModal={setShowPostCommentModal}
-              parentType="COMMENT"
-              parentId={props.route.params.commentId}
-              authorId={userId}
-            />
-          </VStack>
-        }
-        data={replies}
-        renderItem={({ item }) => (
-          <CommentButton
-            comment={item as Comment}
-            eventOrganiserId={props.route.params.eventOrganiserId}
-          />
-        )}
-        ListEmptyComponent={
-          retrieveCommentErrMsg ? undefined : retrieveRepliesErrMsg ? (
-            <Alert
-              action="error"
-              variant="outline"
-              width="95%"
-              alignSelf="center">
-              <MaterialIcons
-                name="error-outline"
-                size={40}
-                color={config.tokens.colors.error}
-                style={{ paddingRight: 15 }}
+              <Heading
+                alignSelf="flex-start"
+                paddingHorizontal={15}>
+                Replies:
+              </Heading>
+              <Button
+                width="93%"
+                onPress={() => setShowPostCommentModal(true)}>
+                <Icon
+                  as={AddIcon}
+                  marginRight={5}
+                  color="white"
+                  size="lg"
+                />
+                <ButtonText>Post Reply</ButtonText>
+              </Button>
+              <CommentInputModal
+                showModal={showPostCommentModal}
+                setShowModal={setShowPostCommentModal}
+                parentType="COMMENT"
+                parentId={props.route.params.commentId}
+                authorId={userId}
               />
-              <AlertText>{retrieveRepliesErrMsg}</AlertText>
-            </Alert>
+            </VStack>
           ) : (
-            <Text
-              fontSize={"$lg"}
-              alignSelf="center">
-              No Replies
-            </Text>
+            <></>
           )
         }
+        style={{ marginTop: 10 }}
         contentContainerStyle={{ paddingBottom: 10, gap: 10 }}
       />
     </ScreenView>
