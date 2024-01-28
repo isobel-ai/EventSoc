@@ -81,7 +81,7 @@ export default function EventScreen(props: Props) {
               <Text
                 fontSize={"$lg"}
                 alignSelf="center"
-                marginTop={-10}>
+                marginTop={-5}>
                 No Comments
               </Text>
             )
