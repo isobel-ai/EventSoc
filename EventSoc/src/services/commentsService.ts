@@ -18,7 +18,7 @@ export function retrieveCommentData(id: string) {
     });
 }
 
-export function retrieveComments(commentIds: string[], isReplies?: boolean) {
+export function retrieveComments(commentIds: string[]) {
   const commentPromises = commentIds.map((commentId) =>
     getDoc(doc(commentsCol, commentId)).then((commentSnapshot) => {
       if (!commentSnapshot.exists()) {
@@ -45,11 +45,15 @@ export function retrieveComments(commentIds: string[], isReplies?: boolean) {
       );
     })
     .catch(() => {
-      throw Error(
-        `Unable to retreive ${
-          isReplies ? "replies" : "comments"
-        }. Try again later.`
-      );
+      throw Error("Unable to retreive comments. Try again later.");
+    });
+}
+
+export function retrieveReplies(commentId: string) {
+  return retrieveCommentData(commentId)
+    .then((commentData) => retrieveComments(commentData.replyIds))
+    .catch(() => {
+      throw Error("Unable to retreive replies. Try again later.");
     });
 }
 
