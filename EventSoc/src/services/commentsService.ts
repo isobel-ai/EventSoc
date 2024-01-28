@@ -53,6 +53,31 @@ export function retrieveComments(commentIds: string[], isReplies?: boolean) {
     });
 }
 
+export async function retrieveReplyAncestry(replyId: string) {
+  const ancestors: (Comment | Error)[] = [];
+
+  let parentId = replyId;
+  while (parentId !== "") {
+    const parentComment = await retrieveCommentData(parentId).catch(() =>
+      Error(
+        `Unable to retrieve comment${
+          parentId === replyId ? " ancestor" : ""
+        }. Try again later.`
+      )
+    );
+
+    if (parentComment instanceof Error) {
+      ancestors.push(parentComment);
+      parentId = "";
+    } else {
+      ancestors.push({ id: parentId, data: parentComment });
+      parentId = parentComment.parentId;
+    }
+  }
+
+  return ancestors;
+}
+
 export function postReply(
   commentId: string,
   authorId: string,
