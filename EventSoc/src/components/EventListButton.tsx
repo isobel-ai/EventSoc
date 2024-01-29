@@ -4,13 +4,14 @@ import { config } from "../../config/gluestack-ui.config";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { SocietiesStackParamList } from "../navigation/Societies/SocietiesStackNavigator";
 import EventMenu from "./EventMenu";
+import { memo } from "react";
 
 interface Props {
   event: Event;
   isExec: boolean;
 }
 
-export default function EventListButton(props: Props) {
+function EventListButton(props: Props) {
   const { navigate } = useNavigation<NavigationProp<SocietiesStackParamList>>();
 
   return (
@@ -39,3 +40,5 @@ export default function EventListButton(props: Props) {
     </Button>
   );
 }
+
+export default memo(EventListButton);

@@ -14,7 +14,7 @@ import { toDateTimeRangeString } from "../helpers/DateTimeHelper";
 import { StyleProp, ViewStyle } from "react-native";
 import { Event } from "../models/Event";
 import EventMenu from "./EventMenu";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useAppContext } from "../contexts/AppContext";
 
 interface Props {
@@ -40,53 +40,56 @@ export default function EventPost(props: Props) {
     alignItems: "center"
   };
 
-  return (
-    <VStack
-      width="100%"
-      gap={10}
-      paddingBottom={10}>
-      <SocietyPressable societyId={props.event.data.organiserId} />
-      {isExec && <EventMenu event={props.event} />}
-      <Pressable onPress={props.onPress}>
-        <VStack
-          gap={15}
-          width="100%"
-          paddingHorizontal={5}>
+  return useMemo(
+    () => (
+      <VStack
+        width="100%"
+        gap={10}
+        paddingBottom={10}>
+        <SocietyPressable societyId={props.event.data.organiserId} />
+        {isExec && <EventMenu event={props.event} />}
+        <Pressable onPress={props.onPress}>
           <VStack
-            gap={5}
+            gap={15}
             width="100%"
-            alignItems="flex-start">
-            <Heading>{props.event.data.name}</Heading>
-            <HStack style={iconTextContainerStyle}>
-              <Icon
-                as={CalendarDaysIcon}
-                size="lg"
+            paddingHorizontal={5}>
+            <VStack
+              gap={5}
+              width="100%"
+              alignItems="flex-start">
+              <Heading>{props.event.data.name}</Heading>
+              <HStack style={iconTextContainerStyle}>
+                <Icon
+                  as={CalendarDaysIcon}
+                  size="lg"
+                />
+                <Text width="100%">
+                  {toDateTimeRangeString(
+                    props.event.data.startDate,
+                    props.event.data.endDate
+                  )}
+                </Text>
+              </HStack>
+              <HStack style={iconTextContainerStyle}>
+                <MaterialIcons
+                  name="location-on"
+                  size={23}
+                  color="black"
+                />
+                <Text>{props.event.data.location}</Text>
+              </HStack>
+            </VStack>
+            {props.event.data.pictureUrl && (
+              <Image
+                size="2xl"
+                source={props.event.data.pictureUrl}
+                alt=""
               />
-              <Text width="100%">
-                {toDateTimeRangeString(
-                  props.event.data.startDate,
-                  props.event.data.endDate
-                )}
-              </Text>
-            </HStack>
-            <HStack style={iconTextContainerStyle}>
-              <MaterialIcons
-                name="location-on"
-                size={23}
-                color="black"
-              />
-              <Text>{props.event.data.location}</Text>
-            </HStack>
+            )}
           </VStack>
-          {props.event.data.pictureUrl && (
-            <Image
-              size="2xl"
-              source={props.event.data.pictureUrl}
-              alt=""
-            />
-          )}
-        </VStack>
-      </Pressable>
-    </VStack>
+        </Pressable>
+      </VStack>
+    ),
+    [props, societies, userId]
   );
 }
