@@ -20,3 +20,8 @@ export const defaultCommentData: () => CommentData = () => {
     replyIds: <string[]>[]
   };
 };
+
+export interface CommentAncestry {
+  ancestry: Comment[];
+  error?: Error;
+}

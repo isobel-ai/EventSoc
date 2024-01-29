@@ -1,6 +1,11 @@
 import { arrayUnion, doc, getDoc, runTransaction } from "firebase/firestore";
 import { commentsCol, db } from "../config/firebaseConfig";
-import { Comment, CommentData, defaultCommentData } from "../models/Comment";
+import {
+  Comment,
+  CommentAncestry,
+  CommentData,
+  defaultCommentData
+} from "../models/Comment";
 
 export function retrieveCommentData(id: string) {
   return getDoc(doc(commentsCol, id))
@@ -57,29 +62,27 @@ export function retrieveReplies(commentId: string) {
     });
 }
 
-export async function retrieveReplyAncestry(replyId: string) {
-  const ancestors: (Comment | Error)[] = [];
+export async function retrieveReplyAncestry(
+  replyId: string
+): Promise<CommentAncestry> {
+  const ancestors: Comment[] = [];
 
   let parentId = replyId;
   while (parentId !== "") {
     const parentComment = await retrieveCommentData(parentId).catch(() =>
-      Error(
-        `Unable to retrieve comment${
-          parentId === replyId ? " ancestor" : ""
-        }. Try again later.`
-      )
+      Error("Unable to retrieve comment ancestor Try again later.")
     );
 
     if (parentComment instanceof Error) {
-      ancestors.push(parentComment);
-      parentId = "";
-    } else {
-      ancestors.push({ id: parentId, data: parentComment });
-      parentId = parentComment.parentId;
+      return { ancestry: ancestors, error: parentComment };
     }
+
+    parentId !== replyId && // Don't push reply
+      ancestors.push({ id: parentId, data: parentComment });
+    parentId = parentComment.parentId;
   }
 
-  return ancestors;
+  return { ancestry: ancestors };
 }
 
 export function postReply(
