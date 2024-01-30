@@ -85,12 +85,12 @@ export default function ReplyScreen(props: Props) {
       <ScrollView
         ref={scrollViewRef}
         maintainVisibleContentPosition={{ minIndexForVisible: 1 }}
-        contentContainerStyle={{ gap: 10 }}>
+        contentContainerStyle={{ paddingTop: 10, gap: 10 }}>
         {retrieveComAncErrMsg && (
           <Alert
             action="error"
             variant="outline"
-            width="100%"
+            width="93%"
             alignSelf="center">
             <MaterialIcons
               name="error-outline"
@@ -103,7 +103,7 @@ export default function ReplyScreen(props: Props) {
         )}
         <FlatList
           scrollEnabled={false}
-          contentContainerStyle={{ paddingTop: 10, gap: 10 }}
+          contentContainerStyle={{ gap: 10 }}
           data={commentAncestry}
           renderItem={({ item }) => (
             <CommentButton
@@ -144,7 +144,7 @@ export default function ReplyScreen(props: Props) {
                 <Alert
                   action="error"
                   variant="outline"
-                  width="100%"
+                  width="93%"
                   alignSelf="center">
                   <MaterialIcons
                     name="error-outline"
