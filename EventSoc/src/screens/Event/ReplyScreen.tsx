@@ -80,18 +80,29 @@ export default function ReplyScreen(props: Props) {
       );
   }, [isFocused]);
 
+  const CommentAncestorDivider = () => (
+    <Divider
+      orientation="vertical"
+      height="$5"
+      bgColor="black"
+      marginHorizontal={20}
+      width="$1"
+    />
+  );
+
   return (
     <ScreenView extraStyle={{ height: "107%" }}>
       <ScrollView
         ref={scrollViewRef}
         maintainVisibleContentPosition={{ minIndexForVisible: 1 }}
-        contentContainerStyle={{ paddingTop: 10, gap: 10 }}>
+        contentContainerStyle={{ paddingTop: 10 }}>
         {retrieveComAncErrMsg && (
           <Alert
             action="error"
             variant="outline"
             width="93%"
-            alignSelf="center">
+            alignSelf="center"
+            marginBottom={10}>
             <MaterialIcons
               name="error-outline"
               size={40}
@@ -103,7 +114,6 @@ export default function ReplyScreen(props: Props) {
         )}
         <FlatList
           scrollEnabled={false}
-          contentContainerStyle={{ gap: 10 }}
           data={commentAncestry}
           renderItem={({ item }) => (
             <CommentButton
@@ -111,7 +121,9 @@ export default function ReplyScreen(props: Props) {
               eventOrganiserId={props.route.params.eventOrganiserId}
             />
           )}
+          ItemSeparatorComponent={() => <CommentAncestorDivider />}
         />
+        {commentAncestry.length > 0 && <CommentAncestorDivider />}
         <FlatList
           scrollEnabled={false}
           contentContainerStyle={{ paddingBottom: 10, gap: 10 }}
@@ -126,12 +138,6 @@ export default function ReplyScreen(props: Props) {
             <VStack
               gap={5}
               alignContent="center">
-              <Divider
-                alignSelf="center"
-                width="95%"
-                marginBottom={5}
-                bgColor={config.tokens.colors.eventButtonGray}
-              />
               {!retrieveCommentErrMsg ? (
                 comment && (
                   <CommentButton
