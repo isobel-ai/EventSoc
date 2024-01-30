@@ -1,6 +1,11 @@
 import { arrayUnion, doc, getDoc, runTransaction } from "firebase/firestore";
 import { commentsCol, db } from "../config/firebaseConfig";
-import { Comment, CommentData, defaultCommentData } from "../models/Comment";
+import {
+  Comment,
+  CommentAncestry,
+  CommentData,
+  defaultCommentData
+} from "../models/Comment";
 
 export function retrieveCommentData(id: string) {
   return getDoc(doc(commentsCol, id))
@@ -18,7 +23,7 @@ export function retrieveCommentData(id: string) {
     });
 }
 
-export function retrieveComments(commentIds: string[], isReplies?: boolean) {
+export function retrieveComments(commentIds: string[]) {
   const commentPromises = commentIds.map((commentId) =>
     getDoc(doc(commentsCol, commentId)).then((commentSnapshot) => {
       if (!commentSnapshot.exists()) {
@@ -45,12 +50,39 @@ export function retrieveComments(commentIds: string[], isReplies?: boolean) {
       );
     })
     .catch(() => {
-      throw Error(
-        `Unable to retreive ${
-          isReplies ? "replies" : "comments"
-        }. Try again later.`
-      );
+      throw Error("Unable to retreive comments. Try again later.");
     });
+}
+
+export function retrieveReplies(commentId: string) {
+  return retrieveCommentData(commentId)
+    .then((commentData) => retrieveComments(commentData.replyIds))
+    .catch(() => {
+      throw Error("Unable to retreive replies. Try again later.");
+    });
+}
+
+export async function retrieveReplyAncestry(
+  replyId: string
+): Promise<CommentAncestry> {
+  const ancestors: Comment[] = [];
+
+  let parentId = replyId;
+  while (parentId !== "") {
+    const parentComment = await retrieveCommentData(parentId).catch(() =>
+      Error("Unable to retrieve comment ancestor Try again later.")
+    );
+
+    if (parentComment instanceof Error) {
+      return { ancestry: ancestors, error: parentComment };
+    }
+
+    parentId !== replyId && // Don't push reply
+      ancestors.push({ id: parentId, data: parentComment });
+    parentId = parentComment.parentId;
+  }
+
+  return { ancestry: ancestors };
 }
 
 export function postReply(
@@ -65,7 +97,8 @@ export function postReply(
     const reply: CommentData = {
       ...defaultCommentData(),
       authorId: authorId,
-      contents: contents
+      contents: contents,
+      parentId: commentId
     };
 
     transaction

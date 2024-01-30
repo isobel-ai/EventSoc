@@ -13,7 +13,7 @@ import { toTimeAgoString } from "../helpers/DateTimeHelper";
 import { useNavigation } from "@react-navigation/native";
 import { EventStackParamList } from "../navigation/CrossTabStackScreens/EventStackScreens";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 interface Props {
   comment: Comment;
@@ -49,69 +49,73 @@ export default function CommentButton(props: Props) {
     fontWeight: "normal"
   };
 
-  return (
-    <Pressable
-      onPress={() =>
-        push("Reply", {
-          commentId: props.comment.id,
-          eventOrganiserId: props.eventOrganiserId
-        })
-      }
-      disabled={props.disableButton}
-      backgroundColor={config.tokens.colors.eventButtonGray}
-      width="93%"
-      alignSelf="center"
-      padding={10}>
-      <HStack>
-        {authorName && (
+  return useMemo(
+    () => (
+      <Pressable
+        onPress={() =>
+          push("Reply", {
+            commentId: props.comment.id,
+            eventOrganiserId: props.eventOrganiserId
+          })
+        }
+        disabled={props.disableButton}
+        backgroundColor={config.tokens.colors.eventButtonGray}
+        width="93%"
+        alignSelf="center"
+        padding={10}>
+        <HStack>
           <Text style={[buttonTextStyle, { fontWeight: "bold" }]}>
-            {authorName}
+            {authorName ?? "User Not Found"}
           </Text>
-        )}
-        {isExec && (
+          {isExec && (
+            <Text
+              style={[
+                buttonTextStyle,
+                {
+                  fontWeight: "bold",
+                  color: config.tokens.colors.navigationDarkPink,
+                  position: "absolute",
+                  right: 0
+                }
+              ]}>
+              EXEC
+            </Text>
+          )}
+        </HStack>
+        <Text
+          style={buttonTextStyle}
+          numberOfLines={5}
+          ellipsizeMode="tail"
+          lineBreakStrategyIOS="standard">
+          {props.comment.data.contents}
+        </Text>
+        <HStack alignItems="center">
+          <Icon
+            as={MessageCircleIcon}
+            color={config.tokens.colors.primary400}
+            marginRight={5}
+          />
+          <Text
+            style={[
+              buttonTextStyle,
+              { color: config.tokens.colors.primary500 }
+            ]}>
+            {props.comment.data.replyIds.length}
+          </Text>
           <Text
             style={[
               buttonTextStyle,
               {
-                fontWeight: "bold",
-                color: config.tokens.colors.navigationDarkPink,
+                color: config.tokens.colors.secondary500,
                 position: "absolute",
                 right: 0
               }
             ]}>
-            EXEC
+            {toTimeAgoString(props.comment.data.timestamp)}
           </Text>
-        )}
-      </HStack>
-      <Text
-        style={buttonTextStyle}
-        numberOfLines={5}
-        ellipsizeMode="tail"
-        lineBreakStrategyIOS="standard">
-        {props.comment.data.contents}
-      </Text>
-      <HStack alignItems="center">
-        <Icon
-          as={MessageCircleIcon}
-          color={config.tokens.colors.primary400}
-          marginRight={5}
-        />
-        <Text
-          style={[buttonTextStyle, { color: config.tokens.colors.primary500 }]}>
-          {props.comment.data.replyIds.length}
-        </Text>
-        <Text
-          style={[
-            buttonTextStyle,
-            {
-              color: config.tokens.colors.secondary500,
-              position: "absolute",
-              right: 0
-            }
-          ]}>
-          {toTimeAgoString(props.comment.data.timestamp)}
-        </Text>
-      </HStack>
-    </Pressable>
+        </HStack>
+      </Pressable>
+    ),
+    [props, users, societies]
   );
 }

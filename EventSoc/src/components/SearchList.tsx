@@ -1,5 +1,4 @@
 import {
-  FlatList,
   Icon,
   Input,
   InputField,
@@ -10,7 +9,7 @@ import {
   Text
 } from "@gluestack-ui/themed";
 import { ComponentType, ReactElement, useEffect, useState } from "react";
-import { DimensionValue, Keyboard } from "react-native";
+import { DimensionValue, Keyboard, FlatList } from "react-native";
 import { searchFilter } from "../helpers/SearchHelper";
 
 interface Props<I> {
@@ -53,7 +52,7 @@ export default function SearchList<Item>(props: Props<Item>) {
       <FlatList
         data={filteredData}
         extraData={props.data}
-        renderItem={({ item }) => props.renderItem(item as Item)}
+        renderItem={({ item }) => props.renderItem(item)}
         ItemSeparatorComponent={props.itemSeperator}
         keyboardShouldPersistTaps="always"
         ListEmptyComponent={
