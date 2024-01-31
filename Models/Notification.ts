@@ -7,6 +7,19 @@ interface NotificationData {
   title: string;
   body: string;
   timestamp: Date;
-  type: string;
-  navParam: string;
+  payload: NotificationPayload;
 }
+
+export type NotificationPayload =
+  | EventNotificationPayload
+  | ReplyNotificationPayload;
+
+type EventNotificationPayload = {
+  type: "EVENT";
+  eventId: string;
+};
+
+type ReplyNotificationPayload = {
+  type: "REPLY";
+  replyId: string;
+};
