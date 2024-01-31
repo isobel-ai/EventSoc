@@ -35,7 +35,8 @@ export const eventUpdateNotification = onDocumentUpdated(
         sendNotifications(
           notifTokens,
           "Event Update",
-          `${afterEvent.name} has been updated`
+          `${afterEvent.name} has been updated`,
+          { type: "EVENT", eventId: event.params.eventId }
         )
       )
       .then(() =>
