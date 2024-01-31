@@ -6,6 +6,7 @@ export interface Notification {
 interface NotificationData {
   title: string;
   body: string;
+  timestamp: Date;
   type: string;
   navParam: string;
 }
