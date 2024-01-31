@@ -5,7 +5,7 @@ const expo = new Expo();
 export function sendNotifications(
   recipientExpoTokens: string[],
   title: string,
-  message?: string
+  body?: string
 ) {
   const messages: ExpoPushMessage[] = recipientExpoTokens
     .filter((token) => Expo.isExpoPushToken(token))
@@ -14,7 +14,7 @@ export function sendNotifications(
         to: validToken,
         sound: "default",
         title: title,
-        body: message,
+        body: body,
         badge: 1,
         channelId: "default"
       };
