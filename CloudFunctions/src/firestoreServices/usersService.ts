@@ -22,6 +22,6 @@ export function getNotificationTokens(userIds: string[]) {
     const users = <UserData[]>(
       results.filter((result) => !(result instanceof Error))
     );
-    return users.map((user) => user.notificationToken);
+    return users.flatMap((user) => user.notificationTokens);
   });
 }
