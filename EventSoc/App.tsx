@@ -26,7 +26,7 @@ import {
 import { Event } from "../Models/Event";
 import { LogBox } from "react-native";
 import * as Notifications from "expo-notifications";
-import { registerForPushNotifications } from "./src/services/notificationsService";
+import { registerForPushNotifications } from "./src/services/expoNotificationsService";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
