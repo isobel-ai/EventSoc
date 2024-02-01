@@ -1,39 +1,24 @@
-import Constants from "expo-constants";
-import { Platform } from "react-native";
-import * as Device from "expo-device";
-import * as Notifications from "expo-notifications";
+import { addDoc, getDocs } from "firebase/firestore";
+import { Notification } from "../../../Models/Notification";
+import { userNotificationsCol } from "../config/firebaseConfig";
 
-export async function registerForPushNotifications() {
-  // Only physical devices support push notifications
-  if (!Device.isDevice) {
-    console.log("Must use physical device for Push Notifications");
-    return;
-  }
+export function storeNotification(userId: string, notification: Notification) {
+  return addDoc(userNotificationsCol(userId), notification).catch((err) => {
+    throw Error("Unable to store notification. Try again later.");
+  });
+}
 
-  // On Android a channel must be specified
-  if (Platform.OS === "android") {
-    Notifications.setNotificationChannelAsync("default", {
-      name: "default",
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C"
+export function retrieveNotifications(userId: string) {
+  return getDocs(userNotificationsCol(userId))
+    .then((notifsSnapshot) =>
+      notifsSnapshot.docs.map((doc) => {
+        return {
+          ...doc.data(),
+          timestamp: doc.data().timestamp
+        } as Notification;
+      })
+    )
+    .catch(() => {
+      throw Error("Unable to retrieve notifications. Try again later.");
     });
-  }
-
-  const { status: existingStatus } = await Notifications.getPermissionsAsync();
-  if (existingStatus !== "granted") {
-    const { status: newStatus } = await Notifications.requestPermissionsAsync();
-    if (newStatus !== "granted") {
-      return "";
-    }
-  }
-
-  const projectId: string = Constants.expoConfig?.extra?.eas.projectId;
-  if (!projectId) {
-    console.log("Failed to get projectId.");
-    return;
-  }
-
-  const token = await Notifications.getExpoPushTokenAsync({ projectId });
-  return token.data;
 }

@@ -27,6 +27,8 @@ import { Event } from "../Models/Event";
 import { LogBox } from "react-native";
 import * as Notifications from "expo-notifications";
 import { registerForPushNotifications } from "./src/services/expoNotificationsService";
+import { storeNotification } from "./src/services/notificationsService";
+import { NotificationPayload } from "../Models/Notification";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -127,7 +129,15 @@ export default function App() {
 
       notificationListener.current =
         Notifications.addNotificationReceivedListener((notification) => {
-          console.log(notification);
+          notification.request.content.title &&
+            notification.request.content.body &&
+            notification.request.content.data &&
+            storeNotification(userId, {
+              title: notification.request.content.title,
+              body: notification.request.content.body,
+              timestamp: new Date(),
+              payload: notification.request.content.data as NotificationPayload
+            });
         });
 
       responseListener.current =
