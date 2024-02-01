@@ -63,7 +63,7 @@ export default function NotificationScreen() {
               No Notifications
             </Text>
           }
-          style={{ height: "100%" }}
+          style={{ height: "110%" }}
           contentContainerStyle={{ gap: 10, paddingTop: 10 }}
         />
       )}
