@@ -7,6 +7,11 @@ import {
   removeNotificationToken
 } from "../services/usersService";
 import * as Notifications from "expo-notifications";
+import { useNavigation } from "@react-navigation/native";
+import { MainTabParamList } from "../navigation/MainTabNavigator";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { useAppContext } from "../contexts/AppContext";
+import { Event } from "../../../Models/Event";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -22,6 +27,11 @@ interface Props {
 }
 
 export default function NotificationProvider(props: Props) {
+  const { navigate } =
+    useNavigation<BottomTabNavigationProp<MainTabParamList>>();
+
+  const { events } = useAppContext();
+
   const [notifToken, setNotifToken] = useState<string>();
 
   const notificationListener = useRef<Notifications.Subscription>();
@@ -52,7 +62,35 @@ export default function NotificationProvider(props: Props) {
 
       responseListener.current =
         Notifications.addNotificationResponseReceivedListener((response) => {
-          console.log(response);
+          const payload = response.notification.request.content
+            .data as NotificationPayload;
+
+          let event: Event | undefined;
+          switch (payload.type) {
+            case "EVENT":
+            case "REPLY":
+              const eventId = payload.eventId;
+              event = events.find((event) => event.id === eventId);
+          }
+
+          navigate("Notifications", { screen: "Home" });
+
+          switch (payload.type) {
+            case "EVENT":
+              navigate("Notifications", {
+                screen: "Event",
+                params: { eventId: payload.eventId }
+              });
+              break;
+            case "REPLY":
+              navigate("Notifications", {
+                screen: "Reply",
+                params: {
+                  commentId: payload.commentId,
+                  eventOrganiserId: event?.data.organiserId
+                }
+              });
+          }
         });
 
       return () => {
