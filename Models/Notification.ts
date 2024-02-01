@@ -1,9 +1,4 @@
 export interface Notification {
-  id: string;
-  data: NotificationData;
-}
-
-interface NotificationData {
   title: string;
   body: string;
   timestamp: Date;
@@ -12,6 +7,7 @@ interface NotificationData {
 
 export type NotificationPayload =
   | EventNotificationPayload
+  | DeleteEventNotificationPayload
   | ReplyNotificationPayload;
 
 type EventNotificationPayload = {
@@ -19,7 +15,12 @@ type EventNotificationPayload = {
   eventId: string;
 };
 
+type DeleteEventNotificationPayload = {
+  type: "DELETE EVENT";
+};
+
 type ReplyNotificationPayload = {
   type: "REPLY";
-  replyId: string;
+  commentId: string;
+  eventId: string;
 };
