@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { NotificationPayload } from "../../../Models/Notification";
-import { registerForPushNotifications } from "../services/expoNotificationsService";
+import {
+  registerForPushNotifications,
+  updateBadgeCount
+} from "../services/expoNotificationsService";
 import { storeNotification } from "../services/notificationsService";
 import {
   addNotificationToken,
@@ -12,12 +15,13 @@ import { MainTabParamList } from "../navigation/MainTabNavigator";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { useAppContext } from "../contexts/AppContext";
 import { Event } from "../../../Models/Event";
+import { Platform } from "react-native";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false
+    shouldPlaySound: true,
+    shouldSetBadge: Platform.OS === "android"
   })
 });
 
@@ -39,16 +43,17 @@ export default function NotificationProvider(props: Props) {
 
   useEffect(() => {
     if (props.loggedIn) {
-      registerForPushNotifications().then((token) => {
-        setNotifToken(token);
-        token !== undefined &&
-          addNotificationToken(props.userId, token).catch((err) =>
-            console.log(err.message)
-          );
-      });
+      registerForPushNotifications()
+        .then((token) => {
+          setNotifToken(token);
+          token !== undefined && addNotificationToken(props.userId, token);
+        })
+        .catch((err) => console.log(err.message));
 
       notificationListener.current =
         Notifications.addNotificationReceivedListener((notification) => {
+          updateBadgeCount(1);
+
           notification.request.content.title &&
             notification.request.content.body &&
             notification.request.content.data &&
@@ -62,6 +67,8 @@ export default function NotificationProvider(props: Props) {
 
       responseListener.current =
         Notifications.addNotificationResponseReceivedListener((response) => {
+          updateBadgeCount(-1);
+
           const payload = response.notification.request.content
             .data as NotificationPayload;
 

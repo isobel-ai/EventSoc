@@ -37,3 +37,13 @@ export async function registerForPushNotifications() {
   const token = await Notifications.getExpoPushTokenAsync({ projectId });
   return token.data;
 }
+
+export function updateBadgeCount(by: number) {
+  Platform.OS === "ios" &&
+    Notifications.getBadgeCountAsync()
+      .then((count) =>
+        Notifications.setBadgeCountAsync(Math.max(0, count + by))
+      )
+      .then((result) => !result && console.log("Failed to update badge"))
+      .catch((err) => console.log(err));
+}

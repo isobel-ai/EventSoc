@@ -17,6 +17,7 @@ export function sendNotifications(
         title: title,
         body: body,
         data: data,
+        badge: 1,
         sound: "default",
         channelId: "default"
       };
