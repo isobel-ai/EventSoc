@@ -6,7 +6,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useAuth } from "./src/hooks/useAuth";
 import LoginStackNavigator from "./src/navigation/LoginStackNavigator";
 import { User } from "../Models/User";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import AppContext, { AppContent } from "./src/contexts/AppContext";
 import { Society } from "../Models/Society";
 import {
@@ -17,26 +17,10 @@ import {
   retrieveSocieties,
   retrieveSocietyData
 } from "./src/services/societiesService";
-import {
-  addNotificationToken,
-  removeNotificationToken,
-  retrieveUserData,
-  retrieveUsers
-} from "./src/services/usersService";
+import { retrieveUserData, retrieveUsers } from "./src/services/usersService";
 import { Event } from "../Models/Event";
 import { LogBox } from "react-native";
-import * as Notifications from "expo-notifications";
-import { registerForPushNotifications } from "./src/services/expoNotificationsService";
-import { storeNotification } from "./src/services/notificationsService";
-import { NotificationPayload } from "../Models/Notification";
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false
-  })
-});
+import NotificationProvider from "./src/providers/NotificationProvider";
 
 export default function App() {
   const { loggedIn, userId } = useAuth();
@@ -108,57 +92,14 @@ export default function App() {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const [notifToken, setNotifToken] = useState<string>();
-  const notificationListener = useRef<Notifications.Subscription>();
-  const responseListener = useRef<Notifications.Subscription>();
-
   useEffect(() => {
     if (loggedIn) {
-      registerForPushNotifications()
-        .then((token) => {
-          setNotifToken(token);
-          token !== undefined &&
-            addNotificationToken(userId, token).catch((err) =>
-              console.log(err.message)
-            );
-        })
-        .then(() =>
-          Promise.allSettled([updateSocieties(), updateEvents(), updateUsers()])
-        )
-        .then(() => setIsLoading(false));
-
-      notificationListener.current =
-        Notifications.addNotificationReceivedListener((notification) => {
-          notification.request.content.title &&
-            notification.request.content.body &&
-            notification.request.content.data &&
-            storeNotification(userId, {
-              title: notification.request.content.title,
-              body: notification.request.content.body,
-              timestamp: new Date(),
-              payload: notification.request.content.data as NotificationPayload
-            });
-        });
-
-      responseListener.current =
-        Notifications.addNotificationResponseReceivedListener((response) => {
-          console.log(response);
-        });
-
-      return () => {
-        notificationListener.current &&
-          Notifications.removeNotificationSubscription(
-            notificationListener.current
-          );
-        responseListener.current &&
-          Notifications.removeNotificationSubscription(
-            responseListener.current
-          );
-      };
+      Promise.allSettled([
+        updateSocieties(),
+        updateEvents(),
+        updateUsers()
+      ]).then(() => setIsLoading(false));
     } else if (loggedIn === false) {
-      notifToken && removeNotificationToken(userId, notifToken);
-      notificationListener.current?.remove();
-      responseListener.current?.remove();
       setIsLoading(false);
     } else {
       // loggedIn === undefined
@@ -176,6 +117,7 @@ export default function App() {
             <></>
           ) : (
             <NavigationContainer>
+              <NotificationProvider {...{ userId, loggedIn }} />
               {loggedIn ? <MainTabNavigator /> : <LoginStackNavigator />}
             </NavigationContainer>
           )}
