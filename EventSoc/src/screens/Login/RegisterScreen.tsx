@@ -57,6 +57,9 @@ export default function RegisterScreen(props: Props) {
         position="absolute"
         top={50}
         left={5}
+        sx={{
+          ":active": { _text: { textDecorationLine: "none" } }
+        }}
         onPress={props.navigation.goBack}>
         <ButtonIcon
           as={ArrowLeftIcon}
