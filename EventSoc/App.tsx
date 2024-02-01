@@ -117,8 +117,9 @@ export default function App() {
             <></>
           ) : (
             <NavigationContainer>
-              <NotificationProvider {...{ userId, loggedIn }} />
-              {loggedIn ? <MainTabNavigator /> : <LoginStackNavigator />}
+              <NotificationProvider {...{ userId, loggedIn }}>
+                {loggedIn ? <MainTabNavigator /> : <LoginStackNavigator />}
+              </NotificationProvider>
             </NavigationContainer>
           )}
         </SafeAreaProvider>

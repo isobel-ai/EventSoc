@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, ReactNode } from "react";
 import { NotificationPayload } from "../../../Models/Notification";
 import {
   registerForPushNotifications,
@@ -16,6 +16,7 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { useAppContext } from "../contexts/AppContext";
 import { Event } from "../../../Models/Event";
 import { Platform } from "react-native";
+import NotificationContext from "../contexts/NotificationContext";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -28,6 +29,7 @@ Notifications.setNotificationHandler({
 interface Props {
   loggedIn?: boolean;
   userId: string;
+  children: ReactNode;
 }
 
 export default function NotificationProvider(props: Props) {
@@ -37,6 +39,9 @@ export default function NotificationProvider(props: Props) {
   const { events } = useAppContext();
 
   const [notifToken, setNotifToken] = useState<string>();
+
+  const [unreadNotifCount, setUnreadNotifCount] = useState<number>(0);
+  const [countDisabled, setCountDisabled] = useState<boolean>(false);
 
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
@@ -62,7 +67,9 @@ export default function NotificationProvider(props: Props) {
               body: notification.request.content.body,
               timestamp: new Date(),
               payload: notification.request.content.data as NotificationPayload
-            });
+            }).then(
+              () => !countDisabled && setUnreadNotifCount((count) => count + 1)
+            );
         });
 
       responseListener.current =
@@ -117,5 +124,14 @@ export default function NotificationProvider(props: Props) {
     }
   }, [props.loggedIn]);
 
-  return <></>;
+  return (
+    <NotificationContext.Provider
+      value={{
+        unreadNotifCount,
+        setUnreadNotifCount,
+        setCountDisabled
+      }}>
+      {props.children}
+    </NotificationContext.Provider>
+  );
 }

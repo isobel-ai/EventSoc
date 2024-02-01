@@ -1,6 +1,6 @@
 import { AlertText, Alert, Text } from "@gluestack-ui/themed";
-import { useIsFocused } from "@react-navigation/native";
-import { useState, useEffect } from "react";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { useState, useEffect, useCallback } from "react";
 import ScreenView from "../components/ScreenView";
 import { useAppContext } from "../contexts/AppContext";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -9,9 +9,11 @@ import { Notification } from "../../../Models/Notification";
 import { retrieveNotifications } from "../services/notificationsService";
 import { FlatList } from "react-native";
 import NotificationListButton from "../components/NotificationListButton";
+import { useNotificationContext } from "../contexts/NotificationContext";
 
 export default function NotificationScreen() {
   const { userId, updateEvents } = useAppContext();
+  const { setUnreadNotifCount, setCountDisabled } = useNotificationContext();
 
   const [notifications, setNotifications] = useState<Notification[]>();
   const [retrieveNotifsErrMsg, setRetrieveNotifsErrMsg] = useState<string>("");
@@ -19,7 +21,11 @@ export default function NotificationScreen() {
   const isFocused = useIsFocused();
 
   useEffect(() => {
+    setCountDisabled(isFocused);
+
     if (isFocused) {
+      setUnreadNotifCount(0);
+
       retrieveNotifications(userId)
         .then((notifications) => {
           setNotifications(notifications);

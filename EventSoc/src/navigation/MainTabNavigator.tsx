@@ -17,6 +17,9 @@ import MyEventsStackNavigator, {
 import NotificationStackNavigator, {
   NotificationStackParamList
 } from "./NotificationStackNavigator";
+import IconBadge from "react-native-icon-badge";
+import { useNotificationContext } from "../contexts/NotificationContext";
+import { Text } from "@gluestack-ui/themed";
 
 export type MainTabParamList = {
   Events: NavigatorScreenParams<EventsStackParamList>;
@@ -27,6 +30,8 @@ export type MainTabParamList = {
 };
 
 export default function MainTabNavigator() {
+  const { unreadNotifCount } = useNotificationContext();
+
   const Tab = createBottomTabNavigator<MainTabParamList>();
 
   const tabNavigatorScreenOptions = (): BottomTabNavigationOptions => ({
@@ -81,9 +86,23 @@ export default function MainTabNavigator() {
         component={NotificationStackNavigator}
         options={{
           tabBarIcon: ({ size }) => (
-            <MaterialCommunityIcons
-              name="bell-ring"
-              size={size}
+            <IconBadge
+              MainElement={
+                <MaterialCommunityIcons
+                  name="bell-ring"
+                  size={size}
+                />
+              }
+              BadgeElement={
+                <Text
+                  top={-4}
+                  color="white"
+                  fontSize="$xs">
+                  {unreadNotifCount}
+                </Text>
+              }
+              IconBadgeStyle={{ width: 20, height: 20, right: -7, top: -5 }}
+              Hidden={unreadNotifCount === 0}
             />
           )
         }}
