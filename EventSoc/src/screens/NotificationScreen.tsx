@@ -35,7 +35,7 @@ export default function NotificationScreen() {
   }, [isFocused]);
 
   return (
-    <ScreenView hasNavHeader>
+    <ScreenView>
       {retrieveNotifsErrMsg ? (
         <Alert
           action="error"
@@ -63,7 +63,8 @@ export default function NotificationScreen() {
               No Notifications
             </Text>
           }
-          contentContainerStyle={{ gap: 10 }}
+          style={{ height: "100%" }}
+          contentContainerStyle={{ gap: 10, paddingTop: 10 }}
         />
       )}
     </ScreenView>
