@@ -25,3 +25,7 @@ export function getNotificationTokens(userIds: string[]) {
     return users.flatMap((user) => user.notificationTokens);
   });
 }
+
+export function getUserName(userId: string) {
+  return retrieveUserData(userId).then((userData) => userData.name);
+}

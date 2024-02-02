@@ -5,7 +5,6 @@ const expo = new Expo();
 
 export function sendNotifications(
   recipientExpoTokens: string[],
-  title: string,
   body: string,
   data: NotificationPayload
 ) {
@@ -14,7 +13,7 @@ export function sendNotifications(
     .map((validToken) => {
       return {
         to: validToken,
-        title: title,
+        title: "EventSoc",
         body: body,
         data: data,
         badge: 1,
