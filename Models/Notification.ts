@@ -1,0 +1,26 @@
+export interface Notification {
+  title: string;
+  body: string;
+  timestamp: Date;
+  payload: NotificationPayload;
+}
+
+export type NotificationPayload =
+  | EventNotificationPayload
+  | DeleteEventNotificationPayload
+  | ReplyNotificationPayload;
+
+type EventNotificationPayload = {
+  type: "EVENT";
+  eventId: string;
+};
+
+type DeleteEventNotificationPayload = {
+  type: "DELETE EVENT";
+};
+
+type ReplyNotificationPayload = {
+  type: "REPLY";
+  commentId: string;
+  eventId: string;
+};

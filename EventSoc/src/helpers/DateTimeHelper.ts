@@ -20,12 +20,6 @@ export function setTime(date: Date, time: Date) {
   return newDate;
 }
 
-export const defaultDate = () => {
-  const date = new Date();
-  date.setSeconds(0, 0);
-  return date;
-};
-
 export function toDateTimeRangeString(startDate: Date, endDate: Date) {
   const startString = `${getDateString(startDate)} ${getTimeString(startDate)}`;
 

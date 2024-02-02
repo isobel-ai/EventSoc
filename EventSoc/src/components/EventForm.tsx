@@ -16,7 +16,7 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { ScrollView, StyleProp, ViewStyle } from "react-native";
 import { endOfUniYear, setDate, setTime } from "../helpers/DateTimeHelper";
-import { EventData } from "../models/Event";
+import { EventData } from "../../../Models/Event";
 import { useRef } from "react";
 import TagInput from "./TagInput";
 import { toInteger, xor } from "lodash";

@@ -4,7 +4,7 @@ import { SocietiesStackParamList } from "../../navigation/Societies/SocietiesSta
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import { useState } from "react";
 import ErrorAlertDialog from "../../components/ErrorAlertDialog";
-import { SocietyData, defaultSocietyData } from "../../models/Society";
+import { SocietyData, defaultSocietyData } from "../../../../Models/Society";
 import SocietyForm from "../../components/SocietyForm";
 import { getSocietyErrMsg } from "../../helpers/SocietyInputValidationHelper";
 import { createSociety } from "../../services/societiesService";

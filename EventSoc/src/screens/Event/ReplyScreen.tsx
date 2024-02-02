@@ -21,7 +21,7 @@ import {
   retrieveReplies,
   retrieveReplyAncestry
 } from "../../services/commentsService";
-import { Comment } from "../../models/Comment";
+import { Comment, CommentData } from "../../../../Models/Comment";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { config } from "../../../config/gluestack-ui.config";
 import CommentButton from "../../components/CommentButton";

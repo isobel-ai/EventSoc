@@ -5,14 +5,16 @@ import {
   where,
   setDoc,
   getDocs,
-  getDoc
+  getDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove
 } from "firebase/firestore";
 import { usersCol } from "../config/firebaseConfig";
-import { User, UserData, defaultUserData } from "../models/User";
+import { User, UserData, defaultUserData } from "../../../Models/User";
 
 export function retrieveUserData(id: string) {
-  const userDoc = doc(usersCol, id);
-  return getDoc(userDoc)
+  return getDoc(doc(usersCol, id))
     .then((userSnapshot) => <UserData>userSnapshot.data())
     .catch(() => {
       throw Error("User couldn't be retrieved. Try again later.");
@@ -40,6 +42,28 @@ export function createUser(id: string, name: string) {
       throw Error("Unable to create user. Try again later.");
     }
   );
+}
+
+export function updateUser(updates: Partial<UserData>, userId: string) {
+  return updateDoc(doc(usersCol, userId), updates).catch(() => {
+    throw Error("Unable to update user. Try again later.");
+  });
+}
+
+export function addNotificationToken(userId: string, token: string) {
+  return updateDoc(doc(usersCol, userId), {
+    notificationTokens: arrayUnion(token)
+  }).catch(() => {
+    throw Error("Unable to add notification token. Try again later.");
+  });
+}
+
+export function removeNotificationToken(userId: string, token: string) {
+  return updateDoc(doc(usersCol, userId), {
+    notificationTokens: arrayRemove(token)
+  }).catch(() => {
+    throw Error("Unable to remove notification token. Try again later.");
+  });
 }
 
 export function usernameTaken(name: string) {

@@ -9,12 +9,11 @@ import {
   where
 } from "firebase/firestore";
 import { societiesCol, societyPicturesRef } from "../config/firebaseConfig";
-import { Society, SocietyData } from "../models/Society";
+import { Society, SocietyData } from "../../../Models/Society";
 import { updateImage, uploadImage } from "./cloudService";
 
 export function retrieveSocietyData(id: string) {
-  const socDoc = doc(societiesCol, id);
-  return getDoc(socDoc)
+  return getDoc(doc(societiesCol, id))
     .then((socSnapshot) => <SocietyData>socSnapshot.data())
     .catch(() => {
       throw Error("Society couldn't be retrieved. Try again later.");
@@ -66,8 +65,6 @@ export function updateSociety(
   updates: Partial<SocietyData>,
   societyId: string
 ) {
-  const societyDoc = doc(societiesCol, societyId);
-
   const getFullUpdates =
     updates.pictureUrl === undefined
       ? Promise.resolve(updates)
@@ -78,7 +75,7 @@ export function updateSociety(
         );
 
   return getFullUpdates
-    .then((fullUpdates) => updateDoc(societyDoc, fullUpdates))
+    .then((fullUpdates) => updateDoc(doc(societiesCol, societyId), fullUpdates))
     .catch(() => {
       throw Error("Unable to update society. Try again later.");
     });

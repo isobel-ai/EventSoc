@@ -5,7 +5,7 @@ import EventForm from "../../components/EventForm";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import { useState } from "react";
 import { getEventErrMsg } from "../../helpers/EventInputValidationHelper";
-import { EventData, defaultEventData } from "../../models/Event";
+import { EventData, defaultEventData } from "../../../../Models/Event";
 import ErrorAlertDialog from "../../components/ErrorAlertDialog";
 import { createSocEvent } from "../../services/socEventsService";
 

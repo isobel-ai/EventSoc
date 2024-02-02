@@ -11,7 +11,7 @@ import {
 } from "@gluestack-ui/themed";
 import { useState } from "react";
 import ConfirmDialog from "./ConfirmDialog";
-import { Event } from "../models/Event";
+import { Event } from "../../../Models/Event";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { useAppContext } from "../contexts/AppContext";
 import { deleteSocEvent } from "../services/socEventsService";

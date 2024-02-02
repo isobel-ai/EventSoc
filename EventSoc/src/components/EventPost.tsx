@@ -12,7 +12,7 @@ import SocietyPressable from "./SocietyPressable";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { toDateTimeRangeString } from "../helpers/DateTimeHelper";
 import { StyleProp, ViewStyle } from "react-native";
-import { Event } from "../models/Event";
+import { Event } from "../../../Models/Event";
 import EventMenu from "./EventMenu";
 import { useEffect, useMemo } from "react";
 import { useAppContext } from "../contexts/AppContext";

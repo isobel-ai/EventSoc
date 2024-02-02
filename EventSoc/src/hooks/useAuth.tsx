@@ -8,7 +8,7 @@ export function useAuth() {
 
   useEffect(() => {
     const unsubscribeFromAuthStateChanged = onAuthStateChanged(auth, (user) => {
-      setLoggedIn(Boolean(user)), setUserId(user ? user.uid : "");
+      user?.uid && setUserId(user.uid), setLoggedIn(Boolean(user?.uid));
     });
     return unsubscribeFromAuthStateChanged;
   }, []);

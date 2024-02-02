@@ -5,10 +5,10 @@ import MainTabNavigator from "./src/navigation/MainTabNavigator";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useAuth } from "./src/hooks/useAuth";
 import LoginStackNavigator from "./src/navigation/LoginStackNavigator";
-import { User } from "./src/models/User";
+import { User } from "../Models/User";
 import { useEffect, useState } from "react";
 import AppContext, { AppContent } from "./src/contexts/AppContext";
-import { Society } from "./src/models/Society";
+import { Society } from "../Models/Society";
 import {
   retrieveEventData,
   retrieveEvents
@@ -18,8 +18,9 @@ import {
   retrieveSocietyData
 } from "./src/services/societiesService";
 import { retrieveUserData, retrieveUsers } from "./src/services/usersService";
-import { Event } from "./src/models/Event";
+import { Event } from "../Models/Event";
 import { LogBox } from "react-native";
+import NotificationProvider from "./src/providers/NotificationProvider";
 
 export default function App() {
   const { loggedIn, userId } = useAuth();
@@ -98,8 +99,11 @@ export default function App() {
         updateEvents(),
         updateUsers()
       ]).then(() => setIsLoading(false));
+    } else if (loggedIn === false) {
+      setIsLoading(false);
     } else {
-      setIsLoading(loggedIn === undefined);
+      // loggedIn === undefined
+      setIsLoading(true);
     }
   }, [loggedIn]);
 
@@ -113,7 +117,9 @@ export default function App() {
             <></>
           ) : (
             <NavigationContainer>
-              {loggedIn ? <MainTabNavigator /> : <LoginStackNavigator />}
+              <NotificationProvider {...{ userId, loggedIn }}>
+                {loggedIn ? <MainTabNavigator /> : <LoginStackNavigator />}
+              </NotificationProvider>
             </NavigationContainer>
           )}
         </SafeAreaProvider>

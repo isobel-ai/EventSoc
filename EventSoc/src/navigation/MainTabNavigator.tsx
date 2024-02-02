@@ -3,7 +3,6 @@ import {
   createBottomTabNavigator
 } from "@react-navigation/bottom-tabs";
 import MyAccountScreen from "../screens/MyAccountScreen";
-import NotificationScreen from "../screens/NotificationScreen";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { config } from "../../config/gluestack-ui.config";
 import SocietiesNavigator from "./Societies/SocietiesNavigator";
@@ -15,16 +14,24 @@ import { SocietiesStackParamList } from "./Societies/SocietiesStackNavigator";
 import MyEventsStackNavigator, {
   MyEventsStackParamList
 } from "./MyEventsStackNavigator";
+import NotificationStackNavigator, {
+  NotificationStackParamList
+} from "./NotificationStackNavigator";
+import IconBadge from "react-native-icon-badge";
+import { useNotificationContext } from "../contexts/NotificationContext";
+import { Text } from "@gluestack-ui/themed";
 
 export type MainTabParamList = {
   Events: NavigatorScreenParams<EventsStackParamList>;
   "My Events": NavigatorScreenParams<MyEventsStackParamList>;
   "My Account": undefined;
-  Notifications: undefined;
+  Notifications: NavigatorScreenParams<NotificationStackParamList>;
   Societies: NavigatorScreenParams<SocietiesStackParamList>;
 };
 
 export default function MainTabNavigator() {
+  const { unreadNotifCount } = useNotificationContext();
+
   const Tab = createBottomTabNavigator<MainTabParamList>();
 
   const tabNavigatorScreenOptions = (): BottomTabNavigationOptions => ({
@@ -76,12 +83,26 @@ export default function MainTabNavigator() {
       />
       <Tab.Screen
         name="Notifications"
-        component={NotificationScreen}
+        component={NotificationStackNavigator}
         options={{
           tabBarIcon: ({ size }) => (
-            <MaterialCommunityIcons
-              name="bell-ring"
-              size={size}
+            <IconBadge
+              MainElement={
+                <MaterialCommunityIcons
+                  name="bell-ring"
+                  size={size}
+                />
+              }
+              BadgeElement={
+                <Text
+                  top={-4}
+                  color="white"
+                  fontSize="$xs">
+                  {unreadNotifCount}
+                </Text>
+              }
+              IconBadgeStyle={{ width: 20, height: 20, right: -7, top: -5 }}
+              Hidden={unreadNotifCount === 0}
             />
           )
         }}

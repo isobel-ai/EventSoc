@@ -37,6 +37,9 @@ export const usersCol = collection(db, "users");
 export const societiesCol = collection(db, "societies");
 export const commentsCol = collection(db, "comments");
 
+export const userNotificationsCol = (userId: string) =>
+  collection(usersCol, userId, "notifications");
+
 const storage = getStorage(app);
 export const eventPicturesRef = ref(storage, "eventPictures");
 export const societyPicturesRef = ref(storage, "societyPictures");

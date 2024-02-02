@@ -1,5 +1,5 @@
 import { Text } from "@gluestack-ui/themed";
-import { Event } from "../models/Event";
+import { Event } from "../../../Models/Event";
 import EventPost from "./EventPost";
 import { FlatList } from "react-native";
 import { useNavigation, NavigationProp } from "@react-navigation/native";

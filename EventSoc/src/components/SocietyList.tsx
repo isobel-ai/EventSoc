@@ -7,7 +7,7 @@ import {
   AvatarImage,
   Divider
 } from "@gluestack-ui/themed";
-import { Society } from "../models/Society";
+import { Society } from "../../../Models/Society";
 import SearchList from "./SearchList";
 import { DimensionValue } from "react-native";
 import SideMenuHeading from "./SideMenuHeading";

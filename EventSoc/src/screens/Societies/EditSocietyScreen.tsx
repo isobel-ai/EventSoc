@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Button, ButtonText } from "@gluestack-ui/themed";
 import ErrorAlertDialog from "../../components/ErrorAlertDialog";
 import { useAppContext } from "../../contexts/AppContext";
-import { SocietyData, defaultSocietyData } from "../../models/Society";
+import { SocietyData, defaultSocietyData } from "../../../../Models/Society";
 import SocietyForm from "../../components/SocietyForm";
 import { getSocietyErrMsg } from "../../helpers/SocietyInputValidationHelper";
 import { cloneDeep } from "lodash";

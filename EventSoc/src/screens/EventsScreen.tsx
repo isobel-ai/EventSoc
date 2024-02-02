@@ -7,7 +7,7 @@ import ScreenView from "../components/ScreenView";
 import EventFilter from "../components/EventFilter";
 import EventFeed from "../components/EventFeed";
 import { useAppContext } from "../contexts/AppContext";
-import { Event } from "../models/Event";
+import { Event } from "../../../Models/Event";
 
 export default function EventsScreen() {
   const { events, updateEvents } = useAppContext();

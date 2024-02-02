@@ -1,10 +1,9 @@
-import { defaultDate } from "../helpers/DateTimeHelper";
-
 export interface Event {
   id: string;
   data: EventData;
 }
 
+// If this changes, update eventDetailKeys accordingly
 export interface EventData {
   name: string;
   location: string;
@@ -19,18 +18,30 @@ export interface EventData {
   commentIds: string[];
 }
 
+export const eventDetailKeys = [
+  "name",
+  "location",
+  "description",
+  "startDate",
+  "endDate",
+  "pictureUrl",
+];
+
 export const defaultEventData: () => EventData = () => {
+  const defaultDate = new Date();
+  defaultDate.setSeconds(0, 0);
+
   return {
     name: "",
     location: "",
     description: "",
-    startDate: defaultDate(),
-    endDate: defaultDate(),
+    startDate: defaultDate,
+    endDate: defaultDate,
     pictureUrl: "",
     tags: <string[]>[],
     organiserId: "",
     capacity: -1,
     attendeeIds: <string[]>[],
-    commentIds: <string[]>[]
+    commentIds: <string[]>[],
   };
 };

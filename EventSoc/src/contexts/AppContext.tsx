@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
-import { Event } from "../models/Event";
-import { Society } from "../models/Society";
-import { User } from "../models/User";
+import { Event } from "../../../Models/Event";
+import { Society } from "../../../Models/Society";
+import { User } from "../../../Models/User";
 
 export type AppContent = {
   societies: Society[];
