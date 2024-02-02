@@ -3,7 +3,7 @@ import { Notification } from "../../../Models/Notification";
 import { userNotificationsCol } from "../config/firebaseConfig";
 
 export function storeNotification(userId: string, notification: Notification) {
-  return addDoc(userNotificationsCol(userId), notification).catch((err) => {
+  return addDoc(userNotificationsCol(userId), notification).catch(() => {
     throw Error("Unable to store notification. Try again later.");
   });
 }
