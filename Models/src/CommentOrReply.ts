@@ -1,13 +1,13 @@
 import { DocumentReference } from "@firebase/firestore-types";
-import { UserOverview, defaultUserOverview } from "./User";
+import { UserOverviewData, defaultUserOverview } from "./User";
 
-export type Comment = {
+export type CommentDoc = {
   id: string;
   data: CommentData;
 };
 
 export type CommentData = {
-  author: UserOverview;
+  author: UserOverviewData;
   contents: string;
   isExecComment: boolean;
   timestamp: Date;
@@ -22,7 +22,7 @@ export function defaultCommentData(): CommentData {
   };
 }
 
-export type Reply = {
+export type ReplyDoc = {
   id: string;
   data: ReplyData;
 };

@@ -1,4 +1,4 @@
-export type Society = {
+export type SocietyDoc = {
   id: string;
   data: SocietyData;
 };
@@ -12,11 +12,12 @@ export function defaultSocietyData(): SocietyData {
   return { name: "", description: "" };
 }
 
-export type SocietyOverview = {
-  id: string;
+export type SocietyOverviewData = {
+  societyId: string;
   name: string;
+  execIds: string[];
 };
 
-export function defaultSocietyOverview(): SocietyOverview {
-  return { id: "", name: "" };
+export function defaultSocietyOverviewData(): SocietyOverviewData {
+  return { societyId: "", name: "", execIds: <string[]>[] };
 }

@@ -1,4 +1,4 @@
-export type User = {
+export type UserDoc = {
   id: string;
   data: UserData;
 };
@@ -12,12 +12,12 @@ export function defaultUserData(): UserData {
   return { name: "", notificationTokens: [] };
 }
 
-export type UserOverview = {
-  id: string;
+export type UserOverviewData = {
+  userId: string;
   name: string;
   notificationTokens: string[];
 };
 
-export function defaultUserOverview(): UserOverview {
-  return { id: "", name: "", notificationTokens: <string[]>[] };
+export function defaultUserOverview(): UserOverviewData {
+  return { userId: "", name: "", notificationTokens: <string[]>[] };
 }

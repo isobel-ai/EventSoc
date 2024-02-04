@@ -1,6 +1,6 @@
-import { SocietyOverview, defaultSocietyOverview } from "./Society";
+import { SocietyOverviewData, defaultSocietyOverviewData } from "./Society";
 
-export type Event = {
+export type EventDoc = {
   id: string;
   data: EventData;
 };
@@ -13,7 +13,7 @@ export type EventData = {
   startDate: Date;
   endDate: Date;
   tags: string[];
-  organiser: SocietyOverview;
+  organiser: SocietyOverviewData;
   capacity: number; // -1 = unlimited capacity
 };
 
@@ -28,7 +28,7 @@ export function defaultEventData(): EventData {
     startDate: defaultDate,
     endDate: defaultDate,
     tags: <string[]>[],
-    organiser: defaultSocietyOverview(),
+    organiser: defaultSocietyOverviewData(),
     capacity: -1,
   };
 }
@@ -41,8 +41,8 @@ export const eventDetailKeys = [
   "endDate",
 ];
 
-export type EventOverview = {
-  id: string;
+export type EventOverviewData = {
+  eventId: string;
   name: string;
   startDate: Date;
   endDate: Date;

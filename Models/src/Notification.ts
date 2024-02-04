@@ -1,4 +1,4 @@
-export type Notification = {
+export type NotificationData = {
   title: string;
   body: string;
   timestamp: Date;
