@@ -1,4 +1,4 @@
-import { EventData } from "../../../Models/Event";
+import { EventData } from "../../../Models/src/Event";
 
 /**
  * Returns an empty string if the event is valid, and an appropriate error message otherwise

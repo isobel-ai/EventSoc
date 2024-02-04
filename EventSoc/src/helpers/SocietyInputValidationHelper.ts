@@ -1,12 +1,13 @@
-import { SocietyData } from "../../../Models/Society";
+import { SocietyData } from "../../../Models/src/Society";
+import { UserOverview } from "../../../Models/src/User";
 
 /**
  * Returns an empty string if the society is valid, and an appropriate error message otherwise
  */
-export function getSocietyErrMsg(society: SocietyData) {
+export function getSocietyErrMsg(society: SocietyData, exec: UserOverview[]) {
   let errMsg = "";
 
-  if (society.name && society.execIds.length > 0) {
+  if (society.name && exec.length > 0) {
     return errMsg;
   }
 
@@ -14,7 +15,7 @@ export function getSocietyErrMsg(society: SocietyData) {
     errMsg = "Your society must have a name.\n";
   }
 
-  if (society.execIds.length === 0) {
+  if (exec.length === 0) {
     errMsg += "Your society must have at least one exec member.\n";
   }
 
