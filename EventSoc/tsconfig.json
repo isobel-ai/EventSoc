@@ -10,7 +10,7 @@
     "src",
     "tests",
     "App.tsx",
-    "../Models",
+    "../Models/src",
     "types.d.ts"
   ]
 }

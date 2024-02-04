@@ -1,33 +1,23 @@
-export interface Event {
+import { SocietyOverview, defaultSocietyOverview } from "./Society";
+
+export type Event = {
   id: string;
   data: EventData;
-}
+};
 
 // If this changes, update eventDetailKeys accordingly
-export interface EventData {
+export type EventData = {
   name: string;
   location: string;
   description: string;
   startDate: Date;
   endDate: Date;
-  pictureUrl: string;
   tags: string[];
-  organiserId: string;
+  organiser: SocietyOverview;
   capacity: number; // -1 = unlimited capacity
-  attendeeIds: string[];
-  commentIds: string[];
-}
+};
 
-export const eventDetailKeys = [
-  "name",
-  "location",
-  "description",
-  "startDate",
-  "endDate",
-  "pictureUrl",
-];
-
-export const defaultEventData: () => EventData = () => {
+export function defaultEventData(): EventData {
   const defaultDate = new Date();
   defaultDate.setSeconds(0, 0);
 
@@ -37,11 +27,23 @@ export const defaultEventData: () => EventData = () => {
     description: "",
     startDate: defaultDate,
     endDate: defaultDate,
-    pictureUrl: "",
     tags: <string[]>[],
-    organiserId: "",
+    organiser: defaultSocietyOverview(),
     capacity: -1,
-    attendeeIds: <string[]>[],
-    commentIds: <string[]>[],
   };
+}
+
+export const eventDetailKeys = [
+  "name",
+  "location",
+  "description",
+  "startDate",
+  "endDate",
+];
+
+export type EventOverview = {
+  id: string;
+  name: string;
+  startDate: Date;
+  endDate: Date;
 };

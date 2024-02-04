@@ -1,9 +1,9 @@
-export interface Notification {
+export type Notification = {
   title: string;
   body: string;
   timestamp: Date;
   payload: NotificationPayload;
-}
+};
 
 export type NotificationPayload =
   | EventNotificationPayload
