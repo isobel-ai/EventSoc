@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import LoginScreen from "../screens/Login/LoginScreen";
-import RegisterScreen from "../screens/Login/RegisterScreen";
+import LoginScreen from "../screens/LoginStackScreens/LoginScreen";
+import RegisterScreen from "../screens/LoginStackScreens/RegisterScreen";
 
 export type LoginStackParamList = {
   Login: undefined;

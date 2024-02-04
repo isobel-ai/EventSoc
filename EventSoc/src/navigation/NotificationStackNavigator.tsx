@@ -16,35 +16,24 @@ import {
   EventStackScreens
 } from "./CrossTabStackScreens/EventStackScreens";
 import NotificationScreen from "../screens/NotificationScreen";
+import { SocietyStackParamList } from "./CrossTabStackScreens/SocietyStackScreens";
 
 export type NotificationStackParamList = {
   Home: undefined;
-  Society: NavigatorScreenParams<SocietiesStackParamList>;
-} & EventStackParamList;
+} & EventStackParamList &
+  SocietyStackParamList;
 
 export default function NotificationStackNavigator() {
   const Stack = createStackNavigator<NotificationStackParamList>();
 
-  const stackScreenOptions = (): StackNavigationOptions => ({
-    headerTitle: "",
-    headerStyle: {
-      backgroundColor: config.tokens.colors.navigationDarkPink
-    },
-    headerBackTitleStyle: { color: "black", fontWeight: "bold", fontSize: 25 },
-    headerBackImage: () => (
-      <Icon
-        as={ArrowLeftIcon}
-        size="xl"
-        style={{ paddingLeft: 40 }}
-        color="black"
-      />
-    )
-  });
-
   return (
     <Stack.Navigator
       initialRouteName="Home"
-      screenOptions={stackScreenOptions}>
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: config.tokens.colors.navigationDarkPink
+        }
+      }}>
       <Stack.Screen
         name="Home"
         component={NotificationScreen}

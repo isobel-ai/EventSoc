@@ -14,37 +14,30 @@ import SocietiesStackNavigator, {
 import MyEventsScreen from "../screens/MyEventsScreen";
 import {
   EventStackParamList,
-  EventStackScreens
+  EventStackScreens,
+  eventStackScreenOptions
 } from "./CrossTabStackScreens/EventStackScreens";
+import {
+  societyStackScreenOptions,
+  SocietyStackScreens
+} from "./CrossTabStackScreens/SocietyStackScreens";
 
 export type MyEventsStackParamList = {
   Home: undefined;
-  Society: NavigatorScreenParams<SocietiesStackParamList>;
-} & EventStackParamList;
+} & EventStackParamList &
+  SocietiesStackParamList;
 
 export default function MyEventsStackNavigator() {
   const Stack = createStackNavigator<MyEventsStackParamList>();
 
-  const stackScreenOptions = (): StackNavigationOptions => ({
-    headerTitle: "",
-    headerStyle: {
-      backgroundColor: config.tokens.colors.navigationDarkPink
-    },
-    headerBackTitleStyle: { color: "black", fontWeight: "bold", fontSize: 25 },
-    headerBackImage: () => (
-      <Icon
-        as={ArrowLeftIcon}
-        size="xl"
-        style={{ paddingLeft: 40 }}
-        color="black"
-      />
-    )
-  });
-
   return (
     <Stack.Navigator
       initialRouteName="Home"
-      screenOptions={stackScreenOptions}>
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: config.tokens.colors.navigationDarkPink
+        }
+      }}>
       <Stack.Screen
         name="Home"
         component={MyEventsScreen}
@@ -52,22 +45,22 @@ export default function MyEventsStackNavigator() {
           headerShown: false
         }}
       />
-      <Stack.Screen
-        name="Society"
-        component={SocietiesStackNavigator}
-        options={({ route }) => {
-          const currentScreen = getFocusedRouteNameFromRoute(route);
-          return {
-            headerShown: currentScreen === "Home"
-          };
-        }}
-      />
-      {EventStackScreens.map((screenInfo, index) => (
-        <Stack.Screen
-          key={index}
-          {...screenInfo}
-        />
-      ))}
+      <Stack.Group screenOptions={eventStackScreenOptions}>
+        {EventStackScreens.map((screenInfo, index) => (
+          <Stack.Screen
+            key={index}
+            {...screenInfo}
+          />
+        ))}
+      </Stack.Group>
+      <Stack.Group screenOptions={societyStackScreenOptions}>
+        {SocietyStackScreens.map((screenInfo, index) => (
+          <Stack.Screen
+            key={index}
+            {...screenInfo}
+          />
+        ))}
+      </Stack.Group>
     </Stack.Navigator>
   );
 }

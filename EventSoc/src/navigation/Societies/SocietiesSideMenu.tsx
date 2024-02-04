@@ -13,7 +13,7 @@ import SideMenu, {
   ReactNativeSideMenuProps
 } from "react-native-side-menu-updated";
 import { config } from "../../../config/gluestack-ui.config";
-import { useAppContext } from "../../contexts/AppContext";
+import { useUserContext } from "../../contexts/UserContext";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { MainTabParamList } from "../MainTabNavigator";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -23,7 +23,7 @@ interface Props {
 }
 
 export default function SocietiesSideMenu(props: Props) {
-  const { societies, updateSocieties, userId } = useAppContext();
+  const { societies, updateSocieties, userId } = useUserContext();
 
   const { navigate } = useNavigation<NavigationProp<MainTabParamList>>();
 
