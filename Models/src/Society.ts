@@ -1,3 +1,5 @@
+import { UserOverviewData } from "./User";
+
 export type SocietyDoc = {
   id: string;
   data: SocietyData;
@@ -15,9 +17,9 @@ export function defaultSocietyData(): SocietyData {
 export type SocietyOverviewData = {
   societyId: string;
   name: string;
-  execIds: string[];
+  exec: UserOverviewData[];
 };
 
 export function defaultSocietyOverviewData(): SocietyOverviewData {
-  return { societyId: "", name: "", execIds: <string[]>[] };
+  return { societyId: "", name: "", exec: <UserOverviewData[]>[] };
 }
