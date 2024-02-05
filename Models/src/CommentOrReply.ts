@@ -1,5 +1,5 @@
 import { DocumentReference } from "@firebase/firestore-types";
-import { UserOverviewData, defaultUserOverview } from "./User";
+import { UserOverview, defaultUserOverview } from "./User";
 
 export type CommentDoc = {
   id: string;
@@ -7,7 +7,7 @@ export type CommentDoc = {
 };
 
 export type CommentData = {
-  author: UserOverviewData;
+  author: UserOverview;
   contents: string;
   isExecComment: boolean;
   timestamp: Date;

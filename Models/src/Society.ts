@@ -1,4 +1,4 @@
-import { UserOverviewData } from "./User";
+import { UserOverview } from "./User";
 
 export type SocietyDoc = {
   id: string;
@@ -14,12 +14,12 @@ export function defaultSocietyData(): SocietyData {
   return { name: "", description: "" };
 }
 
-export type SocietyOverviewData = {
-  societyId: string;
+export type SocietyOverview = {
+  id: string;
   name: string;
-  exec: UserOverviewData[];
+  exec: UserOverview[];
 };
 
-export function defaultSocietyOverviewData(): SocietyOverviewData {
-  return { societyId: "", name: "", exec: <UserOverviewData[]>[] };
+export function defaultSocietyOverviewData(): SocietyOverview {
+  return { id: "", name: "", exec: <UserOverview[]>[] };
 }

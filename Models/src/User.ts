@@ -13,11 +13,16 @@ export function defaultUserData(): UserData {
 }
 
 export type UserOverviewData = {
-  userId: string;
   name: string;
   notificationTokens: string[];
 };
 
-export function defaultUserOverview(): UserOverviewData {
-  return { userId: "", name: "", notificationTokens: <string[]>[] };
+export type UserOverview = {
+  id: string;
+  name: string;
+  notificationTokens: string[];
+};
+
+export function defaultUserOverview(): UserOverview {
+  return { id: "", name: "", notificationTokens: <string[]>[] };
 }
