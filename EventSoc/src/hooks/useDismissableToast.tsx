@@ -3,10 +3,10 @@ import DismissableToast, {
   DismissableToastProps
 } from "../components/DismissableToast";
 
-export default function useDismissableToast(props: DismissableToastProps) {
+export default function useDismissableToast() {
   const toast = useToast();
 
-  const showToast = () =>
+  const showToast = (props: DismissableToastProps) =>
     toast.show({
       placement: "top",
       render: ({ id }) => (
