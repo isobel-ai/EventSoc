@@ -1,4 +1,3 @@
-import { DocumentReference } from "@firebase/firestore-types";
 import { UserOverview, defaultUserOverview } from "./User";
 
 export type CommentDoc = {
@@ -28,5 +27,9 @@ export type ReplyDoc = {
 };
 
 export type ReplyData = CommentData & {
-  replies: DocumentReference[];
+  replyIds: string[];
 };
+
+export function defaultReplyData(): ReplyData {
+  return { ...defaultCommentData(), replyIds: <string[]>[] };
+}
