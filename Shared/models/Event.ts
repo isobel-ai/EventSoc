@@ -41,8 +41,13 @@ export const eventDetailKeys = [
   "endDate",
 ];
 
+export type EventOverview = EventOverviewData & {
+  id: string;
+};
+
 export type EventOverviewData = {
   name: string;
   startDate: Date;
   endDate: Date;
+  organiserId: string;
 };

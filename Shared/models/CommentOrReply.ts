@@ -27,9 +27,14 @@ export type ReplyDoc = {
 };
 
 export type ReplyData = CommentData & {
+  parentReplyIds: string[];
   replyIds: string[];
 };
 
 export function defaultReplyData(): ReplyData {
-  return { ...defaultCommentData(), replyIds: <string[]>[] };
+  return {
+    ...defaultCommentData(),
+    parentReplyIds: <string[]>[],
+    replyIds: <string[]>[],
+  };
 }

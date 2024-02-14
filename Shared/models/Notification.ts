@@ -21,6 +21,7 @@ type DeleteEventNotificationPayload = {
 
 type ReplyNotificationPayload = {
   type: "REPLY";
-  commentId: string;
+  topLevelCommentId?: string;
+  replyParentId: string;
   eventId: string;
 };

@@ -1,10 +1,5 @@
 import { UserOverview } from "./User";
 
-export type SocietyDoc = {
-  id: string;
-  data: SocietyData;
-};
-
 export type SocietyData = {
   name: string;
   description: string;
