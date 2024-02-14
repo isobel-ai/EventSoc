@@ -34,15 +34,15 @@ export async function register(name: string, email: string, password: string) {
         return "Username taken";
       }
 
-        return createUserWithEmailAndPassword(auth, email, password)
-          .then((userCreds) =>
-            createUser(userCreds.user.uid, name).catch((err) => {
+      return createUserWithEmailAndPassword(auth, email, password)
+        .then((userCreds) =>
+          createUser(userCreds.user.uid, name).catch((err) => {
             deleteUser(userCreds.user).catch((err) =>
               console.error(err.message)
             );
-              throw err;
-            })
-          )
+            throw err;
+          })
+        )
         .catch((err) => {
           if (err.code === "auth/email-already-in-use") {
             return "Email already linked to an account.";
@@ -53,8 +53,6 @@ export async function register(name: string, email: string, password: string) {
     });
 }
 
-export function signOut() {
-  return auth.signOut().catch(() => {
-    throw Error("Something went wrong. Try again later.");
-  });
+export async function signOut() {
+  await auth.signOut();
 }
