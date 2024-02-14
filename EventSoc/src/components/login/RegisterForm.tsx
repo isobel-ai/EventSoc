@@ -1,78 +1,52 @@
 import {
-  Alert,
-  AlertText,
-  ArrowLeftIcon,
-  Button,
-  ButtonIcon,
-  ButtonText,
   FormControl,
-  FormControlError,
-  FormControlErrorText,
-  Heading,
   Input,
   InputField,
-  ScrollView
+  FormControlError,
+  FormControlErrorText,
+  ButtonText,
+  ScrollView,
+  Button
 } from "@gluestack-ui/themed";
-import ScreenView from "../../components/ScreenView";
-import { StackScreenProps } from "@react-navigation/stack";
+import { isUndefined } from "lodash";
 import React, { useState } from "react";
-import { LoginStackParamList } from "../../navigation/LoginStackNavigator";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { config } from "../../../config/gluestack-ui.config";
+import { Keyboard } from "react-native";
 import {
   validEmail,
   validPassword
 } from "../../helpers/AuthInputValidationHelper";
 import { register } from "../../services/authService";
-import { Keyboard } from "react-native";
+import ErrorAlert from "../error/ErrorAlert";
+import { config } from "../../../config/gluestack-ui.config";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-interface Input {
+type Input = {
   value: string;
   error: boolean;
-}
+};
+
 const defaultInput = { value: "", error: true };
 
-type Props = StackScreenProps<LoginStackParamList, "Register">;
-
-export default function RegisterScreen(props: Props) {
+export default function RegisterForm() {
   const [name, setName] = useState<Input>(defaultInput);
   const [email, setEmail] = useState<Input>(defaultInput);
   const [password, setPassword] = useState<Input>(defaultInput);
   const [confirmPswd, setConfirmPswd] = useState<Input>(defaultInput);
 
-  const [registerErrMsg, setRegisterErrMsg] = useState<string>("");
+  const [registerErrMsg, setRegisterErrMsg] = useState<string>();
+
+  const handleRegistration = () => {
+    Keyboard.dismiss();
+    register(name.value, email.value, password.value)
+      .then((errMsg) => errMsg !== undefined && setRegisterErrMsg(errMsg))
+      .catch((err) => {
+        console.error(err.message);
+        setRegisterErrMsg("Something went wrong. Try again later.");
+      });
+  };
 
   return (
-    <ScreenView
-      extraStyle={{
-        backgroundColor: config.tokens.colors.navigationLightPink,
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 15
-      }}>
-      <Button
-        variant={"link"}
-        size={"lg"}
-        position="absolute"
-        top={50}
-        left={5}
-        sx={{
-          ":active": { _text: { textDecorationLine: "none" } }
-        }}
-        onPress={props.navigation.goBack}>
-        <ButtonIcon
-          as={ArrowLeftIcon}
-          size={"xl"}
-        />
-        <ButtonText style={{ paddingLeft: 5 }}>Back to Login</ButtonText>
-      </Button>
-      <Heading
-        size="2xl"
-        marginTop={80}
-        style={{ textAlign: "center" }}>
-        Welcome to EventSoc
-      </Heading>
+    <>
       <ScrollView
         automaticallyAdjustKeyboardInsets={true}
         backgroundColor={config.tokens.colors.inputSectionPink}
@@ -92,7 +66,7 @@ export default function RegisterScreen(props: Props) {
           <Input>
             <InputField
               placeholder="Name"
-              backgroundColor="white"
+              backgroundColor={config.tokens.colors.white}
               onChangeText={(n) => setName({ value: n, error: !n })}
             />
           </Input>
@@ -111,7 +85,7 @@ export default function RegisterScreen(props: Props) {
           <Input>
             <InputField
               placeholder="Email"
-              backgroundColor="white"
+              backgroundColor={config.tokens.colors.white}
               onChangeText={(e) =>
                 setEmail({ value: e, error: !validEmail(e) })
               }
@@ -135,7 +109,7 @@ export default function RegisterScreen(props: Props) {
             <InputField
               type="password"
               placeholder="Password"
-              backgroundColor="white"
+              backgroundColor={config.tokens.colors.white}
               onChangeText={(p) =>
                 setPassword({ value: p, error: !validPassword(p) })
               }
@@ -162,7 +136,7 @@ export default function RegisterScreen(props: Props) {
             <InputField
               type="password"
               placeholder="Confirm Password"
-              backgroundColor="white"
+              backgroundColor={config.tokens.colors.white}
               onChangeText={(p) =>
                 setConfirmPswd({ value: p, error: p !== password.value })
               }
@@ -184,29 +158,17 @@ export default function RegisterScreen(props: Props) {
           isDisabled={
             name.error || email.error || password.error || confirmPswd.error
           }
-          onPress={() => {
-            Keyboard.dismiss();
-            register(name.value, email.value, password.value).catch((err) =>
-              setRegisterErrMsg(err.message)
-            );
-          }}>
+          onPress={handleRegistration}>
           <ButtonText>Register</ButtonText>
         </Button>
       </ScrollView>
-      {registerErrMsg && (
-        <Alert
-          action="error"
+      {!isUndefined(registerErrMsg) && (
+        <ErrorAlert
+          message={registerErrMsg}
           variant="solid"
-          width="80%">
-          <MaterialIcons
-            name="error-outline"
-            size={40}
-            color={config.tokens.colors.error}
-            style={{ paddingRight: 5 }}
-          />
-          <AlertText>{registerErrMsg}</AlertText>
-        </Alert>
+          width="80%"
+        />
       )}
-    </ScreenView>
+    </>
   );
 }
