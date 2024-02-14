@@ -6,16 +6,20 @@ import {
 import { auth } from "../config/firebaseConfig";
 import { createUser, usernameTaken } from "./usersService";
 
-export function login(email: string, password: string) {
-  return signInWithEmailAndPassword(auth, email, password).catch((e) => {
-    if (e.code === "auth/invalid-login-credentials") {
-      throw Error("Invalid login details.");
-    } else {
-      throw Error("Something went wrong. Try again later.");
-    }
-  });
-}
+/**
+ * @returns whether the sign in attempt is successful
+ */
+export function signIn(email: string, password: string) {
+  return signInWithEmailAndPassword(auth, email, password)
+    .then(() => true)
+    .catch((err) => {
+      if (err.code === "auth/invalid-login-credentials") {
+        return false;
+      }
 
+      throw Error(err);
+    });
+}
 export async function register(name: string, email: string, password: string) {
   return usernameTaken(name)
     .catch((err) => {
