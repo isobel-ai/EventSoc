@@ -1,13 +1,14 @@
-import { SocietyData } from "../../../Models/src/Society";
-import { UserOverview } from "../../../Models/src/User";
+import { isUndefined } from "lodash";
+import { SocietyData } from "../../../Shared/models/Society";
+import { UserOverview } from "../../../Shared/models/User";
 
 /**
  * Returns an empty string if the society is valid, and an appropriate error message otherwise
  */
-export function getSocietyErrMsg(society: SocietyData, exec: UserOverview[]) {
+export function getSocietyErrMsg(society: SocietyData, exec?: UserOverview[]) {
   let errMsg = "";
 
-  if (society.name && exec.length > 0) {
+  if (society.name && (isUndefined(exec) || exec.length > 0)) {
     return errMsg;
   }
 
@@ -15,7 +16,7 @@ export function getSocietyErrMsg(society: SocietyData, exec: UserOverview[]) {
     errMsg = "Your society must have a name.\n";
   }
 
-  if (exec.length === 0) {
+  if (!isUndefined(exec) && exec.length === 0) {
     errMsg += "Your society must have at least one exec member.\n";
   }
 
