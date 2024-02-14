@@ -1,29 +1,24 @@
 const { getDefaultConfig } = require('@expo/metro-config');
 const path = require('path');
 
-const defaultConfig = getDefaultConfig(__dirname);
-defaultConfig.resolver.sourceExts.push('cjs');
+const config = getDefaultConfig(__dirname);
+config.resolver.sourceExts.push('cjs');
 
 const extraNodeModules = {
-  'models': path.resolve(__dirname + '/../Models'),
+  'Shared': path.resolve(__dirname + '/../Shared/'),
 };
-const watchFolders = [
-  path.resolve(__dirname + '/../Models')
+
+config.watchFolders = [
+  path.resolve(__dirname + '/../Shared')
 ];
 
-module.exports = {
-  ...defaultConfig,
-  transformer: {
-    getTransformOptions: async () => ({
-      transform: {
-        experimentalImportSupport: false,
-        inlineRequires: false,
-      },
-    }),
-  }, 
-  resolver: {
-    extraNodeModules
-  },
-  watchFolders
-};
+config.resolver.extraNodeModules = new Proxy(extraNodeModules, {
+  get: (target, name) =>
+    //redirects dependencies referenced from Models/ to local node_modules
+    name in target
+      ? target[name]
+      : path.join(process.cwd(), `node_modules/${name}`)
+})
+
+module.exports = config
 
