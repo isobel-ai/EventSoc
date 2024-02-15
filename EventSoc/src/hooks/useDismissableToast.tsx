@@ -1,7 +1,7 @@
 import { useToast } from "@gluestack-ui/themed";
 import DismissableToast, {
   DismissableToastProps
-} from "../components/DismissableToast";
+} from "../components/general/DismissableToast";
 
 export default function useDismissableToast() {
   const toast = useToast();
