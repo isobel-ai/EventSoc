@@ -119,7 +119,7 @@ export default function EditSocietyScreen(props: Props) {
   };
 
   return (
-    <ScreenView hasNavHeader>
+    <ScreenView useTopPadding>
       {!isSocietyUndefined && (
         <>
           <SocietyForm
@@ -133,7 +133,8 @@ export default function EditSocietyScreen(props: Props) {
           />
           <Button
             size="xl"
-            action={"positive"}
+            action="positive"
+            placement="absoluteBottom"
             onPress={editSociety}>
             <ButtonText>Update</ButtonText>
           </Button>

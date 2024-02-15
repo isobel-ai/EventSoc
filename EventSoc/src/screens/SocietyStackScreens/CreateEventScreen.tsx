@@ -41,12 +41,12 @@ export default function CreateEventScreen(props: Props) {
   };
 
   return (
-    <ScreenView hasNavHeader>
+    <ScreenView useTopPadding>
       <EventForm {...{ event, setEvent, image, setImage }} />
       <Button
         size="xl"
         action={"positive"}
-        borderRadius="$none"
+        placement="absoluteBottom"
         onPress={handleCreateEvent}>
         <ButtonText>Post</ButtonText>
       </Button>

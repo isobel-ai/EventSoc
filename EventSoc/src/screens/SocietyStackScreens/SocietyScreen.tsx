@@ -85,8 +85,8 @@ export default function SocietyScreen(props: Props) {
       ) : (
         <>
           <View
-            height={isExec ? "96%" : "103.5%"}
-            paddingBottom={5}>
+            height={isExec ? "100%" : "103.5%"}
+            paddingBottom={18}>
             <SearchList
               ListHeaderComponent={() => (
                 <SocietyProfile
@@ -126,8 +126,8 @@ export default function SocietyScreen(props: Props) {
           </View>
           {isExec && (
             <Button
-              size={"xl"}
-              borderRadius="$none"
+              size="xl"
+              placement="absoluteBottom"
               onPress={() =>
                 !isUndefined(props.route.params.societyId) &&
                 props.navigation.navigate("Create Event", {

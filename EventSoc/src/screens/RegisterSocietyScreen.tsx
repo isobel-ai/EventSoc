@@ -65,13 +65,14 @@ export default function RegisterScreen(props: Props) {
   };
 
   return (
-    <ScreenView hasNavHeader>
+    <ScreenView useTopPadding>
       <SocietyForm
         {...{ society, setSociety, exec, setExec, image, setImage }}
       />
       <Button
         size="xl"
-        action={"positive"}
+        action="positive"
+        placement="absoluteBottom"
         onPress={registerSociety}>
         <ButtonText>Register</ButtonText>
       </Button>
