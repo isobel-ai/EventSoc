@@ -86,7 +86,7 @@ export default function SocietyScreen(props: Props) {
         <>
           <View
             height={isExec ? "100%" : "103.5%"}
-            paddingBottom={18}>
+            paddingBottom={10}>
             <SearchList
               ListHeaderComponent={() => (
                 <SocietyProfile

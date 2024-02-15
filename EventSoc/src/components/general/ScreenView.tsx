@@ -13,8 +13,8 @@ export default function ScreenView(props: Props) {
 
   return (
     <SafeAreaView
-      edges={["bottom", "left", "right"]}
-      style={[{ paddingTop: paddingTop }, props.extraStyle]}>
+      edges={["left", "right"]}
+      style={[{ paddingTop: paddingTop, paddingBottom: 40 }, props.extraStyle]}>
       {props.children}
     </SafeAreaView>
   );
