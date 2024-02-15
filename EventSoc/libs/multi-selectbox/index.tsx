@@ -342,7 +342,7 @@ function SelectBox({
       alignItems: "center",
       paddingRight: 18,
       justifyContent: "space-between",
-      backgroundColor: config.tokens.colors.modalBackgroundLight,
+      backgroundColor: config.tokens.colors.defaultBackgroundLight,
       ...inputFilterContainerStyle
     } as ViewStyle;
     const kInputFilterStyle = {
