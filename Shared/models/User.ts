@@ -7,15 +7,12 @@ export function defaultUserData(): UserData {
   return { name: "", notificationTokens: [] };
 }
 
-export type UserOverview = UserOverviewData & {
+export type UserOverview = {
   id: string;
+  name: string;
+  notificationTokens: string[];
 };
 
 export function defaultUserOverview(): UserOverview {
   return { id: "", name: "", notificationTokens: <string[]>[] };
 }
-
-export type UserOverviewData = {
-  name: string;
-  notificationTokens: string[];
-};

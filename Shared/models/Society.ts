@@ -15,6 +15,6 @@ export type SocietyOverview = {
   exec: UserOverview[];
 };
 
-export function defaultSocietyOverviewData(): SocietyOverview {
+export function defaultSocietyOverview(): SocietyOverview {
   return { id: "", name: "", exec: <UserOverview[]>[] };
 }

@@ -1,4 +1,4 @@
-import { SocietyOverview, defaultSocietyOverviewData } from "./Society";
+import { SocietyOverview, defaultSocietyOverview } from "./Society";
 
 export type EventDoc = {
   id: string;
@@ -19,8 +19,8 @@ export type EventData = {
 
 export function defaultEventData(): EventData {
   const defaultDate = () => {
-  const defaultDate = new Date();
-  defaultDate.setSeconds(0, 0);
+    const defaultDate = new Date();
+    defaultDate.setSeconds(0, 0);
     return defaultDate;
   };
 
@@ -44,11 +44,8 @@ export const eventDetailKeys = [
   "endDate",
 ];
 
-export type EventOverview = EventOverviewData & {
+export type EventOverview = {
   id: string;
-};
-
-export type EventOverviewData = {
   name: string;
   startDate: Date;
   endDate: Date;
