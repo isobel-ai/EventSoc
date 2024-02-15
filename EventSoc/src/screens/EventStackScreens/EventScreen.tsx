@@ -45,7 +45,7 @@ export default function EventScreen(props: Props) {
 
   return (
     <OnDeleteEventContext.Provider value={onDeleteEventContent}>
-      <ScreenView extraStyle={{ height: "107%" }}>
+      <ScreenView removeBottomPadding>
         <ScrollView>
           {showRetrieveEventErr ? (
             <ErrorAlert
