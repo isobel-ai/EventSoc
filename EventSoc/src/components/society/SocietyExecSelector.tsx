@@ -38,7 +38,7 @@ export default function SocietyExecSelector(props: Props) {
   const [isSelectExecOpen, setIsSelectExecOpen] = useState<boolean>(false);
 
   const [userItems, setUserItems] = useState<Item[]>();
-  const [execItems, setExecItems] = useState<Item[]>(props.exec);
+  const [execItems, setExecItems] = useState<Item[]>();
 
   const [showRetrieveUsersErr, setShowRetrieveUsersErr] =
     useState<boolean>(false);
@@ -53,6 +53,13 @@ export default function SocietyExecSelector(props: Props) {
           props.editingForm
             ? setUserItems(newUserItems)
             : setUserItems(newUserItems.filter((item) => item.id !== userId));
+
+          setExecItems(
+            newUserItems.filter((item) =>
+              props.exec.some((member) => member.id === item.id)
+            )
+          );
+
           setShowRetrieveUsersErr(false);
         })
         .catch((err) => {
