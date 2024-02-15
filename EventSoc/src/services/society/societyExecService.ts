@@ -1,3 +1,23 @@
+import {
+  Transaction,
+  WriteBatch,
+  doc,
+  documentId,
+  getCountFromServer,
+  getDocs,
+  limit,
+  query,
+  where
+} from "firebase/firestore";
+import {
+  societyExecCol,
+  userExecMemberSocieties
+} from "../../config/firebaseConfig";
+import { UserOverview } from "../../../../Shared/models/User";
+import { docToModel } from "../../mappers/docToModel";
+import { ArrayUpdates } from "../../helpers/UpdateHelper";
+import { Name } from "../../../../Shared/models/Name";
+
 export function createSocietyExec(
   socId: string,
   socName: string,
@@ -19,6 +39,13 @@ export function retrieveSocietyExec(socId: string) {
     execSnapshot.docs.map(docToModel<UserOverview>)
   );
 }
+
+export function retrieveIsUserSocietyExecMember(socId: string, userId: string) {
+  return getCountFromServer(
+    query(societyExecCol(socId), where(documentId(), "==", userId), limit(1))
+  ).then((result) => Boolean(result.data().count));
+}
+
 export function updateSocietyExec(
   socName: Name,
   updates: ArrayUpdates<UserOverview>,

@@ -1,3 +1,17 @@
+import {
+  doc,
+  getDocs,
+  query,
+  runTransaction,
+  orderBy
+} from "firebase/firestore";
+import { db, societyEventsCol } from "../../config/firebaseConfig";
+import { docToEventOverviewNarrow } from "../../mappers/docToEvent";
+import { EventData } from "../../../../Shared/models/Event";
+import { retrieveSocietyOverview } from "./societiesService";
+import { createEvent } from "../event/eventsService";
+import { eventDataToOverview } from "../../mappers/dataToOverview";
+
 export async function createSocietyEvent(
   societyId: string,
   eventWithoutOrganiser: EventData,
@@ -16,4 +30,10 @@ export async function createSocietyEvent(
       eventDataToOverview(eventId, eventWithOrganiser)
     );
   });
+}
+
+export function retrieveSocietyEvents(societyId: string) {
+  return getDocs(query(societyEventsCol(societyId), orderBy("startDate"))).then(
+    (eventsSnapshot) => eventsSnapshot.docs.map(docToEventOverviewNarrow)
+  );
 }
