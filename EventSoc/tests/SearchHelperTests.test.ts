@@ -1,11 +1,11 @@
 import { searchFilter } from "../src/helpers/SearchHelper";
 
-interface TestObject {
+type TestObject = {
   id: number;
   name: string;
   obj?: { prop: string };
   arr?: string[];
-}
+};
 
 describe("searchFilter", () => {
   test("it should return an empty array if there are no matches", () => {

@@ -1,6 +1,6 @@
 import { getSocietyErrMsg } from "../src/helpers/SocietyInputValidationHelper";
-import { SocietyData, defaultSocietyData } from "../../Models/src/Society";
-import { UserOverview, defaultUserOverview } from "../../Models/src/User";
+import { SocietyData, defaultSocietyData } from "../../Shared/models/Society";
+import { UserOverview, defaultUserOverview } from "../../Shared/models/User";
 
 describe("getSocietyErrMsg", () => {
   test("it should return an empty string if the society is valid", () => {
@@ -9,9 +9,7 @@ describe("getSocietyErrMsg", () => {
       name: "name"
     };
 
-    const exec: UserOverview[] = [defaultUserOverview()];
-
-    expect(getSocietyErrMsg(soc, exec)).toBe("");
+    expect(getSocietyErrMsg(soc)).toBe("");
   });
 
   test("it should return an appropriate error message if the society's name is empty", () => {
