@@ -13,3 +13,13 @@ export function retrieveEventOverview(
 export function retrieveEventImage(eventId: string) {
   return downloadImage(eventPicturesRef, eventId);
 }
+export async function updateEvent(
+  eventId: string,
+  updates: Partial<EventData>,
+  newImage?: string
+) {
+  if (!isUndefined(newImage)) {
+    await updateImage(eventPicturesRef, eventId, newImage);
+  }
+  await updateDoc(doc(eventsCol, eventId), updates);
+}
