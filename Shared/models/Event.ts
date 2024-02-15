@@ -18,17 +18,20 @@ export type EventData = {
 };
 
 export function defaultEventData(): EventData {
+  const defaultDate = () => {
   const defaultDate = new Date();
   defaultDate.setSeconds(0, 0);
+    return defaultDate;
+  };
 
   return {
     name: "",
     location: "",
     description: "",
-    startDate: defaultDate,
-    endDate: defaultDate,
+    startDate: defaultDate(),
+    endDate: defaultDate(),
     tags: <string[]>[],
-    organiser: defaultSocietyOverviewData(),
+    organiser: defaultSocietyOverview(),
     capacity: -1,
   };
 }
