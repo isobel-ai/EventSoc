@@ -47,32 +47,28 @@ export default function ReplyScreen(props: Props) {
   const [showRetrieveCommentErr, setShowRetrieveCommentErr] =
     useState<boolean>(false);
 
+  const updateComment = () =>
+    (isUndefined(props.route.params.topLevelCommentId)
+      ? retrieveComment(props.route.params.eventId, props.route.params.replyId)
+      : retrieveCommentReply(
+          props.route.params.eventId,
+          props.route.params.topLevelCommentId,
+          props.route.params.replyId
+        )
+    )
+      .then((comment) => {
+        setFocusComment(comment as ReplyDoc);
+        setShowRetrieveCommentErr(false);
+      })
+      .catch((err) => {
+        console.error(err.message);
+        isUndefined(focusComment) && setShowRetrieveCommentErr(true);
+      });
+
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (isFocused) {
-      updateEvent();
-
-      (isUndefined(props.route.params.topLevelCommentId)
-        ? retrieveComment(
-            props.route.params.eventId,
-            props.route.params.replyId
-          )
-        : retrieveCommentReply(
-            props.route.params.eventId,
-            props.route.params.topLevelCommentId,
-            props.route.params.replyId
-          )
-      )
-        .then((comment) => {
-          setFocusComment(comment as ReplyDoc);
-          setShowRetrieveCommentErr(false);
-        })
-        .catch((err) => {
-          console.error(err.message);
-          isUndefined(focusComment) && setShowRetrieveCommentErr(true);
-        });
-    }
+    isFocused && updateComment().finally(updateEvent);
   }, [isFocused]);
 
   const SectionDivider = () => (
@@ -84,10 +80,17 @@ export default function ReplyScreen(props: Props) {
     />
   );
 
+  const [showPostCommentModal, setShowPostCommentModal] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    !showPostCommentModal && updateComment();
+  }, [showPostCommentModal]);
+
   return (
     <OnDeleteEventContext.Provider value={onDeleteEventContent}>
       <ScreenView removeBottomPadding>
-        <ScrollView>
+        <ScrollView maintainVisibleContentPosition={{ minIndexForVisible: 2 }}>
           {showRetrieveEventErr ? (
             <ErrorAlert
               message="Could not retrieve event details. Try again later."
@@ -133,11 +136,17 @@ export default function ReplyScreen(props: Props) {
                   comment={focusComment}
                   topLevelCommentId={props.route.params.topLevelCommentId}
                   disableButton
+                  refreshCountTrigger={[
+                    showPostCommentModal,
+                    focusComment.data.replyIds.length
+                  ]}
                 />
                 <SectionDivider />
                 <ReplySection
                   eventId={props.route.params.eventId}
                   eventOrganiserExec={event?.data.organiser.exec}
+                  showPostCommentModal={showPostCommentModal}
+                  setShowPostCommentModal={setShowPostCommentModal}
                   comment={focusComment}
                   topLevelCommentId={props.route.params.topLevelCommentId}
                 />

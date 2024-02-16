@@ -19,6 +19,7 @@ import { isUndefined } from "lodash";
 type Props = {
   eventId: string;
   disableButton?: boolean;
+  refreshCountTrigger?: any[];
 } & (
   | { comment: CommentDoc; topLevelCommentId?: never }
   | { comment: ReplyDoc; topLevelCommentId: string }
@@ -38,7 +39,7 @@ export default function CommentButton(props: Props) {
             .then(setReplyCount)
             .catch((err) => console.error(err.message))
         : setReplyCount(props.comment.data.replyIds.length));
-  }, [isFocused]);
+  }, [isFocused, ...(props.refreshCountTrigger ?? [])]);
 
   const buttonTextStyle: StyleProp<TextStyle> = {
     color: config.tokens.colors.black,

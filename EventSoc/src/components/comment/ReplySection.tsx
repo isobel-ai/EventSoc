@@ -11,8 +11,8 @@ import { FlatList } from "react-native";
 import CommentButton from "./CommentButton";
 import CommentInputModal from "./CommentInputModal";
 import ErrorAlert from "../error/ErrorAlert";
-import { isUndefined } from "lodash";
-import { useEffect, useState } from "react";
+import { isEqual, isUndefined } from "lodash";
+import React, { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { CommentDoc, ReplyDoc } from "../../../../Shared/models/CommentOrReply";
 import {
@@ -24,15 +24,15 @@ import { UserOverview } from "../../../../Shared/models/User";
 type Props = {
   eventId: string;
   eventOrganiserExec?: UserOverview[];
+
+  showPostCommentModal: boolean;
+  setShowPostCommentModal: React.Dispatch<React.SetStateAction<boolean>>;
 } & (
   | { comment: CommentDoc; topLevelCommentId?: never }
   | { comment: ReplyDoc; topLevelCommentId: string }
 );
 
 export default function ReplySection(props: Props) {
-  const [showPostCommentModal, setShowPostCommentModal] =
-    useState<boolean>(false);
-
   const [replies, setReplies] = useState<ReplyDoc[]>([]);
   const [showRetrieveRepliesErr, setShowRetrieveRepliesErr] =
     useState<boolean>(false);
@@ -40,7 +40,7 @@ export default function ReplySection(props: Props) {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (isFocused) {
+    if (isFocused && !props.showPostCommentModal) {
       (props.topLevelCommentId === undefined
         ? retrieveCommentReplies(props.eventId, props.comment.id)
         : retrieveReplyReplies(
@@ -55,10 +55,10 @@ export default function ReplySection(props: Props) {
         })
         .catch((err) => {
           console.error(err);
-          setShowRetrieveRepliesErr(true);
+          !replies.length && setShowRetrieveRepliesErr(true);
         });
     }
-  }, [isFocused]);
+  }, [isFocused, props.showPostCommentModal, props.comment.data]);
 
   return (
     <FlatList
@@ -75,7 +75,7 @@ export default function ReplySection(props: Props) {
           </Heading>
           <Button
             width="93%"
-            onPress={() => setShowPostCommentModal(true)}
+            onPress={() => props.setShowPostCommentModal(true)}
             isDisabled={isUndefined(props.eventOrganiserExec)}>
             <Icon
               as={AddIcon}
@@ -88,16 +88,16 @@ export default function ReplySection(props: Props) {
           {!isUndefined(props.eventOrganiserExec) &&
             (props.topLevelCommentId === undefined ? (
               <CommentInputModal
-                showModal={showPostCommentModal}
-                setShowModal={setShowPostCommentModal}
+                showModal={props.showPostCommentModal}
+                setShowModal={props.setShowPostCommentModal}
                 eventId={props.eventId}
                 eventOrganiserExec={props.eventOrganiserExec}
                 topLevelCommentId={props.comment.id}
               />
             ) : (
               <CommentInputModal
-                showModal={showPostCommentModal}
-                setShowModal={setShowPostCommentModal}
+                showModal={props.showPostCommentModal}
+                setShowModal={props.setShowPostCommentModal}
                 eventId={props.eventId}
                 eventOrganiserExec={props.eventOrganiserExec}
                 topLevelCommentId={props.topLevelCommentId}
@@ -113,6 +113,7 @@ export default function ReplySection(props: Props) {
           eventId={props.eventId}
           topLevelCommentId={props.topLevelCommentId ?? props.comment.id}
           comment={item}
+          refreshCountTrigger={[item.data.replyIds.length]}
         />
       )}
       ListEmptyComponent={
