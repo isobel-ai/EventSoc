@@ -1,59 +1,54 @@
 import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
-import { Alert, AlertText } from "@gluestack-ui/themed";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { config } from "../../config/gluestack-ui.config";
-import ScreenView from "../components/ScreenView";
-import EventFilter from "../components/EventFilter";
-import EventFeed from "../components/EventFeed";
-import { useAppContext } from "../contexts/AppContext";
-import { Event } from "../../../Models/Event";
+import ScreenView from "../components/general/ScreenView";
+import EventFilter from "../components/event/EventFilter";
+import EventFeed from "../components/event/EventFeed";
+import { EventDoc } from "../../../Shared/models/Event";
+import { retrieveUpcomingEvents } from "../services/event/eventsService";
+import { isUndefined } from "lodash";
+import ErrorAlert from "../components/error/ErrorAlert";
 
 export default function EventsScreen() {
-  const { events, updateEvents } = useAppContext();
+  const [upcomingEvents, setUpcomingEvents] = useState<EventDoc[]>();
+  const [showRetrieveEventsErr, setShowRetrieveEventsErr] =
+    useState<boolean>(false);
 
-  const upcomingEvents = events.filter(
-    (event) => event.data.endDate > new Date()
-  );
-
-  const [filteredEvents, setFilteredEvents] = useState<Event[]>(upcomingEvents);
-
-  const [retrieveEventsErrMsg, setRetrieveEventsErrMsg] = useState<string>("");
+  const [filteredEvents, setFilteredEvents] = useState<EventDoc[]>();
 
   const isFocused = useIsFocused();
 
   useEffect(() => {
     isFocused &&
-      updateEvents()
-        .then(() => setRetrieveEventsErrMsg(""))
-        .catch((err) => !events.length && setRetrieveEventsErrMsg(err.message));
+      retrieveUpcomingEvents()
+        .then((events) => {
+          setUpcomingEvents(events);
+          isUndefined(filteredEvents) && setFilteredEvents(events);
+          setShowRetrieveEventsErr(false);
+        })
+        .catch((err) => {
+          console.error(err.message);
+          isUndefined(upcomingEvents) && setShowRetrieveEventsErr(true);
+        });
   }, [isFocused]);
 
   return (
     <>
-      {retrieveEventsErrMsg ? (
+      {showRetrieveEventsErr ? (
         <ScreenView>
-          <Alert
-            action="error"
-            variant="outline"
-            width="80%"
-            marginTop={20}
-            alignSelf="center">
-            <MaterialIcons
-              name="error-outline"
-              size={40}
-              color={config.tokens.colors.error}
-              style={{ paddingRight: 10 }}
-            />
-            <AlertText>{retrieveEventsErrMsg}</AlertText>
-          </Alert>
+          <ErrorAlert
+            message="Couldn't retrieve events. Try again later."
+            style={{ marginTop: 10 }}
+          />
         </ScreenView>
       ) : (
-        <EventFilter
-          events={upcomingEvents}
-          setFullyFilteredEvents={setFilteredEvents}>
-          <EventFeed feed={filteredEvents} />
-        </EventFilter>
+        !isUndefined(upcomingEvents) &&
+        !isUndefined(filteredEvents) && (
+          <EventFilter
+            events={upcomingEvents}
+            setFullyFilteredEvents={setFilteredEvents}>
+            <EventFeed feed={filteredEvents} />
+          </EventFilter>
+        )
       )}
     </>
   );

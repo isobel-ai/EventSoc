@@ -1,20 +1,21 @@
-import { VStack, AlertText, Alert, View } from "@gluestack-ui/themed";
+import { VStack, View } from "@gluestack-ui/themed";
 import React, { ReactNode, useEffect, useState } from "react";
 import CalendarPicker from "react-native-calendar-picker";
 import SideMenu, {
   ReactNativeSideMenuProps
 } from "react-native-side-menu-updated";
-import { toDateRangeString, endOfUniYear } from "../helpers/DateTimeHelper";
-import SideMenuHeading from "./SideMenuHeading";
-import Tag from "./Tag";
+import { toDateRangeString, endOfUniYear } from "../../helpers/DateTimeHelper";
+import SideMenuHeading from "../general/SideMenuHeading";
+import Tag from "../tag/Tag";
 import { MaterialIcons } from "@expo/vector-icons";
-import { config } from "../../config/gluestack-ui.config";
-import SelectBox, { Item } from "../../libs/multi-selectbox";
-import { isEqual, xorBy } from "lodash";
-import { Dimensions } from "react-native";
-import { useAppContext } from "../contexts/AppContext";
+import { config } from "../../../config/gluestack-ui.config";
+import SelectBox, { Item } from "../../../libs/multi-selectbox";
+import { isEqual, isUndefined, xorBy } from "lodash";
+import { Dimensions, Keyboard } from "react-native";
+import { retrieveSocietyNames } from "../../services/namesService";
+import ErrorAlert from "../error/ErrorAlert";
 
-interface Props {
+type Props = {
   children: ReactNode;
 
   isFilterMenuOpen: boolean;
@@ -28,43 +29,34 @@ interface Props {
 
   filterEndDate?: Date;
   setFilterEndDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
-}
+};
 
 export default function EventFilterSideMenu(props: Props) {
-  const { updateSocieties, societies } = useAppContext();
-
-  const getSocItems = () =>
-    societies.map((soc) => {
-      return { id: soc.id, item: soc.data.name };
-    });
-
-  const [socItems, setSocItems] = useState<Item[]>(getSocItems);
-
-  const [retrieveSocsErrMsg, setRetrieveSocsErrMsg] = useState<string>("");
+  const [socItems, setSocItems] = useState<Item[]>();
+  const [showRetrieveSocsErr, setShowRetrieveSocsErr] =
+    useState<boolean>(false);
 
   useEffect(() => {
-    props.isFilterMenuOpen &&
-      updateSocieties()
-        .then(() => {
-          setSocItems(getSocItems);
-          setRetrieveSocsErrMsg("");
-        })
-        .catch(
-          (err) => !societies.length && setRetrieveSocsErrMsg(err.message)
-        );
-  }, [props.isFilterMenuOpen]);
+    Keyboard.dismiss();
 
-  useEffect(
-    () =>
-      props.setSelectedSocItems(
-        socItems.filter((item) =>
-          props.selectedSocItems.some((selectedItem) =>
-            isEqual(item, selectedItem)
-          )
-        )
-      ),
-    [socItems]
-  );
+    props.isFilterMenuOpen &&
+      retrieveSocietyNames()
+        .then((newSocItems) => {
+          setSocItems(newSocItems);
+
+          props.setSelectedSocItems((oldItems) =>
+            newSocItems.filter((newItem) =>
+              oldItems.some((selectedItem) => isEqual(newItem, selectedItem))
+            )
+          );
+
+          setShowRetrieveSocsErr(false);
+        })
+        .catch((err) => {
+          console.error(err.message);
+          isUndefined(socItems) && setShowRetrieveSocsErr(true);
+        });
+  }, [props.isFilterMenuOpen]);
 
   const handleSelectedSocItemsChange = (item: Item) => {
     props.setSelectedSocItems(xorBy(props.selectedSocItems, [item], "id"));
@@ -74,11 +66,9 @@ export default function EventFilterSideMenu(props: Props) {
     momentDate: moment.Moment,
     type: "START_DATE" | "END_DATE"
   ) => {
-    if (type === "START_DATE") {
-      props.setFilterStartDate(momentDate.toDate());
-    } else {
-      props.setFilterEndDate(momentDate?.toDate());
-    }
+    type === "START_DATE"
+      ? props.setFilterStartDate(momentDate.toDate())
+      : props.setFilterEndDate(momentDate?.toDate());
   };
 
   const resetDateRange = () => {
@@ -93,21 +83,8 @@ export default function EventFilterSideMenu(props: Props) {
         height="100%"
         gap={5}>
         <SideMenuHeading heading="Society" />
-        {retrieveSocsErrMsg ? (
-          <Alert
-            action="error"
-            variant="outline"
-            width="90%"
-            alignSelf="center"
-            marginVertical={15}>
-            <MaterialIcons
-              name="error-outline"
-              size={40}
-              color={config.tokens.colors.error}
-              style={{ paddingRight: 15 }}
-            />
-            <AlertText>{retrieveSocsErrMsg}</AlertText>
-          </Alert>
+        {showRetrieveSocsErr ? (
+          <ErrorAlert message="Couldn't retrieve society names. Try again later." />
         ) : (
           <View
             height="42%"
@@ -148,13 +125,13 @@ export default function EventFilterSideMenu(props: Props) {
           selectedDayColor={config.tokens.colors.navigationDarkPink}
           selectedDayTextColor={config.tokens.colors.white}
           todayBackgroundColor="transparent"
-          todayTextStyle={{ color: "black" }}
+          todayTextStyle={{ color: config.tokens.colors.black }}
           width={filterMenuSize}
         />
       </VStack>
     ),
     isOpen: props.isFilterMenuOpen,
-    onChange: () => props.setIsFilterMenuOpen(!props.isFilterMenuOpen),
+    onChange: props.setIsFilterMenuOpen,
     bounceBackOnOverdraw: false,
     overlayColor: config.tokens.colors.tintBlack,
     openMenuOffset: filterMenuSize

@@ -1,9 +1,9 @@
 import { Heading } from "@gluestack-ui/themed";
-import { config } from "../../config/gluestack-ui.config";
+import { config } from "../../../config/gluestack-ui.config";
 
-interface Props {
+type Props = {
   heading: string;
-}
+};
 
 export default function SideMenuHeading(props: Props) {
   return (

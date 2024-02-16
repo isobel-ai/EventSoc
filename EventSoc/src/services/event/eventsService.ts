@@ -10,9 +10,21 @@ export function retrieveEventOverview(
     .get(doc(eventsCol, eventId))
     .then(docToEventOverviewNarrow);
 }
+
+export function retrieveUpcomingEvents() {
+  return getDocs(
+    query(eventsCol, where("endDate", ">", new Date()), orderBy("endDate"))
+  ).then((eventsSnapshot) =>
+    eventsSnapshot.docs
+      .map(docToEventDoc)
+      .sort((a, b) => a.data.startDate.getTime() - b.data.startDate.getTime())
+  );
+}
+
 export function retrieveEventImage(eventId: string) {
   return downloadImage(eventPicturesRef, eventId);
 }
+
 export async function updateEvent(
   eventId: string,
   updates: Partial<EventData>,
