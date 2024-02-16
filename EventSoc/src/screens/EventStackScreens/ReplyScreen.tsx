@@ -138,7 +138,7 @@ export default function ReplyScreen(props: Props) {
                   disableButton
                   refreshCountTrigger={[
                     showPostCommentModal,
-                    focusComment.data.replyIds.length
+                    focusComment.data
                   ]}
                 />
                 <SectionDivider />
