@@ -13,15 +13,20 @@ export interface DismissableToastProps {
   description?: string;
 }
 
-interface Props extends DismissableToastProps {
+type Props = DismissableToastProps & {
   id: any;
   close: () => void;
-}
+};
 
 export default function DismissableToast(props: Props) {
   return (
-    <Pressable onPress={props.close}>
+    <Pressable
+      onPress={props.close}
+      maxWidth="95%"
+      alignSelf="center">
       <Toast
+        width="95%"
+        alignSelf="center"
         nativeID={props.id}
         bg="$error">
         <Icon

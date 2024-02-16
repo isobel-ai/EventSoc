@@ -19,9 +19,10 @@ import {
 } from "@gluestack-ui/themed";
 import { useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { config } from "../../config/gluestack-ui.config";
+import { config } from "../../../config/gluestack-ui.config";
+import ErrorAlert from "../error/ErrorAlert";
 
-interface Props {
+type Props = {
   confirmFunc: () => Promise<any>;
 
   heading: string;
@@ -30,23 +31,21 @@ interface Props {
 
   isVisible: boolean;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}
+};
 
 export default function ConfirmDialog(props: Props) {
-  const [confirmFuncErrorMsg, setConfirmFuncErrorMsg] = useState<string>("");
+  const [confirmFuncErrMsg, setConfirmFuncErrMsg] = useState<string>();
 
   const handleDialogClose = () => {
     props.setIsVisible(false);
-    setConfirmFuncErrorMsg("");
+    setConfirmFuncErrMsg(undefined);
   };
 
   const handleConfirm = () => {
     props
       .confirmFunc()
       .then(handleDialogClose)
-      .catch((err) => {
-        setConfirmFuncErrorMsg(err.message);
-      });
+      .catch((err) => setConfirmFuncErrMsg(err.message));
   };
 
   return (
@@ -91,20 +90,7 @@ export default function ConfirmDialog(props: Props) {
                 <ButtonText>{props.confirmText ?? "Confirm"}</ButtonText>
               </Button>
             </HStack>
-            {confirmFuncErrorMsg && (
-              <Alert
-                action="error"
-                variant="outline"
-                width="95%">
-                <MaterialIcons
-                  name="error-outline"
-                  size={40}
-                  color={config.tokens.colors.error}
-                  style={{ paddingRight: 15 }}
-                />
-                <AlertText>{confirmFuncErrorMsg}</AlertText>
-              </Alert>
-            )}
+            {confirmFuncErrMsg && <ErrorAlert message={confirmFuncErrMsg} />}
           </VStack>
         </AlertDialogFooter>
       </AlertDialogContent>

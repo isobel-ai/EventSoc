@@ -14,27 +14,39 @@ import {
   ButtonText,
   Text
 } from "@gluestack-ui/themed";
-import { config } from "../../config/gluestack-ui.config";
+import { config } from "../../../config/gluestack-ui.config";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-interface Props {
-  isVisible: boolean;
-  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+export type ErrDialogState = {
+  message: string;
+  showDialog: boolean;
+};
 
-  errMsg: string;
+export const defaultErrDialogState = {
+  message: "",
+  showDialog: false
+};
+
+type Props = {
+  errDialogState: ErrDialogState;
+  setErrDialogState: (state: ErrDialogState) => void;
 
   onClose?: () => void;
-}
+};
 
 export default function ErrorAlertDialog(props: Props) {
+  const setShowDialog = (value: boolean) => {
+    props.setErrDialogState({ ...props.errDialogState, showDialog: value });
+  };
+
   const handleClose = () => {
-    props.setIsVisible(false);
+    setShowDialog(false);
     props.onClose && props.onClose();
   };
 
   return (
     <AlertDialog
-      isOpen={props.isVisible}
+      isOpen={props.errDialogState.showDialog}
       onClose={handleClose}>
       <AlertDialogBackdrop />
       <AlertDialogContent>
@@ -56,7 +68,7 @@ export default function ErrorAlertDialog(props: Props) {
           </AlertDialogCloseButton>
         </AlertDialogHeader>
         <AlertDialogBody>
-          <Text size="md">{props.errMsg}</Text>
+          <Text size="md">{props.errDialogState.message}</Text>
         </AlertDialogBody>
         <AlertDialogFooter>
           <Button

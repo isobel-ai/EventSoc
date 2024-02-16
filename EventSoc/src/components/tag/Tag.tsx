@@ -1,11 +1,11 @@
 import { View, Text, Icon, CloseCircleIcon } from "@gluestack-ui/themed";
-import { config } from "../../config/gluestack-ui.config";
+import { config } from "../../../config/gluestack-ui.config";
 import { TextStyle, TouchableOpacity, ViewStyle } from "react-native";
 
-interface Props {
+type Props = {
   label: string;
   onCancel: () => void;
-}
+};
 
 export default function Tag(props: Props) {
   const containerStyle: ViewStyle = {
@@ -36,7 +36,7 @@ export default function Tag(props: Props) {
         <Icon
           as={CloseCircleIcon}
           fill="$navigationDarkPink"
-          color="white"
+          color="$white"
           w={21}
           h={21}
         />

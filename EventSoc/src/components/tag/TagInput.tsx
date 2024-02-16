@@ -1,11 +1,12 @@
-import { FlatList, Input, InputField, View } from "@gluestack-ui/themed";
+import { Input, InputField, View } from "@gluestack-ui/themed";
 import { useState } from "react";
 import Tag from "./Tag";
+import { FlatList } from "react-native";
 
-interface Props {
+type Props = {
   tags: string[];
   onChangeTags: (tag: string) => void;
-}
+};
 
 export default function TagInput(props: Props) {
   const [tag, setTag] = useState<string>("");
@@ -25,12 +26,12 @@ export default function TagInput(props: Props) {
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => (
           <Tag
-            label={String(item)}
-            onCancel={() => props.onChangeTags(String(item))}
+            label={item}
+            onCancel={() => props.onChangeTags(item)}
           />
         )}
         horizontal={true}
-        marginBottom={props.tags.length > 0 ? 10 : 0}
+        style={{ marginBottom: props.tags.length > 0 ? 10 : 0 }}
       />
       <Input>
         <InputField
