@@ -1,5 +1,5 @@
 import { Expo, ExpoPushMessage } from "expo-server-sdk";
-import { NotificationPayload } from "../../Models/Notification";
+import { NotificationPayload } from "../../../Shared/models/Notification";
 
 const expo = new Expo();
 
