@@ -1,22 +1,18 @@
-import {
-  StackNavigationOptions,
-  createStackNavigator
-} from "@react-navigation/stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import { config } from "../../config/gluestack-ui.config";
-import { ArrowLeftIcon, Icon } from "@gluestack-ui/themed";
-import {
-  NavigatorScreenParams,
-  getFocusedRouteNameFromRoute
-} from "@react-navigation/native";
-import SocietiesStackNavigator, {
-  SocietiesStackParamList
-} from "./Societies/SocietiesStackNavigator";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import SocietiesStackNavigator from "./SocietiesNavigator/SocietiesStackNavigator";
 import {
   EventStackParamList,
-  EventStackScreens
+  EventStackScreens,
+  eventStackScreenOptions
 } from "./CrossTabStackScreens/EventStackScreens";
 import NotificationScreen from "../screens/NotificationScreen";
-import { SocietyStackParamList } from "./CrossTabStackScreens/SocietyStackScreens";
+import {
+  SocietyStackParamList,
+  SocietyStackScreens,
+  societyStackScreenOptions
+} from "./CrossTabStackScreens/SocietyStackScreens";
 
 export type NotificationStackParamList = {
   Home: undefined;
@@ -41,22 +37,22 @@ export default function NotificationStackNavigator() {
           headerShown: false
         }}
       />
-      <Stack.Screen
-        name="Society"
-        component={SocietiesStackNavigator}
-        options={({ route }) => {
-          const currentScreen = getFocusedRouteNameFromRoute(route);
-          return {
-            headerShown: currentScreen === "Home"
-          };
-        }}
-      />
-      {EventStackScreens.map((screenInfo, index) => (
-        <Stack.Screen
-          key={index}
-          {...screenInfo}
-        />
-      ))}
+      <Stack.Group screenOptions={eventStackScreenOptions}>
+        {EventStackScreens.map((screenInfo, index) => (
+          <Stack.Screen
+            key={index}
+            {...screenInfo}
+          />
+        ))}
+      </Stack.Group>
+      <Stack.Group screenOptions={societyStackScreenOptions}>
+        {SocietyStackScreens.map((screenInfo, index) => (
+          <Stack.Screen
+            key={index}
+            {...screenInfo}
+          />
+        ))}
+      </Stack.Group>
     </Stack.Navigator>
   );
 }

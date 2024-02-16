@@ -51,21 +51,24 @@ export function updateSocietyExec(
   updates: ArrayUpdates<UserOverview>,
   transaction: Transaction
 ) {
-  const { id: socId, ...nameData } = socName;
-
   updates.createObjs.forEach((createdMember) => {
     const { id: memberId, ...data } = createdMember;
-    transaction.set(doc(societyExecCol(socId), memberId), data);
-    transaction.set(doc(userExecMemberSocieties(memberId), socId), nameData);
+    transaction.set(doc(societyExecCol(socName.id), memberId), data);
+    transaction.set(
+      doc(userExecMemberSocieties(memberId), socName.id),
+      socName
+    );
   });
 
   updates.updateObjs.forEach((updatedMember) => {
     const { id: memberId, ...data } = updatedMember;
-    transaction.update(doc(societyExecCol(socId), memberId), data);
+    transaction.update(doc(societyExecCol(socName.id), memberId), data);
   });
 
   updates.deleteObjs.forEach((deletedMember) => {
-    transaction.delete(doc(societyExecCol(socId), deletedMember.id));
-    transaction.delete(doc(userExecMemberSocieties(deletedMember.id), socId));
+    transaction.delete(doc(societyExecCol(socName.id), deletedMember.id));
+    transaction.delete(
+      doc(userExecMemberSocieties(deletedMember.id), socName.id)
+    );
   });
 }

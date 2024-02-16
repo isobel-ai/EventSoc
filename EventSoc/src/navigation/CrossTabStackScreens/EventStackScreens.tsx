@@ -5,16 +5,16 @@ import { StackNavigationOptions } from "@react-navigation/stack";
 import { Icon, ArrowLeftIcon, CloseIcon } from "@gluestack-ui/themed";
 
 export type EventStackParamList = {
-  Event: { eventId: string; showMenu?: boolean };
+  Event: { eventId: string };
   "Edit Event": { eventId: string };
-  Reply: { commentId: string; eventOrganiserId?: string };
+  Reply: { eventId: string; topLevelCommentId?: string; replyId: string };
 };
 
-interface EventStackScreenInfo {
+type EventStackScreenInfo = {
   name: keyof EventStackParamList;
   component: (props: any) => React.JSX.Element;
   options?: StackNavigationOptions;
-}
+};
 
 export const EventStackScreens: EventStackScreenInfo[] = [
   { name: "Event", component: EventScreen },
@@ -22,7 +22,6 @@ export const EventStackScreens: EventStackScreenInfo[] = [
     name: "Edit Event",
     component: EditEventScreen,
     options: {
-      headerTitle: undefined, // Use default title
       headerBackImage: () => (
         <Icon
           as={CloseIcon}
@@ -36,7 +35,6 @@ export const EventStackScreens: EventStackScreenInfo[] = [
 ];
 
 export const eventStackScreenOptions: StackNavigationOptions = {
-  headerTitle: "Event",
   headerBackTitleVisible: false,
   headerBackImage: () => (
     <Icon

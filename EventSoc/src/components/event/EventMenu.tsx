@@ -10,42 +10,32 @@ import {
   TrashIcon
 } from "@gluestack-ui/themed";
 import { useState } from "react";
-import ConfirmDialog from "./ConfirmDialog";
-import { Event } from "../../../Models/Event";
+import ConfirmDialog from "../general/ConfirmDialog";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { useAppContext } from "../contexts/AppContext";
-import { deleteSocEvent } from "../services/socEventsService";
-import { EventStackParamList } from "../navigation/CrossTabStackScreens/EventStackScreens";
-import { useDeleteEventContext } from "../contexts/DeleteEventContext";
+import { EventStackParamList } from "../../navigation/CrossTabStackScreens/EventStackScreens";
+import { useOnDeleteEventContext } from "../../contexts/OnDeleteEventContext";
+import { deleteEvent } from "../../services/event/eventsService";
+import { config } from "../../../config/gluestack-ui.config";
 
-interface Props {
-  event: Event;
-}
+type Props = {
+  eventId: string;
+};
 
 export default function EventMenu(props: Props) {
   const { navigate } = useNavigation<NavigationProp<EventStackParamList>>();
 
-  const { updateSocieties, updateEvents } = useAppContext();
-
-  const { onDeleteEvent } = useDeleteEventContext();
+  const { onDeleteEvent } = useOnDeleteEventContext();
 
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
 
   const handleDeleteEvent = () => {
-    return deleteSocEvent(
-      props.event.id,
-      props.event.data.pictureUrl,
-      props.event.data.organiserId
-    )
-      .then(() => updateSocieties().catch())
-      .then(() => updateEvents().catch())
-      .then(onDeleteEvent);
+    return deleteEvent(props.eventId).then(onDeleteEvent);
   };
 
   const menuSelectionHandler = (keys: Iterable<React.Key> | string) => {
     const keySet = new Set<React.Key>(keys);
     if (keySet.has("edit")) {
-      navigate("Edit Event", { eventId: props.event.id });
+      navigate("Edit Event", { eventId: props.eventId });
     } else if (keySet.has("delete")) {
       setShowDeleteDialog(true);
     }
@@ -66,23 +56,21 @@ export default function EventMenu(props: Props) {
               <ButtonIcon
                 as={ThreeDotsIcon}
                 size="xl"
-                color="black"
+                color={config.tokens.colors.black}
               />
             </Button>
           );
         }}>
-        {props.event.data.startDate > new Date() && (
-          <MenuItem
-            key="edit"
-            textValue="Edit Event">
-            <Icon
-              as={DownloadIcon}
-              size="xl"
-              mr="$5"
-            />
-            <MenuItemLabel size="sm">Edit Event</MenuItemLabel>
-          </MenuItem>
-        )}
+        <MenuItem
+          key="edit"
+          textValue="Edit Event">
+          <Icon
+            as={DownloadIcon}
+            size="xl"
+            mr="$5"
+          />
+          <MenuItemLabel size="sm">Edit Event</MenuItemLabel>
+        </MenuItem>
         <MenuItem
           key="delete"
           textValue="Delete Event">

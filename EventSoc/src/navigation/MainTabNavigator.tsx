@@ -5,12 +5,12 @@ import {
 import MyAccountScreen from "../screens/MyAccountScreen";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { config } from "../../config/gluestack-ui.config";
-import SocietiesNavigator from "./Societies/SocietiesNavigator";
+import SocietiesNavigator from "./SocietiesNavigator/SocietiesNavigator";
 import EventsStackNavigator, {
   EventsStackParamList
 } from "./EventsStackNavigator";
 import { NavigatorScreenParams } from "@react-navigation/native";
-import { SocietiesStackParamList } from "./Societies/SocietiesStackNavigator";
+import { SocietiesStackParamList } from "./SocietiesNavigator/SocietiesStackNavigator";
 import MyEventsStackNavigator, {
   MyEventsStackParamList
 } from "./MyEventsStackNavigator";

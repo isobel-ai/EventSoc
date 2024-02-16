@@ -33,7 +33,7 @@ export async function createSocietyEvent(
 }
 
 export function retrieveSocietyEvents(societyId: string) {
-  return getDocs(query(societyEventsCol(societyId), orderBy("startDate"))).then(
-    (eventsSnapshot) => eventsSnapshot.docs.map(docToEventOverviewNarrow)
-  );
+  return getDocs(
+    query(societyEventsCol(societyId), orderBy("startDate", "desc"))
+  ).then((eventsSnapshot) => eventsSnapshot.docs.map(docToEventOverviewNarrow));
 }

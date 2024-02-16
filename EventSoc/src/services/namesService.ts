@@ -1,3 +1,25 @@
+import {
+  CollectionReference,
+  DocumentData,
+  Transaction,
+  doc,
+  getCountFromServer,
+  getDocs,
+  query,
+  where
+} from "firebase/firestore";
+import { societyNamesCol, userNamesCol } from "../config/firebaseConfig";
+import { docToModel } from "../mappers/docToModel";
+import { Name } from "../../../Shared/models/Name";
+
+export function retrieveUserNames() {
+  return retrieveNames(userNamesCol);
+}
+
+export function retrieveSocietyName(socId: string, transaction: Transaction) {
+  return transaction.get(doc(societyNamesCol, socId)).then(docToModel<Name>);
+}
+
 export function retrieveSocietyNames() {
   return retrieveNames(societyNamesCol);
 }

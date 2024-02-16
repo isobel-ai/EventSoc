@@ -1,12 +1,11 @@
 import { ArrowLeftIcon, CloseIcon, Icon } from "@gluestack-ui/themed";
 import { StackNavigationOptions } from "@react-navigation/stack";
-import SocietiesScreen from "../../screens/SocietyStackScreens/SocietiesScreen";
-import RegisterSocietyScreen from "../../screens/SocietyStackScreens/RegisterSocietyScreenn
+import SocietyScreen from "../../screens/SocietyStackScreens/SocietyScreen";
 import EditSocietyScreen from "../../screens/SocietyStackScreens/EditSocietyScreen";
 import CreateEventScreen from "../../screens/SocietyStackScreens/CreateEventScreen";
 
 export type SocietyStackParamList = {
-  Society: { societyId: string };
+  Society: { societyId?: string };
   "Edit Society": { societyId: string };
   "Create Event": { organiserId: string };
 };
@@ -20,7 +19,7 @@ export type SocietyStackScreenInfo = {
 export const SocietyStackScreens: SocietyStackScreenInfo[] = [
   {
     name: "Society",
-    component: SocietiesScreen,
+    component: SocietyScreen,
     options: {
       headerBackImage: () => (
         <Icon

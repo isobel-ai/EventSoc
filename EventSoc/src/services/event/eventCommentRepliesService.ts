@@ -7,7 +7,8 @@ import {
   getDocs,
   query,
   where,
-  writeBatch
+  writeBatch,
+  orderBy
 } from "firebase/firestore";
 import {
   ReplyData,
@@ -80,7 +81,8 @@ export function retrieveCommentReplies(eventId: string, commentId: string) {
   return getDocs(
     query(
       eventCommentRepliesCol(eventId, commentId),
-      where("parentReplyIds", "==", [])
+      where("parentReplyIds", "==", []),
+      orderBy("timestamp", "desc")
     )
   ).then((repliesSnapshot) => repliesSnapshot.docs.map(docToReplyDoc));
 }
@@ -109,7 +111,9 @@ export async function retrieveReplyReplies(
   }
 
   return Promise.all(retrieveOperations).then((replyBatches) =>
-    replyBatches.flat()
+    replyBatches
+      .flat()
+      .sort((a, b) => b.data.timestamp.getTime() - a.data.timestamp.getTime())
   );
 }
 

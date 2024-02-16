@@ -10,7 +10,7 @@ import {
 } from "@react-navigation/native";
 import SocietiesStackNavigator, {
   SocietiesStackParamList
-} from "./Societies/SocietiesStackNavigator";
+} from "./SocietiesNavigator/SocietiesStackNavigator";
 import MyEventsScreen from "../screens/MyEventsScreen";
 import {
   EventStackParamList,
