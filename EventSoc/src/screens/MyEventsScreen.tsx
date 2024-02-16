@@ -1,74 +1,76 @@
-import { AlertText, Divider, Alert } from "@gluestack-ui/themed";
+import { Divider } from "@gluestack-ui/themed";
 import { useIsFocused } from "@react-navigation/native";
 import { useState, useEffect } from "react";
-import EventListButton from "../components/EventListButton";
-import ScreenView from "../components/ScreenView";
-import SearchList from "../components/SearchList";
-import { useAppContext } from "../contexts/AppContext";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { config } from "../../config/gluestack-ui.config";
+import EventListButton from "../components/event/EventListButton";
+import ScreenView from "../components/general/ScreenView";
+import SearchList from "../components/general/SearchList";
+import { useUserContext } from "../contexts/UserContext";
+import ErrorAlert from "../components/error/ErrorAlert";
+import { EventOverview } from "../../../Shared/models/Event";
+import { retrieveUserEventsAttendingOverviews } from "../services/user/userEventsAttendingService";
+import { isUndefined } from "lodash";
+import { Name } from "../../../Shared/models/Name";
+import { retrieveUserExecMemberSocieties } from "../services/user/userExecMemberSocietiesService";
 
 export default function MyEventsScreen() {
-  const { events, userId, updateEvents, societies, updateSocieties } =
-    useAppContext();
+  const { userId } = useUserContext();
 
-  const myEvents = events.filter((event) =>
-    event.data.attendeeIds.includes(userId)
-  );
+  const [myEvents, setMyEvents] = useState<EventOverview[]>();
+  const [showRetrieveEventsErr, setShowRetrieveEventsErr] =
+    useState<boolean>(false);
 
-  const [retrieveEventsErrMsg, setRetrieveEventsErrMsg] = useState<string>("");
+  const [userExecSocieties, setUserExecSocieties] = useState<Name[]>([]);
 
   const isFocused = useIsFocused();
 
   useEffect(() => {
     if (isFocused) {
-      updateEvents()
-        .then(() => setRetrieveEventsErrMsg(""))
-        .catch((err) => !events.length && setRetrieveEventsErrMsg(err.message));
-      updateSocieties().catch();
+      retrieveUserEventsAttendingOverviews(userId)
+        .then((newMyEvents) => {
+          setMyEvents(newMyEvents);
+          setShowRetrieveEventsErr(false);
+        })
+        .catch((err) => {
+          console.error(err.message);
+          isUndefined(myEvents) && setShowRetrieveEventsErr(true);
+        });
+
+      retrieveUserExecMemberSocieties(userId)
+        .then(setUserExecSocieties)
+        .catch((err) => console.error(err.message));
     }
   }, [isFocused]);
 
-  const isExec = (eventOrganiserId: string) =>
-    societies
-      .find((soc) => soc.id === eventOrganiserId)
-      ?.data.execIds.includes(userId) ?? false;
-
   return (
-    <ScreenView>
-      {retrieveEventsErrMsg ? (
-        <Alert
-          action="error"
-          variant="outline"
-          width="80%"
-          alignSelf="center">
-          <MaterialIcons
-            name="error-outline"
-            size={40}
-            color={config.tokens.colors.error}
-            style={{ paddingRight: 10 }}
-          />
-          <AlertText>{retrieveEventsErrMsg}</AlertText>
-        </Alert>
-      ) : (
-        <SearchList
-          data={myEvents}
-          renderItem={(event) => (
-            <EventListButton
-              event={event}
-              isExec={isExec(event.data.organiserId)}
-            />
-          )}
-          searchKeys={["data.name"]}
-          itemSeperator={() => (
-            <Divider
-              h="$1"
-              bgColor="transparent"
-            />
-          )}
-          maxHeight="102%"
-          listEmptyText="No events"
+    <ScreenView removeBottomPadding>
+      {showRetrieveEventsErr ? (
+        <ErrorAlert
+          message="Couldn't retrieve your events. Try again later"
+          style={{ marginTop: 10 }}
         />
+      ) : (
+        !isUndefined(myEvents) && (
+          <SearchList
+            maxHeight="99%"
+            data={myEvents}
+            renderItem={(event) => (
+              <EventListButton
+                event={event}
+                isExec={userExecSocieties.some(
+                  (soc) => soc.id === event.organiserId
+                )}
+              />
+            )}
+            searchKeys={["name"]}
+            itemSeperator={() => (
+              <Divider
+                h="$1"
+                bgColor="transparent"
+              />
+            )}
+            listEmptyText="No events"
+          />
+        )
       )}
     </ScreenView>
   );
