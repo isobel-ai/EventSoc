@@ -4,47 +4,55 @@ import {
   signInWithEmailAndPassword
 } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
-import { createUser, usernameTaken } from "./usersService";
+import { createUser, retrieveDoesUsernameExist } from "./user/usersService";
 
-export function login(email: string, password: string) {
-  return signInWithEmailAndPassword(auth, email, password).catch((e) => {
-    if (e.code === "auth/invalid-login-credentials") {
-      throw Error("Invalid login details.");
-    } else {
-      throw Error("Something went wrong. Try again later.");
-    }
-  });
+/**
+ * @returns whether the sign in attempt is successful
+ */
+export function signIn(email: string, password: string) {
+  return signInWithEmailAndPassword(auth, email, password)
+    .then(() => true)
+    .catch((err) => {
+      if (err.code === "auth/invalid-login-credentials") {
+        return false;
+      }
+
+      throw Error(err);
+    });
 }
 
+/**
+ * @returns error message if registration is unsuccessful
+ */
 export async function register(name: string, email: string, password: string) {
-  return usernameTaken(name)
+  return retrieveDoesUsernameExist(name)
     .catch((err) => {
       throw err;
     })
     .then((isUserNameTaken) => {
       if (isUserNameTaken) {
-        throw Error("Username taken.");
-      } else {
-        return createUserWithEmailAndPassword(auth, email, password)
-          .then((userCreds) =>
-            createUser(userCreds.user.uid, name).catch((err) => {
-              deleteUser(userCreds.user);
-              throw err;
-            })
-          )
-          .catch((e) => {
-            if (e.code === "auth/email-already-in-use") {
-              throw Error("Email already linked to an account.");
-            } else {
-              throw Error("Something went wrong. Try again later.");
-            }
-          });
+        return "Username taken";
       }
+
+      return createUserWithEmailAndPassword(auth, email, password)
+        .then((userCreds) =>
+          createUser(userCreds.user.uid, name).catch((err) => {
+            deleteUser(userCreds.user).catch((err) =>
+              console.error(err.message)
+            );
+            throw err;
+          })
+        )
+        .catch((err) => {
+          if (err.code === "auth/email-already-in-use") {
+            return "Email already linked to an account.";
+          }
+
+          throw err;
+        });
     });
 }
 
-export function signOut() {
-  return auth.signOut().catch(() => {
-    throw Error("Something went wrong. Try again later.");
-  });
+export async function signOut() {
+  await auth.signOut();
 }

@@ -580,6 +580,15 @@ export const Button = createStyle({
           }
         }
       }
+    },
+
+    placement: {
+      absoluteBottom: {
+        position: "absolute",
+        bottom: 0,
+        borderRadius: "$none",
+        width: "100%"
+      }
     }
   },
   compoundVariants: [

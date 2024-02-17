@@ -1,4 +1,10 @@
-import { getApp, getApps, initializeApp } from "firebase/app";
+import {
+  FirebaseApp,
+  FirebaseOptions,
+  getApp,
+  getApps,
+  initializeApp
+} from "firebase/app";
 import {
   initializeAuth,
   getReactNativePersistence,
@@ -9,7 +15,7 @@ import { collection, getFirestore } from "firebase/firestore";
 import { getStorage, ref } from "firebase/storage";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
-const firebaseConfig = {
+const firebaseConfig: FirebaseOptions = {
   apiKey: "AIzaSyAh-K4jPf_6ugoEmaY8mE_JltG5zpSguvE",
   authDomain: "eventsoc-5bfa8.firebaseapp.com",
   projectId: "eventsoc-5bfa8",
@@ -19,7 +25,7 @@ const firebaseConfig = {
   measurementId: "G-BLJQFZR42D"
 };
 
-let app;
+let app: FirebaseApp;
 export let auth: Auth;
 if (!getApps().length) {
   app = initializeApp(firebaseConfig);
@@ -32,13 +38,31 @@ if (!getApps().length) {
 }
 
 export const db = getFirestore(app);
-export const eventsCol = collection(db, "events");
-export const usersCol = collection(db, "users");
-export const societiesCol = collection(db, "societies");
-export const commentsCol = collection(db, "comments");
 
+export const eventsCol = collection(db, "events");
+export const eventAttendeesCol = (eventId: string) =>
+  collection(eventsCol, eventId, "attendees");
+export const eventCommentsCol = (eventId: string) =>
+  collection(eventsCol, eventId, "comments");
+export const eventCommentRepliesCol = (eventId: string, commentId: string) =>
+  collection(eventCommentsCol(eventId), commentId, "replies");
+
+export const usersCol = collection(db, "users");
+export const userExecMemberSocieties = (userId: string) =>
+  collection(usersCol, userId, "execMemberSocieties");
 export const userNotificationsCol = (userId: string) =>
   collection(usersCol, userId, "notifications");
+export const userEventsAttendingCol = (userId: string) =>
+  collection(usersCol, userId, "eventsAttending");
+
+export const societiesCol = collection(db, "societies");
+export const societyExecCol = (socId: string) =>
+  collection(societiesCol, socId, "exec");
+export const societyEventsCol = (socId: string) =>
+  collection(societiesCol, socId, "socEvents");
+
+export const userNamesCol = collection(db, "userNames");
+export const societyNamesCol = collection(db, "societyNames");
 
 const storage = getStorage(app);
 export const eventPicturesRef = ref(storage, "eventPictures");

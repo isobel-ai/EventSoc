@@ -64,7 +64,7 @@ export type SelectBoxProps = {
 
 export type Item = {
   id: string | number;
-  item: string;
+  name: string;
 };
 
 function SelectBox({
@@ -118,7 +118,7 @@ function SelectBox({
               hitSlop={hitSlop}
               style={renderItemStyle}
               onPress={onPressMultiItem()}>
-              {renderLabel(item.item)}
+              {renderLabel(item.name)}
             </TouchableOpacity>
             <Toggle
               iconColor={toggleIconColor}
@@ -132,7 +132,7 @@ function SelectBox({
               hitSlop={hitSlop}
               style={renderItemStyle}
               onPress={onPressItem()}>
-              {renderLabel(item.item)}
+              {renderLabel(item.name)}
               <View />
             </TouchableOpacity>
           </>
@@ -175,7 +175,7 @@ function SelectBox({
     };
     return (
       <View style={kMultiOptionContainerStyle}>
-        <Text style={kMultiOptionsLabelStyle}>{label?.item}</Text>
+        <Text style={kMultiOptionsLabelStyle}>{label?.name}</Text>
         <TouchableOpacity
           // eslint-disable-next-line react-native/no-inline-styles
           style={{ marginLeft: 15 }}
@@ -212,7 +212,7 @@ function SelectBox({
     () =>
       options?.filter(
         (suggestion) =>
-          suggestion.item.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+          suggestion.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
       ),
     [inputValue, options]
   );
@@ -289,7 +289,7 @@ function SelectBox({
           ) : (
             <TouchableOpacity hitSlop={hitSlop}>
               <Text style={kSelectedItemStyle()}>
-                {value?.item || inputPlaceholder}
+                {value?.name || inputPlaceholder}
               </Text>
             </TouchableOpacity>
           )}
@@ -328,7 +328,7 @@ function SelectBox({
   function kSelectedItemStyle() {
     return {
       fontSize: 17,
-      color: isEmpty(value?.item) ? "rgba(60, 60, 67, 0.3)" : "#000",
+      color: isEmpty(value?.name) ? "rgba(60, 60, 67, 0.3)" : "#000",
       ...selectedItemStyle
     };
   }
@@ -342,7 +342,7 @@ function SelectBox({
       alignItems: "center",
       paddingRight: 18,
       justifyContent: "space-between",
-      backgroundColor: config.tokens.colors.modalBackgroundLight,
+      backgroundColor: config.tokens.colors.defaultBackgroundLight,
       ...inputFilterContainerStyle
     } as ViewStyle;
     const kInputFilterStyle = {

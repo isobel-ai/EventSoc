@@ -1,4 +1,4 @@
-import { EventData } from "../../../Models/Event";
+import { EventData } from "../../../Shared/models/Event";
 
 /**
  * Returns an empty string if the event is valid, and an appropriate error message otherwise

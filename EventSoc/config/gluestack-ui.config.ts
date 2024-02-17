@@ -34,7 +34,7 @@ export const gluestackUIConfig = createConfig({
       inputSectionPink: "#fdc6ef",
       tintBlack: "rgba(0,0,0,0.5)",
       placeholderGray: "#8e8e8e",
-      modalBackgroundLight: "#F5F5F5",
+      defaultBackgroundLight: "#F5F5F5",
       infoBlue: "#0077E6",
       error: "#E63535",
       rose50: "#fff1f2",

@@ -6,7 +6,7 @@ import * as Notifications from "expo-notifications";
 export async function registerForPushNotifications() {
   // Only physical devices support push notifications
   if (!Device.isDevice) {
-    console.log("Must use physical device for Push Notifications");
+    console.error("Must use physical device for Push Notifications");
     return;
   }
 
@@ -30,7 +30,7 @@ export async function registerForPushNotifications() {
 
   const projectId: string = Constants.expoConfig?.extra?.eas.projectId;
   if (!projectId) {
-    console.log("Failed to get projectId.");
+    console.error("Failed to get projectId.");
     return;
   }
 

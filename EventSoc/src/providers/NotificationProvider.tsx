@@ -1,20 +1,18 @@
 import { useState, useRef, useEffect, ReactNode } from "react";
-import { NotificationPayload } from "../../../Models/Notification";
+import { NotificationPayload } from "../../../Shared/models/Notification";
 import {
   registerForPushNotifications,
   updateBadgeCount
 } from "../services/expoNotificationsService";
-import { storeNotification } from "../services/notificationsService";
+import { createUserNotification } from "../services/user/userNotificationsService";
 import {
-  addNotificationToken,
-  removeNotificationToken
-} from "../services/usersService";
+  createUserNotificationToken,
+  deleteUserNotificationToken
+} from "../services/user/usersService";
 import * as Notifications from "expo-notifications";
 import { useNavigation } from "@react-navigation/native";
 import { MainTabParamList } from "../navigation/MainTabNavigator";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { useAppContext } from "../contexts/AppContext";
-import { Event } from "../../../Models/Event";
 import { Platform } from "react-native";
 import NotificationContext from "../contexts/NotificationContext";
 
@@ -26,17 +24,15 @@ Notifications.setNotificationHandler({
   })
 });
 
-interface Props {
+type Props = {
   loggedIn?: boolean;
   userId: string;
   children: ReactNode;
-}
+};
 
 export default function NotificationProvider(props: Props) {
   const { navigate } =
     useNavigation<BottomTabNavigationProp<MainTabParamList>>();
-
-  const { events } = useAppContext();
 
   const [notifToken, setNotifToken] = useState<string>();
 
@@ -51,7 +47,8 @@ export default function NotificationProvider(props: Props) {
       registerForPushNotifications()
         .then((token) => {
           setNotifToken(token);
-          token !== undefined && addNotificationToken(props.userId, token);
+          token !== undefined &&
+            createUserNotificationToken(props.userId, token);
         })
         .catch((err) => console.log(err.message));
 
@@ -62,14 +59,17 @@ export default function NotificationProvider(props: Props) {
           notification.request.content.title &&
             notification.request.content.body &&
             notification.request.content.data &&
-            storeNotification(props.userId, {
+            createUserNotification(props.userId, {
               title: notification.request.content.title,
               body: notification.request.content.body,
               timestamp: new Date(),
               payload: notification.request.content.data as NotificationPayload
-            }).then(
-              () => !countDisabled && setUnreadNotifCount((count) => count + 1)
-            );
+            })
+              .then(
+                () =>
+                  !countDisabled && setUnreadNotifCount((count) => count + 1)
+              )
+              .catch((err) => console.error(err.message));
         });
 
       responseListener.current =
@@ -78,14 +78,6 @@ export default function NotificationProvider(props: Props) {
 
           const payload = response.notification.request.content
             .data as NotificationPayload;
-
-          let event: Event | undefined;
-          switch (payload.type) {
-            case "EVENT":
-            case "REPLY":
-              const eventId = payload.eventId;
-              event = events.find((event) => event.id === eventId);
-          }
 
           navigate("Notifications", { screen: "Home" });
 
@@ -100,8 +92,9 @@ export default function NotificationProvider(props: Props) {
               navigate("Notifications", {
                 screen: "Reply",
                 params: {
-                  commentId: payload.commentId,
-                  eventOrganiserId: event?.data.organiserId
+                  eventId: payload.eventId,
+                  topLevelCommentId: payload.topLevelCommentId,
+                  replyId: payload.replyParentId
                 }
               });
           }
@@ -118,7 +111,10 @@ export default function NotificationProvider(props: Props) {
           );
       };
     } else if (props.loggedIn === false) {
-      notifToken && removeNotificationToken(props.userId, notifToken);
+      notifToken &&
+        deleteUserNotificationToken(props.userId, notifToken).catch((err) =>
+          console.error(err.message)
+        );
       notificationListener.current?.remove();
       responseListener.current?.remove();
     }

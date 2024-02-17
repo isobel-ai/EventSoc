@@ -1,12 +1,12 @@
 import { getSocietyErrMsg } from "../src/helpers/SocietyInputValidationHelper";
-import { SocietyData, defaultSocietyData } from "../../Models/Society";
+import { SocietyData, defaultSocietyData } from "../../Shared/models/Society";
+import { UserOverview, defaultUserOverview } from "../../Shared/models/User";
 
 describe("getSocietyErrMsg", () => {
   test("it should return an empty string if the society is valid", () => {
     const soc: SocietyData = {
       ...defaultSocietyData(),
-      name: "name",
-      execIds: ["a"]
+      name: "name"
     };
 
     expect(getSocietyErrMsg(soc)).toBe("");
@@ -14,11 +14,12 @@ describe("getSocietyErrMsg", () => {
 
   test("it should return an appropriate error message if the society's name is empty", () => {
     const soc: SocietyData = {
-      ...defaultSocietyData(),
-      execIds: ["a"]
+      ...defaultSocietyData()
     };
 
-    expect(getSocietyErrMsg(soc)).toBe("Your society must have a name.");
+    const exec: UserOverview[] = [defaultUserOverview()];
+
+    expect(getSocietyErrMsg(soc, exec)).toBe("Your society must have a name.");
   });
 
   test("it should return an appropriate error message if society has no exec members", () => {
@@ -27,7 +28,9 @@ describe("getSocietyErrMsg", () => {
       name: "name"
     };
 
-    expect(getSocietyErrMsg(soc)).toBe(
+    const exec: UserOverview[] = [];
+
+    expect(getSocietyErrMsg(soc, exec)).toBe(
       "Your society must have at least one exec member."
     );
   });
@@ -35,7 +38,9 @@ describe("getSocietyErrMsg", () => {
   test("it should return an appropriate message if the society is invalid for multiple reasons", () => {
     const soc: SocietyData = defaultSocietyData();
 
-    expect(getSocietyErrMsg(soc)).toBe(
+    const exec: UserOverview[] = [];
+
+    expect(getSocietyErrMsg(soc, exec)).toBe(
       "Your society must have a name.\nYour society must have at least one exec member."
     );
   });
