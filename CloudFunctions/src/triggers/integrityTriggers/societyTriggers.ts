@@ -58,9 +58,11 @@ export const societyUpdateTrigger = onDocumentUpdated(
         .catch((err) => logger.error(err.message));
 
       const newName = updates.name;
-      [updateUsersExecMemberSocietyName, updateEventOrganisersName].forEach(
-        (updateFunc) => updateFunc(event.params.societyId, newName)
-      );
+      [
+        updateUsersExecMemberSocietyName,
+        updateEventOrganisersName,
+        updateUsersExecMemberSocietyName
+      ].forEach((updateFunc) => updateFunc(event.params.societyId, newName));
     }
   }
 );

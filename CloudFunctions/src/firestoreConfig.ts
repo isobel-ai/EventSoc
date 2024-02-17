@@ -25,6 +25,8 @@ export const userEventsAttendingColGroup =
 export const userExecMemberSocietiesColGroup = db.collectionGroup(
   "execMemberSocieties"
 );
+export const userSocietiesFollowingColGroup =
+  db.collectionGroup("societiesFollowing");
 
 export const userNamesCol = db.collection("userNames");
 export const societyNamesCol = db.collection("societyNames");
