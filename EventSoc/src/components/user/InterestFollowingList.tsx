@@ -27,6 +27,8 @@ type Props = {
 export default function InterestFollowingList(props: Props) {
   const { userId } = useUserContext();
 
+  const sortedInterests = props.interests.sort((a, b) => a.localeCompare(b));
+
   const [newInterest, setNewInterest] = useState<string>("");
 
   const showToast = useDismissableToast();
@@ -79,7 +81,7 @@ export default function InterestFollowingList(props: Props) {
           </InputSlot>
         </Input>
       }
-      data={props.interests}
+      data={sortedInterests}
       renderItem={({ item }) => (
         <InterestListButton
           interest={item}
