@@ -8,24 +8,26 @@ import {
 import { Name } from "../../../../Shared/models/Name";
 import { useEffect, useState } from "react";
 import { retrieveSocietyImage } from "../../services/society/societiesService";
-import { isUndefined } from "lodash";
 import { config } from "../../../config/gluestack-ui.config";
+import { useIsFocused } from "@react-navigation/native";
 
 type Props = {
   society: Name;
-  onPress: () => void;
-  triggerImageReload: boolean;
+  onPress?: () => void;
+  imageReloadTrigger?: boolean;
 };
 
 export default function SocietyListButton(props: Props) {
   const [image, setImage] = useState<string>();
 
+  const triggerReload = props.imageReloadTrigger ?? useIsFocused();
+
   useEffect(() => {
-    props.triggerImageReload &&
+    triggerReload &&
       retrieveSocietyImage(props.society.id)
         .then(setImage)
         .catch((err) => console.error(err.message));
-  }, [props.triggerImageReload]);
+  }, [triggerReload]);
 
   return (
     <Button

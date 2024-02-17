@@ -1,5 +1,4 @@
 import {
-  setDoc,
   doc,
   getDocs,
   deleteDoc,
@@ -22,16 +21,18 @@ export async function createUserSocietyFollow(
   await runTransaction(db, async (transaction) => {
     const societyName = await retrieveSocietyName(societyId, transaction);
 
-    transaction.set(doc(userSocietiesFollowingCol(userId), societyId), {
-      id: societyId,
-      name: societyName
-    });
+    transaction.set(
+      doc(userSocietiesFollowingCol(userId), societyId),
+      societyName
+    );
   });
 }
 
 export function retrieveUserSocietiesFollowing(userId: string) {
   return getDocs(userSocietiesFollowingCol(userId)).then((societiesSnapshot) =>
-    societiesSnapshot.docs.map(docToModel<Name>)
+    societiesSnapshot.docs
+      .map(docToModel<Name>)
+      .sort((a, b) => a.name.localeCompare(b.name))
   );
 }
 

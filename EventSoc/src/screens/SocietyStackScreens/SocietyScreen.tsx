@@ -1,21 +1,10 @@
 import {
-  Button,
-  ButtonText,
-  ButtonIcon,
-  AddIcon,
   HStack,
-  Avatar,
-  AvatarFallbackText,
-  AvatarImage,
   Heading,
   Icon,
   ArrowLeftIcon,
-  EditIcon,
-  Text,
   View,
-  Divider,
-  Alert,
-  AlertText
+  Divider
 } from "@gluestack-ui/themed";
 import React, { useEffect, useState } from "react";
 import ScreenView from "../../components/general/ScreenView";
@@ -25,12 +14,10 @@ import { useUserContext } from "../../contexts/UserContext";
 import { config } from "../../../config/gluestack-ui.config";
 import SearchList from "../../components/general/SearchList";
 import EventListButton from "../../components/event/EventListButton";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { SocietyStackParamList } from "../../navigation/CrossTabStackScreens/SocietyStackScreens";
 import SocietyProfile from "../../components/society/SocietyProfile";
 import { isUndefined } from "lodash";
-import ErrorAlert from "../../components/error/ErrorAlert";
-import { EventDoc, EventOverview } from "../../../../Shared/models/Event";
+import { EventOverview } from "../../../../Shared/models/Event";
 import { retrieveIsUserSocietyExecMember } from "../../services/society/societyExecService";
 import { retrieveSocietyEvents } from "../../services/society/societyEventsService";
 import SocietyScreenBottomButton from "../../components/society/SocietyScreenBottomButton";

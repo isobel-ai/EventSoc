@@ -35,7 +35,7 @@ export default function SocietyScreenBottomButton(props: Props) {
 
   useEffect(() => {
     isFocused && !props.isExec && updateIsFollowing();
-  }, [isFocused, props.isExec]);
+  }, [isFocused, props.isExec, props.societyId]);
 
   const showToast = useDismissableToast();
 
