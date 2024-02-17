@@ -9,6 +9,7 @@ import { retrieveUserData } from "../services/user/usersService";
 import { isUndefined } from "lodash";
 import ErrorAlert from "../components/error/ErrorAlert";
 import useDismissableToast from "../hooks/useDismissableToast";
+import FollowingLists from "../components/user/FollowingLists";
 
 export default function MyAccountScreen() {
   const { userId } = useUserContext();
@@ -17,19 +18,21 @@ export default function MyAccountScreen() {
   const [showRetrieveUserErr, setShowRetrieveUserErr] =
     useState<boolean>(false);
 
+  const updateUser = () =>
+    retrieveUserData(userId)
+      .then((newUser) => {
+        setUser(newUser);
+        setShowRetrieveUserErr(false);
+      })
+      .catch((err) => {
+        console.error(err.message);
+        isUndefined(user) && setShowRetrieveUserErr(true);
+      });
+
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    isFocused &&
-      retrieveUserData(userId)
-        .then((newUser) => {
-          setUser(newUser);
-          setShowRetrieveUserErr(false);
-        })
-        .catch((err) => {
-          console.error(err.message);
-          isUndefined(user) && setShowRetrieveUserErr(true);
-        });
+    isFocused && updateUser();
   }, [isFocused]);
 
   const showSignOutErrToast = useDismissableToast();
@@ -49,12 +52,19 @@ export default function MyAccountScreen() {
         />
       ) : (
         !isUndefined(user) && (
-          <Heading textAlign="center">Name: {user.name}</Heading>
+          <>
+            <Heading textAlign="center">{`Hi ${user.name}!`}</Heading>
+            <FollowingLists
+              interests={user.interests}
+              updateInterests={updateUser}
+            />
+          </>
         )
       )}
       <Button
-        action={"negative"}
-        borderRadius="$none"
+        action="negative"
+        size="xl"
+        placement="absoluteBottom"
         onPress={handleSignOut}>
         <ButtonText>Logout</ButtonText>
       </Button>
