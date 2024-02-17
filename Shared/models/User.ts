@@ -1,10 +1,11 @@
 export type UserData = {
   name: string;
   notificationTokens: string[];
+  interests: string[];
 };
 
 export function defaultUserData(): UserData {
-  return { name: "", notificationTokens: [] };
+  return { name: "", notificationTokens: [], interests: [] };
 }
 
 export type UserOverview = {
