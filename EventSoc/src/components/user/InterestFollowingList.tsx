@@ -60,13 +60,13 @@ export default function InterestFollowingList(props: Props) {
   return (
     <FlatList
       style={{ width: "100%" }}
-      contentContainerStyle={{ paddingBottom: 40 }}
       stickyHeaderIndices={[0]}
       ListHeaderComponent={
         <Input
-          borderRadius={"$none"}
+          borderRadius="$none"
           borderColor={config.tokens.colors.black}
-          borderBottomWidth={"$2"}
+          borderTopWidth="$0"
+          borderBottomWidth="$2"
           bgColor={config.tokens.colors.defaultBackgroundLight}>
           <InputField
             value={newInterest}
@@ -74,7 +74,7 @@ export default function InterestFollowingList(props: Props) {
             onChangeText={(t) => setNewInterest(t)}
             onSubmitEditing={handleAddInterest}
           />
-          <InputSlot paddingRight={"$1.5"}>
+          <InputSlot paddingRight="$1.5">
             <InputIcon>
               <Icon as={AddIcon} />
             </InputIcon>
@@ -92,9 +92,9 @@ export default function InterestFollowingList(props: Props) {
       ListFooterComponent={<Divider />}
       ListEmptyComponent={
         <Text
-          fontSize={"$lg"}
+          fontSize="$lg"
           alignSelf="center"
-          marginTop={10}>
+          marginVertical={10}>
           No Interests
         </Text>
       }
