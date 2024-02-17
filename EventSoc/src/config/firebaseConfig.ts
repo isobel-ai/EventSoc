@@ -54,6 +54,8 @@ export const userNotificationsCol = (userId: string) =>
   collection(usersCol, userId, "notifications");
 export const userEventsAttendingCol = (userId: string) =>
   collection(usersCol, userId, "eventsAttending");
+export const userSocietiesFollowingCol = (userId: string) =>
+  collection(usersCol, userId, "societiesFollowing");
 
 export const societiesCol = collection(db, "societies");
 export const societyExecCol = (socId: string) =>
