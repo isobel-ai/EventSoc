@@ -97,7 +97,7 @@ export async function retrieveReplyReplies(
   }
 
   // Retrievals must be done in batches of 30 due to Firestore limitation on "in" WhereFilterOp
-  let retrieveOperations: Promise<ReplyDoc[]>[] = [];
+  const retrieveOperations: Promise<ReplyDoc[]>[] = [];
   for (let i = 0; i < replyReplyIds.length; i += 30) {
     const replyIdBatch = replyReplyIds.slice(i, i + 29);
     retrieveOperations.push(

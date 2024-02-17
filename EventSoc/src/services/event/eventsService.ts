@@ -5,14 +5,12 @@ import {
   query,
   orderBy,
   getDoc,
-  addDoc,
   Transaction,
   deleteDoc,
-  where,
-  getCountFromServer
+  where
 } from "firebase/firestore";
 import { eventPicturesRef, eventsCol } from "../../config/firebaseConfig";
-import { EventData, EventDoc } from "../../../../Shared/models/Event";
+import { EventData } from "../../../../Shared/models/Event";
 import { downloadImage, updateImage, uploadImage } from "../storageService";
 import { isUndefined } from "lodash";
 import {

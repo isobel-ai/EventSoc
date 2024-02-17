@@ -1,14 +1,8 @@
 import {
   Transaction,
   doc,
-  getCountFromServer,
   getDoc,
-  getDocs,
-  query,
   runTransaction,
-  setDoc,
-  updateDoc,
-  where,
   writeBatch
 } from "firebase/firestore";
 import {

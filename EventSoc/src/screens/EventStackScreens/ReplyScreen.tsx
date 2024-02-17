@@ -4,7 +4,7 @@ import { EventStackParamList } from "../../navigation/CrossTabStackScreens/Event
 import { Divider, Heading } from "@gluestack-ui/themed";
 import React, { useEffect, useState } from "react";
 import { config } from "../../../config/gluestack-ui.config";
-import { NavigationProp, useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import { ScrollView } from "react-native";
 import { EventDoc } from "../../../../Shared/models/Event";
 import { isUndefined } from "lodash";
@@ -14,7 +14,7 @@ import EventPostAndSignUp from "../../components/event/EventPostAndSignUp";
 import OnDeleteEventContext, {
   OnDeleteEventContent
 } from "../../contexts/OnDeleteEventContext";
-import { CommentDoc, ReplyDoc } from "../../../../Shared/models/CommentOrReply";
+import { ReplyDoc } from "../../../../Shared/models/CommentOrReply";
 import CommentThread from "../../components/comment/CommentThread";
 import ReplySection from "../../components/comment/ReplySection";
 import { retrieveCommentReply } from "../../services/event/eventCommentRepliesService";

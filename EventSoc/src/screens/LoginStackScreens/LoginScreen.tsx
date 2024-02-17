@@ -30,7 +30,7 @@ export default function LoginScreen(props: Props) {
       <Heading
         size="md"
         style={{ textAlign: "center" }}>
-        Don't have an account?
+        Don&apos;t have an account?
       </Heading>
       <Button
         size="xl"

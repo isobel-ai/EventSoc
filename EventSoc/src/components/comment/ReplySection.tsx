@@ -11,7 +11,7 @@ import { FlatList } from "react-native";
 import CommentButton from "./CommentButton";
 import CommentInputModal from "./CommentInputModal";
 import ErrorAlert from "../error/ErrorAlert";
-import { isEqual, isUndefined } from "lodash";
+import { isUndefined } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { CommentDoc, ReplyDoc } from "../../../../Shared/models/CommentOrReply";
