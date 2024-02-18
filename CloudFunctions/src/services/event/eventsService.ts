@@ -2,7 +2,7 @@ import { firestore } from "firebase-admin";
 import { EventData } from "../../../../Shared/models/Event";
 import { UserOverview } from "../../../../Shared/models/User";
 import { eventsCol } from "../../firestoreConfig";
-import { updateQueryDocs } from "../queryService";
+import { updateQueryDocs } from "../queryDocsService";
 
 export function retrieveEventData(eventId: string) {
   return eventsCol

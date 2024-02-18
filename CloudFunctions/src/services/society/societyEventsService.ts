@@ -1,6 +1,6 @@
 import { societyEventsColGroup } from "../../firestoreConfig";
 import { EventOverview } from "../../../../Shared/models/Event";
-import { deleteQueryDocs, updateQueryDocs } from "../queryService";
+import { deleteQueryDocs, updateQueryDocs } from "../queryDocsService";
 
 export function updateSocietyEvents(
   eventId: string,

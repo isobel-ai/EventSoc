@@ -1,17 +1,34 @@
 import { societyNamesCol, userNamesCol } from "../firestoreConfig";
+import * as logger from "firebase-functions/logger";
 
 export function createUserName(userId: string, name: string) {
-  return userNamesCol.doc(userId).set({ id: userId, name: name });
+  const doc = userNamesCol.doc(userId);
+  doc
+    .set({ id: userId, name: name })
+    .then(() => logger.info(`${doc.path} created`))
+    .catch((err) => logger.error(err.message));
 }
 
-export async function createSocietyName(societyId: string, name: string) {
-  await societyNamesCol.doc(societyId).set({ id: societyId, name: name });
+export function createSocietyName(societyId: string, name: string) {
+  const doc = societyNamesCol.doc(societyId);
+  doc
+    .set({ id: societyId, name: name })
+    .then(() => logger.info(`${doc.path} created`))
+    .catch((err) => logger.error(err.message));
 }
 
 export function updateUserName(userId: string, newName: string) {
-  return userNamesCol.doc(userId).update({ name: newName });
+  const doc = userNamesCol.doc(userId);
+  doc
+    .update({ name: newName })
+    .then(() => logger.info(`${doc.path} updated`))
+    .catch((err) => logger.error(err.message));
 }
 
 export function updateSocietyName(societyId: string, newName: string) {
-  return societyNamesCol.doc(societyId).update({ name: newName });
+  const doc = societyNamesCol.doc(societyId);
+  doc
+    .update({ name: newName })
+    .then(() => logger.info(`${doc.path} updated`))
+    .catch((err) => logger.error(err.message));
 }

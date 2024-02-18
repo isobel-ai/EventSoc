@@ -1,7 +1,7 @@
 import { CommentData } from "../../../../Shared/models/CommentOrReply";
 import { UserOverview } from "../../../../Shared/models/User";
 import { eventCommentsCol, eventCommentsColGroup } from "../../firestoreConfig";
-import { updateQueryDocs } from "../queryService";
+import { updateQueryDocs } from "../queryDocsService";
 
 export function retrieveEventCommentAuthorNotifTokens(
   eventId: string,
