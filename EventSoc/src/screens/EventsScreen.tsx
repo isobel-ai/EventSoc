@@ -1,28 +1,31 @@
 import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import ScreenView from "../components/general/ScreenView";
-import EventFilter from "../components/event/EventFilter";
+import EventSortAndFilter from "../components/event/EventSortAndFilter";
 import EventFeed from "../components/event/EventFeed";
-import { EventDoc } from "../../../Shared/models/Event";
-import { retrieveUpcomingEvents } from "../services/event/eventsService";
+import { EventDoc, EventDocAndRecScore } from "../../../Shared/models/Event";
+import { retrieveUpcomingEventsAndRecScores } from "../services/event/eventsService";
 import { isUndefined } from "lodash";
 import ErrorAlert from "../components/error/ErrorAlert";
+import { useUserContext } from "../contexts/UserContext";
 
 export default function EventsScreen() {
-  const [upcomingEvents, setUpcomingEvents] = useState<EventDoc[]>();
+  const { userId } = useUserContext();
+
+  const [upcomingEvents, setUpcomingEvents] = useState<EventDocAndRecScore[]>();
   const [showRetrieveEventsErr, setShowRetrieveEventsErr] =
     useState<boolean>(false);
 
-  const [filteredEvents, setFilteredEvents] = useState<EventDoc[]>();
+  const [eventFeed, setEventFeed] = useState<EventDoc[]>();
 
   const isFocused = useIsFocused();
 
   useEffect(() => {
     isFocused &&
-      retrieveUpcomingEvents()
+      retrieveUpcomingEventsAndRecScores(userId)
         .then((events) => {
           setUpcomingEvents(events);
-          isUndefined(filteredEvents) && setFilteredEvents(events);
+          isUndefined(eventFeed) && setEventFeed(events);
           setShowRetrieveEventsErr(false);
         })
         .catch((err) => {
@@ -42,12 +45,12 @@ export default function EventsScreen() {
         </ScreenView>
       ) : (
         !isUndefined(upcomingEvents) &&
-        !isUndefined(filteredEvents) && (
-          <EventFilter
+        !isUndefined(eventFeed) && (
+          <EventSortAndFilter
             events={upcomingEvents}
-            setFullyFilteredEvents={setFilteredEvents}>
-            <EventFeed feed={filteredEvents} />
-          </EventFilter>
+            setEventFeed={setEventFeed}>
+            <EventFeed feed={eventFeed} />
+          </EventSortAndFilter>
         )
       )}
     </>

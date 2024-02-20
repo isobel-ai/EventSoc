@@ -2,17 +2,19 @@ import { DocumentData, DocumentSnapshot } from "firebase/firestore";
 import { isUndefined } from "lodash";
 import {
   EventData,
-  EventDoc,
+  EventDocAndRecScore,
   EventOverview
 } from "../../../Shared/models/Event";
 
-export function docToEventDoc(
-  doc: DocumentSnapshot<DocumentData, DocumentData>
-) {
+export function docToEventDocAndRecScore(
+  doc: DocumentSnapshot<DocumentData, DocumentData>,
+  score: number
+): EventDocAndRecScore {
   return {
     id: doc.id,
-    data: docToEventData(doc)
-  } as EventDoc;
+    data: docToEventData(doc),
+    score: score
+  };
 }
 
 export function docToEventData(

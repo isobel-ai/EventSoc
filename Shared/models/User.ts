@@ -21,7 +21,6 @@ export function defaultUserOverview(): UserOverview {
 export type UserInterests = { id: string; interests: string[] };
 
 export type UserRecScore = {
-  id: string;
   tagScore: number;
   organiserScore: number;
 };

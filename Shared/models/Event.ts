@@ -5,6 +5,8 @@ export type EventDoc = {
   data: EventData;
 };
 
+export type EventDocAndRecScore = EventDoc & { score: number };
+
 // If this changes, update eventDetailKeys accordingly
 export type EventData = {
   name: string;

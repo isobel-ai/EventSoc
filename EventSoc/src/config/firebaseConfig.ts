@@ -46,6 +46,8 @@ export const eventCommentsCol = (eventId: string) =>
   collection(eventsCol, eventId, "comments");
 export const eventCommentRepliesCol = (eventId: string, commentId: string) =>
   collection(eventCommentsCol(eventId), commentId, "replies");
+export const eventUserRecScoresCol = (eventId: string) =>
+  collection(eventsCol, eventId, "userRecScores");
 
 export const usersCol = collection(db, "users");
 export const userExecMemberSocieties = (userId: string) =>
