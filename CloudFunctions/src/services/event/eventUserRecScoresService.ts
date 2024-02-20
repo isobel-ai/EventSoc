@@ -7,9 +7,10 @@ export function createEventUserRecScore(
   tagScore: number,
   organiserScore: number
 ) {
-  eventUserRecScoresCol(eventId)
-    .doc(userId)
+  const doc = eventUserRecScoresCol(eventId).doc(userId);
+  doc
     .set({ tagScore: tagScore, organiserScore: organiserScore })
+    .then(() => logger.info(`Created ${doc.path}`))
     .catch((err) => logger.error(err.message));
 }
 
@@ -18,9 +19,10 @@ export function updateEventUserRecTagScore(
   userId: string,
   tagScore: number
 ) {
-  eventUserRecScoresCol(eventId)
-    .doc(userId)
+  const doc = eventUserRecScoresCol(eventId).doc(userId);
+  doc
     .update({ tagScore: tagScore })
+    .then(() => logger.info(`Updated ${doc.path} tag score`))
     .catch((err) => logger.error(err.message));
 }
 
@@ -29,8 +31,9 @@ export function updateEventUserRecOrganiserScore(
   userId: string,
   organiserScore: number
 ) {
-  eventUserRecScoresCol(eventId)
-    .doc(userId)
+  const doc = eventUserRecScoresCol(eventId).doc(userId);
+  doc
     .update({ organiserScore: organiserScore })
+    .then(() => logger.info(`Updated ${doc.path} organiser score`))
     .catch((err) => logger.error(err.message));
 }
