@@ -5,21 +5,23 @@ import {
   query,
   orderBy,
   getDoc,
-  addDoc,
   Transaction,
   deleteDoc,
-  where,
-  getCountFromServer
+  where
 } from "firebase/firestore";
 import { eventPicturesRef, eventsCol } from "../../config/firebaseConfig";
-import { EventData, EventDoc } from "../../../../Shared/models/Event";
+import {
+  EventData,
+  EventDocAndRecScore
+} from "../../../../Shared/models/Event";
 import { downloadImage, updateImage, uploadImage } from "../storageService";
 import { isUndefined } from "lodash";
 import {
   docToEventData,
-  docToEventDoc,
+  docToEventDocAndRecScore,
   docToEventOverviewNarrow
 } from "../../mappers/docToEvent";
+import { retrieveEventUserRecScore } from "./eventUserRecScoresService";
 
 export async function createEvent(
   event: EventData,
@@ -49,14 +51,25 @@ export function retrieveEventOverview(
     .then(docToEventOverviewNarrow);
 }
 
-export function retrieveUpcomingEvents() {
+export function retrieveUpcomingEventsAndRecScores(
+  userId: string
+): Promise<EventDocAndRecScore[]> {
   return getDocs(
     query(eventsCol, where("endDate", ">", new Date()), orderBy("endDate"))
-  ).then((eventsSnapshot) =>
-    eventsSnapshot.docs
-      .map(docToEventDoc)
-      .sort((a, b) => a.data.startDate.getTime() - b.data.startDate.getTime())
-  );
+  )
+    .then((eventsSnapshot) =>
+      eventsSnapshot.docs.map(async (eventDoc) => {
+        const score = await retrieveEventUserRecScore(
+          eventDoc.id,
+          userId
+        ).catch((err) => {
+          console.error(err.message);
+          return 0;
+        });
+        return docToEventDocAndRecScore(eventDoc, score);
+      })
+    )
+    .then((retrievalOperations) => Promise.all(retrievalOperations));
 }
 
 export function retrieveEventImage(eventId: string) {

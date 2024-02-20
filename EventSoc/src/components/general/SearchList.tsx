@@ -5,7 +5,6 @@ import {
   InputIcon,
   InputSlot,
   SearchIcon,
-  View,
   Text,
   ScrollView
 } from "@gluestack-ui/themed";

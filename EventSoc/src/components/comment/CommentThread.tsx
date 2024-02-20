@@ -1,4 +1,4 @@
-import { Divider, Heading } from "@gluestack-ui/themed";
+import { Divider } from "@gluestack-ui/themed";
 import { FlatList } from "react-native";
 import CommentButton from "./CommentButton";
 import ErrorAlert from "../error/ErrorAlert";

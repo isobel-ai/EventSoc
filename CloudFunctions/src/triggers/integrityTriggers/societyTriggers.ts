@@ -1,4 +1,4 @@
-import { logger } from "firebase-functions/v1";
+import * as logger from "firebase-functions/logger";
 import {
   onDocumentCreated,
   onDocumentDeleted,
@@ -30,10 +30,7 @@ export const societyCreateTrigger = onDocumentCreated(
     }
 
     const societyData = event.data.data() as SocietyData;
-
-    createSocietyName(event.params.societyId, societyData.name)
-      .then(() => logger.info(`societyNames/${event.params.societyId} created`))
-      .catch((err) => logger.error(err.message));
+    createSocietyName(event.params.societyId, societyData.name);
   }
 );
 
@@ -51,16 +48,13 @@ export const societyUpdateTrigger = onDocumentUpdated(
     const updates = getUpdates(beforeSociety, afterSociety);
 
     if (!isUndefined(updates.name)) {
-      updateSocietyName(event.params.societyId, updates.name)
-        .then(() =>
-          logger.info(`societyNames/${event.params.societyId} updated`)
-        )
-        .catch((err) => logger.error(err.message));
-
       const newName = updates.name;
-      [updateUsersExecMemberSocietyName, updateEventOrganisersName].forEach(
-        (updateFunc) => updateFunc(event.params.societyId, newName)
-      );
+      [
+        updateSocietyName,
+        updateUsersExecMemberSocietyName,
+        updateEventOrganisersName,
+        updateUsersExecMemberSocietyName
+      ].forEach((updateFunc) => updateFunc(event.params.societyId, newName));
     }
   }
 );
@@ -73,9 +67,7 @@ export const societyExecCreateTrigger = onDocumentCreated(
       return;
     }
 
-    updateSocietyExecMemberData(event.data.ref, event.params.userId)
-      .then(() => logger.info(`Updated ${event.document} data`))
-      .catch((err) => logger.error(err.message));
+    updateSocietyExecMemberData(event.data.ref, event.params.userId);
   }
 );
 

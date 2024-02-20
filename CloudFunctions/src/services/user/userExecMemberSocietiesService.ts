@@ -1,5 +1,5 @@
 import { userExecMemberSocietiesColGroup } from "../../firestoreConfig";
-import { updateQueryDocs } from "../queryService";
+import { updateQueryDocs } from "../queryDocsService";
 
 export function updateUsersExecMemberSocietyName(
   societyId: string,

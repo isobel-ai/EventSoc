@@ -1,7 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { config } from "../../config/gluestack-ui.config";
-import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-import SocietiesStackNavigator from "./SocietiesNavigator/SocietiesStackNavigator";
 import {
   EventStackParamList,
   EventStackScreens,

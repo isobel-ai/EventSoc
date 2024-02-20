@@ -1,6 +1,4 @@
-import { Divider } from "@gluestack-ui/themed";
 import { EventDoc } from "../../../../Shared/models/Event";
-import { config } from "../../../config/gluestack-ui.config";
 import EventPost from "./EventPost";
 import EventSignUp from "./EventSignUp";
 

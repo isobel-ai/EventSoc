@@ -39,14 +39,28 @@ export function retrieveDoesUsernameExist(name: string) {
   );
 }
 
-export function createUserNotificationToken(userId: string, token: string) {
-  return updateDoc(doc(usersCol, userId), {
+export async function createUserInterest(userId: string, interest: string) {
+  await updateDoc(doc(usersCol, userId), { interests: arrayUnion(interest) });
+}
+
+export async function deleteUserInterest(userId: string, interest: string) {
+  await updateDoc(doc(usersCol, userId), { interests: arrayRemove(interest) });
+}
+
+export async function createUserNotificationToken(
+  userId: string,
+  token: string
+) {
+  await updateDoc(doc(usersCol, userId), {
     notificationTokens: arrayUnion(token)
   });
 }
 
-export function deleteUserNotificationToken(userId: string, token: string) {
-  return updateDoc(doc(usersCol, userId), {
+export async function deleteUserNotificationToken(
+  userId: string,
+  token: string
+) {
+  await updateDoc(doc(usersCol, userId), {
     notificationTokens: arrayRemove(token)
   });
 }

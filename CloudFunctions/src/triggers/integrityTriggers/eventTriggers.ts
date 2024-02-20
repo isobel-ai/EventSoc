@@ -1,4 +1,4 @@
-import { logger } from "firebase-functions/v1";
+import * as logger from "firebase-functions/logger";
 import {
   onDocumentDeleted,
   onDocumentUpdated

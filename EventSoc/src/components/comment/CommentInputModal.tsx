@@ -18,7 +18,6 @@ import {
 import { useState } from "react";
 import { createComment } from "../../services/event/eventCommentsService";
 import ErrorAlert from "../error/ErrorAlert";
-import { isUndefined } from "lodash";
 import { useUserContext } from "../../contexts/UserContext";
 import { UserOverview } from "../../../../Shared/models/User";
 import {

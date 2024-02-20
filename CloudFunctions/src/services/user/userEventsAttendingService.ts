@@ -1,6 +1,6 @@
 import { EventOverview } from "../../../../Shared/models/Event";
 import { userEventsAttendingColGroup } from "../../firestoreConfig";
-import { deleteQueryDocs, updateQueryDocs } from "../queryService";
+import { deleteQueryDocs, updateQueryDocs } from "../queryDocsService";
 
 export function updateUserEventsAttending(
   eventId: string,

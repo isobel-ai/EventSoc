@@ -1,21 +1,10 @@
 import {
-  Button,
-  ButtonText,
-  ButtonIcon,
-  AddIcon,
   HStack,
-  Avatar,
-  AvatarFallbackText,
-  AvatarImage,
   Heading,
   Icon,
   ArrowLeftIcon,
-  EditIcon,
-  Text,
   View,
-  Divider,
-  Alert,
-  AlertText
+  Divider
 } from "@gluestack-ui/themed";
 import React, { useEffect, useState } from "react";
 import ScreenView from "../../components/general/ScreenView";
@@ -25,14 +14,13 @@ import { useUserContext } from "../../contexts/UserContext";
 import { config } from "../../../config/gluestack-ui.config";
 import SearchList from "../../components/general/SearchList";
 import EventListButton from "../../components/event/EventListButton";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { SocietyStackParamList } from "../../navigation/CrossTabStackScreens/SocietyStackScreens";
 import SocietyProfile from "../../components/society/SocietyProfile";
 import { isUndefined } from "lodash";
-import ErrorAlert from "../../components/error/ErrorAlert";
-import { EventDoc, EventOverview } from "../../../../Shared/models/Event";
+import { EventOverview } from "../../../../Shared/models/Event";
 import { retrieveIsUserSocietyExecMember } from "../../services/society/societyExecService";
 import { retrieveSocietyEvents } from "../../services/society/societyEventsService";
+import SocietyScreenBottomButton from "../../components/society/SocietyScreenBottomButton";
 
 type Props = StackScreenProps<SocietyStackParamList, "Society">;
 
@@ -85,7 +73,7 @@ export default function SocietyScreen(props: Props) {
       ) : (
         <>
           <View
-            height={isExec ? "100%" : "103.5%"}
+            height="100%"
             paddingBottom={10}>
             <SearchList
               ListHeaderComponent={() => (
@@ -124,24 +112,10 @@ export default function SocietyScreen(props: Props) {
               }
             />
           </View>
-          {isExec && (
-            <Button
-              size="xl"
-              placement="absoluteBottom"
-              onPress={() =>
-                !isUndefined(props.route.params.societyId) &&
-                props.navigation.navigate("Create Event", {
-                  organiserId: props.route.params.societyId
-                })
-              }>
-              <ButtonIcon
-                as={AddIcon}
-                size="xl"
-                style={{ marginRight: 5 }}
-              />
-              <ButtonText>Create Event</ButtonText>
-            </Button>
-          )}
+          <SocietyScreenBottomButton
+            societyId={props.route.params.societyId}
+            isExec={isExec}
+          />
         </>
       )}
     </ScreenView>

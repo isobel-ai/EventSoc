@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import UserContext from "./src/contexts/UserContext";
 import { LogBox } from "react-native";
 import NotificationProvider from "./src/providers/NotificationProvider";
+import { MenuProvider } from "react-native-popup-menu";
 
 export default function App() {
   const { loggedIn, userId } = useAuth();
@@ -18,17 +19,19 @@ export default function App() {
   return (
     <GluestackUIProvider config={config}>
       <SafeAreaProvider>
-        <NavigationContainer>
-          <NotificationProvider {...{ userId, loggedIn }}>
-            {loggedIn ? (
-              <UserContext.Provider value={{ userId }}>
-                <MainTabNavigator />
-              </UserContext.Provider>
-            ) : (
-              <LoginStackNavigator />
-            )}
-          </NotificationProvider>
-        </NavigationContainer>
+        <MenuProvider>
+          <NavigationContainer>
+            <NotificationProvider {...{ userId, loggedIn }}>
+              {loggedIn ? (
+                <UserContext.Provider value={{ userId }}>
+                  <MainTabNavigator />
+                </UserContext.Provider>
+              ) : (
+                <LoginStackNavigator />
+              )}
+            </NotificationProvider>
+          </NavigationContainer>
+        </MenuProvider>
       </SafeAreaProvider>
     </GluestackUIProvider>
   );

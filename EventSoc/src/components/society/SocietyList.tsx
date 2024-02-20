@@ -4,7 +4,6 @@ import { DimensionValue } from "react-native";
 import SideMenuHeading from "../general/SideMenuHeading";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import SocietyListButton from "./SocietyListButton";
-import { SocietiesStackParamList } from "../../navigation/SocietiesNavigator/SocietiesStackNavigator";
 import { Name } from "../../../../Shared/models/Name";
 import { MainTabParamList } from "../../navigation/MainTabNavigator";
 
@@ -36,7 +35,7 @@ export default function SocietyList(props: Props) {
           <SocietyListButton
             society={item}
             onPress={() => handleSelectSocietyPage(item.id)}
-            triggerImageReload={props.isSideMenuOpen}
+            imageReloadTrigger={props.isSideMenuOpen}
           />
         )}
         searchKeys={["name"]}

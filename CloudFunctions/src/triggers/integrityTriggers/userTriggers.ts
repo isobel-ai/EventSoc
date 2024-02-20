@@ -26,10 +26,7 @@ export const userCreateTrigger = onDocumentCreated(
     }
 
     const userData = event.data.data() as UserData;
-
-    createUserName(event.params.userId, userData.name)
-      .then(() => logger.info(`userNames/${event.params.userId} created`))
-      .catch((err) => logger.error(err.message));
+    createUserName(event.params.userId, userData.name);
   }
 );
 
@@ -48,9 +45,7 @@ export const userUpdateTrigger = onDocumentUpdated(
     const overviewUpdates = userToOverviewUpdates(updates);
 
     !isUndefined(updates.name) &&
-      updateUserName(event.params.userId, updates.name)
-        .then(() => logger.info(`userNames/${event.params.userId} updated`))
-        .catch((err) => logger.error(err.message));
+      updateUserName(event.params.userId, updates.name);
 
     if (!isEmpty(overviewUpdates)) {
       [updateEventAttendees, updateSocietyExecs].forEach((updateFunc) =>

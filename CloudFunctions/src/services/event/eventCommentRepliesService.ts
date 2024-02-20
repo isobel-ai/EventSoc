@@ -1,11 +1,11 @@
-import { logger } from "firebase-functions/v1";
+import * as logger from "firebase-functions/logger";
 import {
   eventCommentRepliesCol,
   eventCommentRepliesColGroup
 } from "../../firestoreConfig";
 import { ReplyData } from "../../../../Shared/models/CommentOrReply";
 import { UserOverview } from "../../../../Shared/models/User";
-import { updateQueryDocs } from "../queryService";
+import { updateQueryDocs } from "../queryDocsService";
 
 export function retrieveReplyParentNotifTokens(
   eventId: string,

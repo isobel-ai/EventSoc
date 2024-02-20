@@ -1,14 +1,34 @@
 import { firestore } from "firebase-admin";
-import { EventData } from "../../../../Shared/models/Event";
+import { EventData, EventDoc } from "../../../../Shared/models/Event";
 import { UserOverview } from "../../../../Shared/models/User";
 import { eventsCol } from "../../firestoreConfig";
-import { updateQueryDocs } from "../queryService";
+import { updateQueryDocs } from "../queryDocsService";
 
 export function retrieveEventData(eventId: string) {
   return eventsCol
     .doc(eventId)
     .get()
     .then((doc) => <EventData>doc.data());
+}
+
+export function retrieveUpcomingEvents(): Promise<EventDoc[]> {
+  return eventsCol
+    .where("endDate", ">", new Date())
+    .get()
+    .then((eventsSnapshot) =>
+      eventsSnapshot.docs.map((doc) => {
+        return { id: doc.id, data: <EventData>doc.data() };
+      })
+    );
+}
+
+export function retrieveUpcomingEventIdsByOrganiser(organiserId: string) {
+  return eventsCol
+    .select()
+    .where("endDate", ">", new Date())
+    .where("organiser.id", "==", organiserId)
+    .get()
+    .then((eventsSnapshot) => eventsSnapshot.docs.map((doc) => doc.id));
 }
 
 export function updateEventOrganisersName(societyId: string, newName: string) {

@@ -1,6 +1,5 @@
 import {
   Button,
-  Alert,
   Icon,
   AlertDialog,
   AlertDialogBackdrop,
@@ -14,7 +13,6 @@ import {
   AlertDialogFooter,
   VStack,
   ButtonText,
-  AlertText,
   Text
 } from "@gluestack-ui/themed";
 import { useState } from "react";

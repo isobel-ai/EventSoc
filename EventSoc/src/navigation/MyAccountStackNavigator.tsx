@@ -1,30 +1,24 @@
-import {
-  createStackNavigator
-} from "@react-navigation/stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import { config } from "../../config/gluestack-ui.config";
-
-
-import {
-  SocietiesStackParamList
-} from "./SocietiesNavigator/SocietiesStackNavigator";
-import MyEventsScreen from "../screens/MyEventsScreen";
 import {
   EventStackParamList,
   EventStackScreens,
   eventStackScreenOptions
 } from "./CrossTabStackScreens/EventStackScreens";
+import MyAccountScreen from "../screens/MyAccountScreen";
 import {
-  societyStackScreenOptions,
-  SocietyStackScreens
+  SocietyStackParamList,
+  SocietyStackScreens,
+  societyStackScreenOptions
 } from "./CrossTabStackScreens/SocietyStackScreens";
 
-export type MyEventsStackParamList = {
+export type MyAccountStackParamList = {
   Home: undefined;
 } & EventStackParamList &
-  SocietiesStackParamList;
+  SocietyStackParamList;
 
-export default function MyEventsStackNavigator() {
-  const Stack = createStackNavigator<MyEventsStackParamList>();
+export default function MyAccountStackNavigator() {
+  const Stack = createStackNavigator<MyAccountStackParamList>();
 
   return (
     <Stack.Navigator
@@ -36,7 +30,7 @@ export default function MyEventsStackNavigator() {
       }}>
       <Stack.Screen
         name="Home"
-        component={MyEventsScreen}
+        component={MyAccountScreen}
         options={{
           headerShown: false
         }}

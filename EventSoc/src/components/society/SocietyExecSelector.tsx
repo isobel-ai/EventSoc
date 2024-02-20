@@ -90,7 +90,8 @@ export default function SocietyExecSelector(props: Props) {
         <ModalBackdrop />
         <ModalContent
           height={showRetrieveUsersErr ? "35%" : "45%"}
-          top={-85}>
+          top={-85}
+          bgColor={config.tokens.colors.defaultBackgroundLight}>
           <ModalHeader>
             <Heading>Select Exec</Heading>
             <ModalCloseButton>

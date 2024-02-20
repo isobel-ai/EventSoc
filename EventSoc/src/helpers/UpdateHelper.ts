@@ -1,4 +1,4 @@
-import { isEmpty, isEqual, isUndefined } from "lodash";
+import { isEmpty, isEqual } from "lodash";
 
 export function getUpdates<Obj extends object>(before: Obj, after: Obj) {
   const updates: Partial<Obj> = {};
@@ -20,7 +20,7 @@ export function getArrayUpdates<Obj extends { id: string }>(
   before: Obj[],
   after: Obj[]
 ) {
-  let arrayUpdates = <ArrayUpdates<Obj>>{
+  const arrayUpdates = <ArrayUpdates<Obj>>{
     createObjs: [],
     updateObjs: [],
     deleteObjs: []

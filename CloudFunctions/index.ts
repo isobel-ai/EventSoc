@@ -9,3 +9,6 @@ exports.societyIntegrity = societyIntegrityTriggers;
 
 import eventIntegrityTriggers = require("./src/triggers/integrityTriggers/eventTriggers");
 exports.eventIntegrity = eventIntegrityTriggers;
+
+import recScoreUpdateTriggers = require("./src/triggers/recScoreUpdateTriggers");
+exports.recScoreUpdates = recScoreUpdateTriggers;

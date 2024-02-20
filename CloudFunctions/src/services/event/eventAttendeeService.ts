@@ -3,7 +3,7 @@ import {
   eventAttendeesColGroup
 } from "../../firestoreConfig";
 import { UserOverview } from "../../../../Shared/models/User";
-import { updateQueryDocs } from "../queryService";
+import { updateQueryDocs } from "../queryDocsService";
 
 export function retrieveEventAttendeeNotifTokens(eventId: string) {
   return eventAttendeesCol(eventId)
