@@ -17,3 +17,11 @@ export type UserOverview = {
 export function defaultUserOverview(): UserOverview {
   return { id: "", name: "", notificationTokens: <string[]>[] };
 }
+
+export type UserInterests = { id: string; interests: string[] };
+
+export type UserRecScore = {
+  id: string;
+  tagScore: number;
+  organiserScore: number;
+};
