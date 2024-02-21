@@ -89,8 +89,7 @@ export default function SocietiesSideMenu(props: Props) {
         flex={1}
         borderRightColor={config.tokens.colors.black}
         borderRightWidth="$2"
-        height="100%"
-        gap={15}>
+        height="100%">
         {showRetrieveSocsErr.isExecSocsErr && showRetrieveSocsErr.isSocsErr ? (
           <ErrorAlert message="Couldn't retrieve societies. Try again later." />
         ) : (
@@ -100,7 +99,7 @@ export default function SocietiesSideMenu(props: Props) {
               societies={execSocieties}
               isSideMenuOpen={isVisible}
               setIsSideMenuOpen={setIsVisible}
-              height="30%"
+              height="33%"
             />
             <SocietyList
               title="All Societies"
