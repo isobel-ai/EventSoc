@@ -20,21 +20,30 @@ import {
   MenuOptions,
   MenuTrigger
 } from "react-native-popup-menu";
+import { useUserContext } from "../../contexts/UserContext";
 
 type Props = {
   eventId: string;
+  organiserId: string;
 };
 
 export default function EventMenu(props: Props) {
   const { navigate } = useNavigation<NavigationProp<EventStackParamList>>();
 
+  const { userId } = useUserContext();
+
   const { onDeleteEvent } = useOnDeleteEventContext();
 
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
 
-  const handleDeleteEvent = () => {
-    return deleteEvent(props.eventId).then(onDeleteEvent);
-  };
+  const handleDeleteEvent = () =>
+    deleteEvent(props.eventId, props.organiserId, userId)
+      // Delay onDeleteEvent to ensure firebase operations have concluded
+      .then(() => setTimeout(onDeleteEvent, 200))
+      .catch((err) => {
+        console.error(err.message);
+        throw Error("Unable to delete event. Try again later.");
+      });
 
   return (
     <>

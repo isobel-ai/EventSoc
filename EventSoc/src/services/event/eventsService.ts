@@ -7,9 +7,10 @@ import {
   getDoc,
   Transaction,
   deleteDoc,
-  where
+  where,
+  writeBatch
 } from "firebase/firestore";
-import { eventPicturesRef, eventsCol } from "../../config/firebaseConfig";
+import { db, eventPicturesRef, eventsCol } from "../../config/firebaseConfig";
 import {
   EventData,
   EventDocAndRecScore
@@ -22,6 +23,8 @@ import {
   docToEventOverviewNarrow
 } from "../../mappers/docToEvent";
 import { retrieveEventUserRecScore } from "./eventUserRecScoresService";
+import { deleteSocietyEvent } from "../society/societyEventsService";
+import { deleteEventAttendee } from "./eventAttendeesService";
 
 export async function createEvent(
   event: EventData,
@@ -87,6 +90,17 @@ export async function updateEvent(
   await updateDoc(doc(eventsCol, eventId), updates);
 }
 
-export async function deleteEvent(eventId: string) {
-  await deleteDoc(doc(eventsCol, eventId));
+/**
+ * @param attendeeId the user's id. If they are not an attendee, nothing will be deleted from userEventsAttending
+ */
+export async function deleteEvent(
+  eventId: string,
+  organiserId: string,
+  attendeeId: string
+) {
+  const batch = writeBatch(db);
+  batch.delete(doc(eventsCol, eventId));
+  deleteSocietyEvent(organiserId, eventId, batch);
+  deleteEventAttendee(eventId, attendeeId, batch);
+  await batch.commit();
 }

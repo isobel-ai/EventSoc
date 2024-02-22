@@ -67,7 +67,10 @@ export default function EventPost(props: Props) {
       paddingBottom={10}>
       <SocietyPressable socOverview={props.event.data.organiser} />
       {isExec && props.event.data.startDate > new Date() && (
-        <EventMenu eventId={props.event.id} />
+        <EventMenu
+          eventId={props.event.id}
+          organiserId={props.event.data.organiser.id}
+        />
       )}
       <Pressable onPress={props.onPress}>
         <VStack

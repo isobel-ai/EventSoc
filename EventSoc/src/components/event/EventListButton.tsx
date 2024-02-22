@@ -73,7 +73,10 @@ export default function EventListButton(props: Props) {
         </ButtonText>
       </HStack>
       {props.isExec && props.event.startDate > new Date() && (
-        <EventMenu eventId={props.event.id} />
+        <EventMenu
+          eventId={props.event.id}
+          organiserId={props.event.organiserId}
+        />
       )}
     </Button>
   );
