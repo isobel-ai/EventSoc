@@ -12,10 +12,7 @@ import {
   deleteUserEventsAttending,
   updateUserEventsAttending
 } from "../../services/user/userEventsAttendingService";
-import {
-  deleteSocietyEvents,
-  updateSocietyEvents
-} from "../../services/society/societyEventsService";
+import { updateSocietyEvents } from "../../services/society/societyEventsService";
 
 export const eventUpdateTrigger = onDocumentUpdated(
   { document: "events/{eventId}", region: region },
@@ -47,8 +44,6 @@ export const eventDeleteTrigger = onDocumentDeleted(
       return;
     }
 
-    [deleteUserEventsAttending, deleteSocietyEvents].forEach((updateFunc) =>
-      updateFunc(event.params.eventId)
-    );
+    deleteUserEventsAttending(event.params.eventId);
   }
 );
