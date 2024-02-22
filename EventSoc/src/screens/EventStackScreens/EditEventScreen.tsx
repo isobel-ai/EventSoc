@@ -19,10 +19,13 @@ import { retrieveEventAttendeeCount } from "../../services/event/eventAttendeesS
 import { cloneDeep, isUndefined } from "lodash";
 import { EventStackParamList } from "../../navigation/CrossTabStackScreens/EventStackScreens";
 import { useIsFocused } from "@react-navigation/native";
+import { useUserContext } from "../../contexts/UserContext";
 
 type Props = StackScreenProps<EventStackParamList, "Edit Event">;
 
 export default function EditEventScreen(props: Props) {
+  const { userId } = useUserContext();
+
   const [beforeEvent, setBeforeEvent] = useState<EventData>();
   const [afterEvent, setAfterEvent] = useState<EventData>();
 
@@ -107,6 +110,8 @@ export default function EditEventScreen(props: Props) {
     updateEvent(
       props.route.params.eventId,
       eventUpdates,
+      afterEvent.organiser.id,
+      userId,
       beforeImage !== afterImage ? afterImage : undefined
     )
       .then(props.navigation.goBack)

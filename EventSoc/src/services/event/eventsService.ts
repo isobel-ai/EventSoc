@@ -6,7 +6,6 @@ import {
   orderBy,
   getDoc,
   Transaction,
-  deleteDoc,
   where,
   writeBatch
 } from "firebase/firestore";
@@ -23,8 +22,12 @@ import {
   docToEventOverviewNarrow
 } from "../../mappers/docToEvent";
 import { retrieveEventUserRecScore } from "./eventUserRecScoresService";
-import { deleteSocietyEvent } from "../society/societyEventsService";
+import {
+  deleteSocietyEvent,
+  updateSocietyEventName
+} from "../society/societyEventsService";
 import { deleteEventAttendee } from "./eventAttendeesService";
+import { updateUserEventAttendingName } from "../user/userEventsAttendingService";
 
 export async function createEvent(
   event: EventData,
@@ -79,19 +82,35 @@ export function retrieveEventImage(eventId: string) {
   return downloadImage(eventPicturesRef, eventId);
 }
 
+/**
+ * @param attendeeId the user's id. If they are not an attendee,
+ * nothing in eventAttendees (or userEventsAttending) will be updated
+ */
 export async function updateEvent(
   eventId: string,
   updates: Partial<EventData>,
+  organiserId: string,
+  attendeeId: string,
   newImage?: string
 ) {
   if (!isUndefined(newImage)) {
     await updateImage(eventPicturesRef, eventId, newImage);
   }
-  await updateDoc(doc(eventsCol, eventId), updates);
+
+  const batch = writeBatch(db);
+  batch.update(doc(eventsCol, eventId), updates);
+
+  if (!isUndefined(updates.name)) {
+    updateSocietyEventName(organiserId, eventId, updates.name, batch);
+    updateUserEventAttendingName(attendeeId, eventId, updates.name, batch);
+  }
+
+  await batch.commit();
 }
 
 /**
- * @param attendeeId the user's id. If they are not an attendee, nothing will be deleted from userEventsAttending
+ * @param attendeeId the user's id. If they are not an attendee,
+ * nothing will be deleted from eventAttendees (or userEventsAttending)
  */
 export async function deleteEvent(
   eventId: string,

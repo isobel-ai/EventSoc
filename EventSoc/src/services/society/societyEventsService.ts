@@ -39,6 +39,15 @@ export function retrieveSocietyEvents(societyId: string) {
   ).then((eventsSnapshot) => eventsSnapshot.docs.map(docToEventOverviewNarrow));
 }
 
+export function updateSocietyEventName(
+  societyId: string,
+  eventId: string,
+  newName: string,
+  batch: WriteBatch
+) {
+  batch.update(doc(societyEventsCol(societyId), eventId), { name: newName });
+}
+
 export function deleteSocietyEvent(
   societyId: string,
   eventId: string,
