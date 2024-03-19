@@ -4,7 +4,8 @@ import {
   signInWithEmailAndPassword
 } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
-import { createUser, retrieveDoesUsernameExist } from "./user/usersService";
+import { createUser } from "./user/usersService";
+import { retrieveDoesUsernameExist } from "./namesService";
 
 /**
  * @returns whether the sign in attempt is successful

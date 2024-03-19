@@ -16,6 +16,12 @@ export function retrieveUserNames() {
   return retrieveNames(userNamesCol);
 }
 
+export function retrieveDoesUsernameExist(name: string) {
+  return getCountFromServer(
+    query(userNamesCol, where("name", "==", name))
+  ).then((result) => Boolean(result.data().count));
+}
+
 export function retrieveSocietyName(socId: string, transaction: Transaction) {
   return transaction.get(doc(societyNamesCol, socId)).then(docToModel<Name>);
 }
