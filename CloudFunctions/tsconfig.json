@@ -9,5 +9,5 @@
     "target": "es2017",
   },
   "compileOnSave": true,
-  "include": ["src", "index.ts",".eslintrc.js"],
+  "include": ["src", "index.ts",".eslintrc.js","tests"],
 }
