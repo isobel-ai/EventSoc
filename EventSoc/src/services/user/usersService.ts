@@ -1,8 +1,5 @@
 import {
   doc,
-  getCountFromServer,
-  query,
-  where,
   setDoc,
   getDoc,
   updateDoc,
@@ -31,12 +28,6 @@ export function retrieveUserOverview(
   return isUndefined(transaction)
     ? getDoc(doc(usersCol, userId)).then(docToUserOverviewNarrow)
     : transaction.get(doc(usersCol, userId)).then(docToUserOverviewNarrow);
-}
-
-export function retrieveDoesUsernameExist(name: string) {
-  return getCountFromServer(query(usersCol, where("name", "==", name))).then(
-    (result) => Boolean(result.data().count)
-  );
 }
 
 export async function createUserInterest(userId: string, interest: string) {

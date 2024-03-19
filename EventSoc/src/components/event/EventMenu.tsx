@@ -1,13 +1,11 @@
 import {
-  Button,
-  Menu,
-  ButtonIcon,
   ThreeDotsIcon,
-  MenuItem,
   Icon,
   DownloadIcon,
-  MenuItemLabel,
-  TrashIcon
+  TrashIcon,
+  Divider,
+  HStack,
+  Text
 } from "@gluestack-ui/themed";
 import { useState } from "react";
 import ConfirmDialog from "../general/ConfirmDialog";
@@ -16,71 +14,84 @@ import { EventStackParamList } from "../../navigation/CrossTabStackScreens/Event
 import { useOnDeleteEventContext } from "../../contexts/OnDeleteEventContext";
 import { deleteEvent } from "../../services/event/eventsService";
 import { config } from "../../../config/gluestack-ui.config";
+import {
+  Menu,
+  MenuOption,
+  MenuOptions,
+  MenuTrigger
+} from "react-native-popup-menu";
+import { useUserContext } from "../../contexts/UserContext";
 
 type Props = {
   eventId: string;
+  organiserId: string;
 };
 
 export default function EventMenu(props: Props) {
   const { navigate } = useNavigation<NavigationProp<EventStackParamList>>();
 
+  const { userId } = useUserContext();
+
   const { onDeleteEvent } = useOnDeleteEventContext();
 
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
 
-  const handleDeleteEvent = () => {
-    return deleteEvent(props.eventId).then(onDeleteEvent);
-  };
-
-  const menuSelectionHandler = (keys: Iterable<React.Key> | string) => {
-    const keySet = new Set<React.Key>(keys);
-    if (keySet.has("edit")) {
-      navigate("Edit Event", { eventId: props.eventId });
-    } else if (keySet.has("delete")) {
-      setShowDeleteDialog(true);
-    }
-  };
+  const handleDeleteEvent = () =>
+    deleteEvent(props.eventId, props.organiserId, userId)
+      // Delay onDeleteEvent to ensure firebase operations have concluded
+      .then(() => setTimeout(onDeleteEvent, 200))
+      .catch((err) => {
+        console.error(err.message);
+        throw Error("Unable to delete event. Try again later.");
+      });
 
   return (
     <>
-      <Menu
-        placement="bottom right"
-        selectionMode="single"
-        onSelectionChange={menuSelectionHandler}
-        trigger={({ ...triggerProps }) => {
-          return (
-            <Button
-              style={{ position: "absolute", right: 10, top: -5 }}
-              {...triggerProps}
-              variant="link">
-              <ButtonIcon
-                as={ThreeDotsIcon}
+      <Menu style={{ position: "absolute", right: 5, top: 0 }}>
+        <MenuTrigger>
+          <Icon
+            as={ThreeDotsIcon}
+            size="xl"
+            color={config.tokens.colors.black}
+          />
+        </MenuTrigger>
+        <MenuOptions
+          customStyles={{
+            optionsContainer: {
+              marginTop: 20,
+              width: "50%",
+              borderWidth: 1,
+              borderRadius: 0,
+              backgroundColor: config.tokens.colors.backgroundLight100
+            }
+          }}>
+          <MenuOption
+            onSelect={() => navigate("Edit Event", { eventId: props.eventId })}>
+            <HStack
+              alignItems="center"
+              gap={5}>
+              <Icon
+                as={DownloadIcon}
                 size="xl"
-                color={config.tokens.colors.black}
+                mr="$5"
               />
-            </Button>
-          );
-        }}>
-        <MenuItem
-          key="edit"
-          textValue="Edit Event">
-          <Icon
-            as={DownloadIcon}
-            size="xl"
-            mr="$5"
-          />
-          <MenuItemLabel size="sm">Edit Event</MenuItemLabel>
-        </MenuItem>
-        <MenuItem
-          key="delete"
-          textValue="Delete Event">
-          <Icon
-            as={TrashIcon}
-            size="xl"
-            mr="$5"
-          />
-          <MenuItemLabel size="sm">Delete Event</MenuItemLabel>
-        </MenuItem>
+              <Text size="sm">Edit Event</Text>
+            </HStack>
+          </MenuOption>
+          <Divider bgColor={config.tokens.colors.black} />
+          <MenuOption onSelect={() => setShowDeleteDialog(true)}>
+            <HStack
+              alignItems="center"
+              gap={5}>
+              <Icon
+                as={TrashIcon}
+                size="xl"
+                mr="$5"
+              />
+              <Text size="sm">Delete Event</Text>
+            </HStack>
+          </MenuOption>
+        </MenuOptions>
       </Menu>
       <ConfirmDialog
         confirmFunc={handleDeleteEvent}

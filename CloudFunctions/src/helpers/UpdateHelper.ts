@@ -1,7 +1,10 @@
 import { isEqual } from "lodash";
 import { EventData, eventDetailKeys } from "../../../Shared/models/Event";
 
-export function hasEventBeenUpdated(before: EventData, after: EventData) {
+export function haveEventDetailsBeenUpdated(
+  before: EventData,
+  after: EventData
+) {
   return eventDetailKeys.some(
     (key) =>
       !isEqual(before[key as keyof EventData], after[key as keyof EventData])

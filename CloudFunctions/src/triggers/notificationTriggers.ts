@@ -8,7 +8,7 @@ import { EventData } from "../../../Shared/models/Event";
 import { isUndefined } from "lodash";
 import { sendNotifications } from "../services/expoNotificationService";
 import { region } from "../constants";
-import { hasEventBeenUpdated } from "../helpers/UpdateHelper";
+import { haveEventDetailsBeenUpdated } from "../helpers/UpdateHelper";
 import { retrieveEventAttendeeNotifTokens } from "../services/event/eventAttendeeService";
 import { retrieveEventData } from "../services/event/eventsService";
 import { CommentData, ReplyData } from "../../../Shared/models/CommentOrReply";
@@ -26,7 +26,7 @@ export const eventUpdateNotification = onDocumentUpdated(
     const beforeEvent = <EventData>event.data.before.data();
     const afterEvent = <EventData>event.data.after.data();
 
-    if (!hasEventBeenUpdated(beforeEvent, afterEvent)) {
+    if (!haveEventDetailsBeenUpdated(beforeEvent, afterEvent)) {
       return;
     }
 

@@ -10,7 +10,6 @@ import {
   Text
 } from "@gluestack-ui/themed";
 import { Keyboard } from "react-native";
-import { useState } from "react";
 import {
   Menu,
   MenuOption,

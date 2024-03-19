@@ -8,6 +8,9 @@ import { retrieveUpcomingEventsAndRecScores } from "../services/event/eventsServ
 import { isUndefined } from "lodash";
 import ErrorAlert from "../components/error/ErrorAlert";
 import { useUserContext } from "../contexts/UserContext";
+import OnDeleteEventContext, {
+  OnDeleteEventContent
+} from "../contexts/OnDeleteEventContext";
 
 export default function EventsScreen() {
   const { userId } = useUserContext();
@@ -20,22 +23,28 @@ export default function EventsScreen() {
 
   const isFocused = useIsFocused();
 
+  const updateEvents = () =>
+    retrieveUpcomingEventsAndRecScores(userId)
+      .then((events) => {
+        setUpcomingEvents(events);
+        isUndefined(eventFeed) && setEventFeed(events);
+        setShowRetrieveEventsErr(false);
+      })
+      .catch((err) => {
+        console.error(err.message);
+        isUndefined(upcomingEvents) && setShowRetrieveEventsErr(true);
+      });
+
   useEffect(() => {
-    isFocused &&
-      retrieveUpcomingEventsAndRecScores(userId)
-        .then((events) => {
-          setUpcomingEvents(events);
-          isUndefined(eventFeed) && setEventFeed(events);
-          setShowRetrieveEventsErr(false);
-        })
-        .catch((err) => {
-          console.error(err.message);
-          isUndefined(upcomingEvents) && setShowRetrieveEventsErr(true);
-        });
+    isFocused && updateEvents();
   }, [isFocused]);
 
+  const onDeleteEventContent: OnDeleteEventContent = {
+    onDeleteEvent: updateEvents
+  };
+
   return (
-    <>
+    <OnDeleteEventContext.Provider value={onDeleteEventContent}>
       {showRetrieveEventsErr ? (
         <ScreenView>
           <ErrorAlert
@@ -53,6 +62,6 @@ export default function EventsScreen() {
           </EventSortAndFilter>
         )
       )}
-    </>
+    </OnDeleteEventContext.Provider>
   );
 }

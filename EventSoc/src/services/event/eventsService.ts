@@ -6,10 +6,10 @@ import {
   orderBy,
   getDoc,
   Transaction,
-  deleteDoc,
-  where
+  where,
+  writeBatch
 } from "firebase/firestore";
-import { eventPicturesRef, eventsCol } from "../../config/firebaseConfig";
+import { db, eventPicturesRef, eventsCol } from "../../config/firebaseConfig";
 import {
   EventData,
   EventDocAndRecScore
@@ -22,6 +22,12 @@ import {
   docToEventOverviewNarrow
 } from "../../mappers/docToEvent";
 import { retrieveEventUserRecScore } from "./eventUserRecScoresService";
+import {
+  deleteSocietyEvent,
+  updateSocietyEventName
+} from "../society/societyEventsService";
+import { deleteEventAttendee } from "./eventAttendeesService";
+import { updateUserEventAttendingName } from "../user/userEventsAttendingService";
 
 export async function createEvent(
   event: EventData,
@@ -76,17 +82,44 @@ export function retrieveEventImage(eventId: string) {
   return downloadImage(eventPicturesRef, eventId);
 }
 
+/**
+ * @param attendeeId the user's id. If they are not an attendee,
+ * nothing in eventAttendees (or userEventsAttending) will be updated
+ */
 export async function updateEvent(
   eventId: string,
   updates: Partial<EventData>,
+  organiserId: string,
+  attendeeId: string,
   newImage?: string
 ) {
   if (!isUndefined(newImage)) {
     await updateImage(eventPicturesRef, eventId, newImage);
   }
-  await updateDoc(doc(eventsCol, eventId), updates);
+
+  const batch = writeBatch(db);
+  batch.update(doc(eventsCol, eventId), updates);
+
+  if (!isUndefined(updates.name)) {
+    updateSocietyEventName(organiserId, eventId, updates.name, batch);
+    updateUserEventAttendingName(attendeeId, eventId, updates.name, batch);
+  }
+
+  await batch.commit();
 }
 
-export async function deleteEvent(eventId: string) {
-  await deleteDoc(doc(eventsCol, eventId));
+/**
+ * @param attendeeId the user's id. If they are not an attendee,
+ * nothing will be deleted from eventAttendees (or userEventsAttending)
+ */
+export async function deleteEvent(
+  eventId: string,
+  organiserId: string,
+  attendeeId: string
+) {
+  const batch = writeBatch(db);
+  batch.delete(doc(eventsCol, eventId));
+  deleteSocietyEvent(organiserId, eventId, batch);
+  deleteEventAttendee(eventId, attendeeId, batch);
+  await batch.commit();
 }

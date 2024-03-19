@@ -1,4 +1,5 @@
 import {
+  WriteBatch,
   doc,
   documentId,
   getCountFromServer,
@@ -15,6 +16,7 @@ import {
 } from "../../config/firebaseConfig";
 import { retrieveUserOverview } from "../user/usersService";
 import { retrieveEventOverview } from "./eventsService";
+import { isUndefined } from "lodash";
 
 export async function createEventAttendee(eventId: string, userId: string) {
   await runTransaction(db, async (transaction) => {
@@ -43,10 +45,14 @@ export function retrieveIsUserEventAttendee(userId: string, eventId: string) {
   ).then((result) => Boolean(result.data().count));
 }
 
-export async function deleteEventAttendee(eventId: string, userId: string) {
-  const batch = writeBatch(db);
+export async function deleteEventAttendee(
+  eventId: string,
+  userId: string,
+  paramBatch?: WriteBatch
+) {
+  const batch = paramBatch ?? writeBatch(db);
   batch
     .delete(doc(eventAttendeesCol(eventId), userId))
     .delete(doc(userEventsAttendingCol(userId), eventId));
-  await batch.commit();
+  isUndefined(paramBatch) && (await batch.commit());
 }

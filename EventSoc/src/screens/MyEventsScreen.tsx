@@ -11,6 +11,9 @@ import { retrieveUserEventsAttendingOverviews } from "../services/user/userEvent
 import { isUndefined } from "lodash";
 import { Name } from "../../../Shared/models/Name";
 import { retrieveUserExecMemberSocieties } from "../services/user/userExecMemberSocietiesService";
+import OnDeleteEventContext, {
+  OnDeleteEventContent
+} from "../contexts/OnDeleteEventContext";
 
 export default function MyEventsScreen() {
   const { userId } = useUserContext();
@@ -23,17 +26,20 @@ export default function MyEventsScreen() {
 
   const isFocused = useIsFocused();
 
+  const updateMyEvents = () =>
+    retrieveUserEventsAttendingOverviews(userId)
+      .then((newMyEvents) => {
+        setMyEvents(newMyEvents);
+        setShowRetrieveEventsErr(false);
+      })
+      .catch((err) => {
+        console.error(err.message);
+        isUndefined(myEvents) && setShowRetrieveEventsErr(true);
+      });
+
   useEffect(() => {
     if (isFocused) {
-      retrieveUserEventsAttendingOverviews(userId)
-        .then((newMyEvents) => {
-          setMyEvents(newMyEvents);
-          setShowRetrieveEventsErr(false);
-        })
-        .catch((err) => {
-          console.error(err.message);
-          isUndefined(myEvents) && setShowRetrieveEventsErr(true);
-        });
+      updateMyEvents();
 
       retrieveUserExecMemberSocieties(userId)
         .then(setUserExecSocieties)
@@ -41,37 +47,43 @@ export default function MyEventsScreen() {
     }
   }, [isFocused]);
 
+  const onDeleteEventContent: OnDeleteEventContent = {
+    onDeleteEvent: updateMyEvents
+  };
+
   return (
-    <ScreenView removeBottomPadding>
-      {showRetrieveEventsErr ? (
-        <ErrorAlert
-          message="Couldn't retrieve your events. Try again later"
-          style={{ marginTop: 10 }}
-        />
-      ) : (
-        !isUndefined(myEvents) && (
-          <SearchList
-            maxHeight="99%"
-            data={myEvents}
-            renderItem={(event) => (
-              <EventListButton
-                event={event}
-                isExec={userExecSocieties.some(
-                  (soc) => soc.id === event.organiserId
-                )}
-              />
-            )}
-            searchKeys={["name"]}
-            itemSeperator={() => (
-              <Divider
-                h="$1"
-                bgColor="transparent"
-              />
-            )}
-            listEmptyText="No events"
+    <OnDeleteEventContext.Provider value={onDeleteEventContent}>
+      <ScreenView removeBottomPadding>
+        {showRetrieveEventsErr ? (
+          <ErrorAlert
+            message="Couldn't retrieve your events. Try again later"
+            style={{ marginTop: 10 }}
           />
-        )
-      )}
-    </ScreenView>
+        ) : (
+          !isUndefined(myEvents) && (
+            <SearchList
+              maxHeight="99%"
+              data={myEvents}
+              renderItem={(event) => (
+                <EventListButton
+                  event={event}
+                  isExec={userExecSocieties.some(
+                    (soc) => soc.id === event.organiserId
+                  )}
+                />
+              )}
+              searchKeys={["name"]}
+              itemSeperator={() => (
+                <Divider
+                  h="$1"
+                  bgColor="transparent"
+                />
+              )}
+              listEmptyText="No events"
+            />
+          )
+        )}
+      </ScreenView>
+    </OnDeleteEventContext.Provider>
   );
 }
