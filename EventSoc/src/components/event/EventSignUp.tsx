@@ -131,6 +131,16 @@ export default function EventSignUp(props: Props) {
           )}
         </Text>
       )}
+      <Text
+        alignSelf="flex-start"
+        paddingLeft={10}>
+        <Text fontWeight="$bold">Ticket Price: </Text>
+        <Text>
+          {props.event.data.ticketPrice
+            ? `£${props.event.data.ticketPrice}`
+            : "Free"}
+        </Text>
+      </Text>
       {showRetreiveIsSignedUpErr ? (
         <ErrorAlert message="Couldn't retrieve your sign-up status. Try again later." />
       ) : (

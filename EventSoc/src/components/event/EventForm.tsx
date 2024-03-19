@@ -11,15 +11,16 @@ import {
   Input,
   InputField,
   Textarea,
-  TextareaInput
+  TextareaInput,
+  Text
 } from "@gluestack-ui/themed";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { ScrollView, StyleProp, ViewStyle } from "react-native";
 import { endOfUniYear, setDate, setTime } from "../../helpers/DateTimeHelper";
 import { EventData } from "../../../../Shared/models/Event";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import TagInput from "../tag/TagInput";
-import { toInteger, xor } from "lodash";
+import { isEmpty, toInteger, xor } from "lodash";
 import { config } from "../../../config/gluestack-ui.config";
 import { useScrollOnResize } from "../../hooks/useScrollOnResize";
 
@@ -34,6 +35,10 @@ type Props = {
 export default function EventForm(props: Props) {
   const scrollViewRef = useRef<ScrollView>(null);
   const handleFormSizeChange = useScrollOnResize(scrollViewRef);
+
+  const [rawTicketPrice, setRawTicketPrice] = useState<string>(
+    props.event.ticketPrice.toFixed(2)
+  );
 
   const dateTimePickerStyle: StyleProp<ViewStyle> = { left: -10 };
 
@@ -133,6 +138,33 @@ export default function EventForm(props: Props) {
             Leave blank if unlimited capacity
           </FormControlHelperText>
         </FormControlHelper>
+      </FormControl>
+      <FormControl>
+        <FormControlLabel>
+          <FormControlLabelText>Event Price</FormControlLabelText>
+        </FormControlLabel>
+        <HStack gap={5}>
+          <Text alignSelf="flex-end">£</Text>
+          <Input width="95%">
+            <InputField
+              placeholder="Event Price"
+              value={rawTicketPrice}
+              onChangeText={setRawTicketPrice}
+              keyboardType="numeric"
+              onEndEditing={() => {
+                const numTicketPrice = Number(rawTicketPrice);
+                const formattedTicketPrice = isNaN(numTicketPrice)
+                  ? "0.00"
+                  : numTicketPrice.toFixed(2);
+                setRawTicketPrice(formattedTicketPrice);
+                props.setEvent({
+                  ...props.event,
+                  ticketPrice: Number(formattedTicketPrice)
+                });
+              }}
+            />
+          </Input>
+        </HStack>
       </FormControl>
       <FormControl isRequired={true}>
         <FormControlLabel>
