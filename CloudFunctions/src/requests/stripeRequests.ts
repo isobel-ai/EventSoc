@@ -1,3 +1,4 @@
+import * as logger from "firebase-functions/logger";
 import { onRequest } from "firebase-functions/v2/https";
 import { region } from "../constants";
 import { Stripe } from "stripe";
@@ -24,6 +25,9 @@ export const createPaymentIntent = onRequest(
           clientSecret: intent.client_secret
         })
       )
-      .catch((err) => res.status(err.statusCode).json({ error: err.message }));
+      .catch((err) => {
+        logger.error(err.message);
+        res.status(err.statusCode).json({ error: err.message });
+      });
   }
 );
