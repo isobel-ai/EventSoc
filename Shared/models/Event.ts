@@ -17,6 +17,8 @@ export type EventData = {
   tags: string[];
   organiser: SocietyOverview;
   capacity: number; // -1 = unlimited capacity
+  attendance: number;
+  ticketPrice: number;
 };
 
 export function defaultEventData(): EventData {
@@ -35,6 +37,8 @@ export function defaultEventData(): EventData {
     tags: <string[]>[],
     organiser: defaultSocietyOverview(),
     capacity: -1,
+    attendance: 0,
+    ticketPrice: 0,
   };
 }
 
