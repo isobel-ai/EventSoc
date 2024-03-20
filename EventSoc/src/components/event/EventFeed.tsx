@@ -1,12 +1,13 @@
-import { Text } from "@gluestack-ui/themed";
+import { Spinner, Text } from "@gluestack-ui/themed";
 import { EventDoc } from "../../../../Shared/models/Event";
 import EventPost from "./EventPost";
 import { FlatList } from "react-native";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { EventsStackParamList } from "../../navigation/EventsStackNavigator";
+import { isUndefined } from "lodash";
 
 type Props = {
-  feed: EventDoc[];
+  feed?: EventDoc[];
 };
 
 export default function EventFeed(props: Props) {
@@ -23,12 +24,19 @@ export default function EventFeed(props: Props) {
       )}
       keyboardShouldPersistTaps="always"
       ListEmptyComponent={
-        <Text
-          fontSize={"$lg"}
-          alignSelf="center"
-          paddingTop={10}>
-          No events
-        </Text>
+        isUndefined(props.feed) ? (
+          <Spinner
+            marginTop={30}
+            size={"large"}
+          />
+        ) : (
+          <Text
+            fontSize={"$lg"}
+            alignSelf="center"
+            paddingTop={10}>
+            No events
+          </Text>
+        )
       }
     />
   );

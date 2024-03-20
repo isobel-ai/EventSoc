@@ -11,6 +11,7 @@ import { useUserContext } from "../contexts/UserContext";
 import OnDeleteEventContext, {
   OnDeleteEventContent
 } from "../contexts/OnDeleteEventContext";
+import { Spinner } from "@gluestack-ui/themed";
 
 export default function EventsScreen() {
   const { userId } = useUserContext();
@@ -52,15 +53,17 @@ export default function EventsScreen() {
             style={{ marginTop: 10 }}
           />
         </ScreenView>
+      ) : isUndefined(upcomingEvents) ? (
+        <Spinner
+          size="large"
+          flex={1}
+        />
       ) : (
-        !isUndefined(upcomingEvents) &&
-        !isUndefined(eventFeed) && (
-          <EventSortAndFilter
-            events={upcomingEvents}
-            setEventFeed={setEventFeed}>
-            <EventFeed feed={eventFeed} />
-          </EventSortAndFilter>
-        )
+        <EventSortAndFilter
+          events={upcomingEvents}
+          setEventFeed={setEventFeed}>
+          <EventFeed feed={eventFeed} />
+        </EventSortAndFilter>
       )}
     </OnDeleteEventContext.Provider>
   );

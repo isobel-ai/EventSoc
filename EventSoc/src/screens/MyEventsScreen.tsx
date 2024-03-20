@@ -60,28 +60,26 @@ export default function MyEventsScreen() {
             style={{ marginTop: 10 }}
           />
         ) : (
-          !isUndefined(myEvents) && (
-            <SearchList
-              maxHeight="99%"
-              data={myEvents}
-              renderItem={(event) => (
-                <EventListButton
-                  event={event}
-                  isExec={userExecSocieties.some(
-                    (soc) => soc.id === event.organiserId
-                  )}
-                />
-              )}
-              searchKeys={["name"]}
-              itemSeperator={() => (
-                <Divider
-                  h="$1"
-                  bgColor="transparent"
-                />
-              )}
-              listEmptyText="No events"
-            />
-          )
+          <SearchList
+            maxHeight="99%"
+            data={myEvents}
+            renderItem={(event) => (
+              <EventListButton
+                event={event}
+                isExec={userExecSocieties.some(
+                  (soc) => soc.id === event.organiserId
+                )}
+              />
+            )}
+            searchKeys={["name"]}
+            itemSeperator={() => (
+              <Divider
+                h="$1"
+                bgColor="transparent"
+              />
+            )}
+            listEmptyText="No events"
+          />
         )}
       </ScreenView>
     </OnDeleteEventContext.Provider>

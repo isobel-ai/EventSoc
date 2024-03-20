@@ -6,7 +6,7 @@ import { retrieveUserSocietiesFollowing } from "../../services/user/userSocietie
 import { useUserContext } from "../../contexts/UserContext";
 import { isUndefined } from "lodash";
 import ErrorAlert from "../error/ErrorAlert";
-import { Text, Divider } from "@gluestack-ui/themed";
+import { Text, Divider, Spinner } from "@gluestack-ui/themed";
 import SocietyFollowingListButton from "./SocietyFollowingListButton";
 
 export default function SocietyFollowingList() {
@@ -41,28 +41,33 @@ export default function SocietyFollowingList() {
           style={{ marginVertical: 10 }}
         />
       ) : (
-        !isUndefined(followedSocs) && (
-          <FlatList
-            style={{ width: "100%" }}
-            data={followedSocs}
-            renderItem={({ item }) => (
-              <SocietyFollowingListButton
-                society={item}
-                updateFollowedSocs={updateFollowedSocs}
+        <FlatList
+          style={{ width: "100%" }}
+          data={followedSocs}
+          renderItem={({ item }) => (
+            <SocietyFollowingListButton
+              society={item}
+              updateFollowedSocs={updateFollowedSocs}
+            />
+          )}
+          ItemSeparatorComponent={() => <Divider />}
+          ListFooterComponent={<Divider />}
+          ListEmptyComponent={
+            isUndefined(followedSocs) ? (
+              <Spinner
+                size="large"
+                marginVertical={15}
               />
-            )}
-            ItemSeparatorComponent={() => <Divider />}
-            ListFooterComponent={<Divider />}
-            ListEmptyComponent={
+            ) : (
               <Text
                 fontSize="$lg"
                 alignSelf="center"
                 paddingVertical={5}>
                 You don&apos;t follow any societies
               </Text>
-            }
-          />
-        )
+            )
+          }
+        />
       )}
     </>
   );

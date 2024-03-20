@@ -1,4 +1,4 @@
-import { Button, ButtonText, Heading } from "@gluestack-ui/themed";
+import { Button, ButtonText, Heading, Spinner } from "@gluestack-ui/themed";
 import ScreenView from "../components/general/ScreenView";
 import { useEffect, useState } from "react";
 import { signOut } from "../services/authService";
@@ -50,16 +50,19 @@ export default function MyAccountScreen() {
           message="Couldn't retrieve your profile. Try again later."
           style={{ marginVertical: 10 }}
         />
+      ) : isUndefined(user) ? (
+        <Spinner
+          size="large"
+          height="100%"
+        />
       ) : (
-        !isUndefined(user) && (
-          <>
-            <Heading textAlign="center">{`Hi ${user.name}!`}</Heading>
-            <FollowingLists
-              interests={user.interests}
-              updateInterests={updateUser}
-            />
-          </>
-        )
+        <>
+          <Heading textAlign="center">{`Hi ${user.name}!`}</Heading>
+          <FollowingLists
+            interests={user.interests}
+            updateInterests={updateUser}
+          />
+        </>
       )}
       <Button
         action="negative"

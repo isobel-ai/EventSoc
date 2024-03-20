@@ -1,4 +1,4 @@
-import { Button, ButtonText } from "@gluestack-ui/themed";
+import { Button, ButtonText, Spinner } from "@gluestack-ui/themed";
 import { useIsFocused } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { cloneDeep, isUndefined } from "lodash";
@@ -122,7 +122,12 @@ export default function EditEventScreen(props: Props) {
 
   return (
     <ScreenView useTopPadding>
-      {!isEventUndefined && (
+      {isEventUndefined ? (
+        <Spinner
+          size="large"
+          marginVertical={10}
+        />
+      ) : (
         <>
           <EventForm
             event={afterEvent}

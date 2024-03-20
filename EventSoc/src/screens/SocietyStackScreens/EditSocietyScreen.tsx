@@ -1,7 +1,7 @@
 import ScreenView from "../../components/general/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useEffect, useState } from "react";
-import { Button, ButtonText } from "@gluestack-ui/themed";
+import { Button, ButtonText, Spinner } from "@gluestack-ui/themed";
 import ErrorAlertDialog, {
   ErrDialogState,
   defaultErrDialogState
@@ -127,7 +127,12 @@ export default function EditSocietyScreen(props: Props) {
 
   return (
     <ScreenView useTopPadding>
-      {!isSocietyUndefined && (
+      {isSocietyUndefined ? (
+        <Spinner
+          size="large"
+          marginTop={20}
+        />
+      ) : (
         <>
           <SocietyForm
             society={afterSociety}

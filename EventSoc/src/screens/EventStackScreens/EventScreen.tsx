@@ -1,7 +1,7 @@
 import ScreenView from "../../components/general/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
 import { EventStackParamList } from "../../navigation/CrossTabStackScreens/EventStackScreens";
-import { Divider, ScrollView } from "@gluestack-ui/themed";
+import { Divider, ScrollView, Spinner } from "@gluestack-ui/themed";
 import React, { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { EventDoc } from "../../../../Shared/models/Event";
@@ -52,14 +52,17 @@ export default function EventScreen(props: Props) {
               message="Could not retrieve event details. Try again later."
               style={{ marginVertical: 10 }}
             />
+          ) : isUndefined(event) ? (
+            <Spinner
+              size="large"
+              marginTop={15}
+            />
           ) : (
-            !isUndefined(event) && (
-              <EventPostAndSignUp
-                event={event}
-                updateEvent={updateEvent}
-                isEventPostExtended
-              />
-            )
+            <EventPostAndSignUp
+              event={event}
+              updateEvent={updateEvent}
+              isEventPostExtended
+            />
           )}
           <Divider
             bgColor={config.tokens.colors.eventButtonGray}

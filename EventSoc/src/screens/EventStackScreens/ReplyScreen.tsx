@@ -1,7 +1,7 @@
 import ScreenView from "../../components/general/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
 import { EventStackParamList } from "../../navigation/CrossTabStackScreens/EventStackScreens";
-import { Divider, Heading } from "@gluestack-ui/themed";
+import { Divider, Heading, Spinner } from "@gluestack-ui/themed";
 import React, { useEffect, useState } from "react";
 import { config } from "../../config/gluestack-ui.config";
 import { useIsFocused } from "@react-navigation/native";
@@ -96,19 +96,22 @@ export default function ReplyScreen(props: Props) {
               message="Could not retrieve event details. Try again later."
               style={{ marginTop: 10 }}
             />
+          ) : isUndefined(event) ? (
+            <Spinner
+              size="large"
+              marginVertical={20}
+            />
           ) : (
-            !isUndefined(event) && (
-              <EventPostAndSignUp
-                event={event}
-                updateEvent={updateEvent}
-                isEventPostExtended
-                onEventPostPress={() =>
-                  props.navigation.navigate("Event", {
-                    eventId: props.route.params.eventId
-                  })
-                }
-              />
-            )
+            <EventPostAndSignUp
+              event={event}
+              updateEvent={updateEvent}
+              isEventPostExtended
+              onEventPostPress={() =>
+                props.navigation.navigate("Event", {
+                  eventId: props.route.params.eventId
+                })
+              }
+            />
           )}
           <SectionDivider />
           {showRetrieveCommentErr ? (
@@ -116,42 +119,42 @@ export default function ReplyScreen(props: Props) {
               message="Couldn't retrieve comments. Try again later."
               style={{ marginVertical: 10 }}
             />
+          ) : isUndefined(focusComment) ? (
+            <Spinner
+              size="large"
+              marginVertical={15}
+            />
           ) : (
-            !isUndefined(focusComment) && (
-              <>
-                <Heading
-                  alignSelf="flex-start"
-                  marginLeft={10}>
-                  Comment Thread:
-                </Heading>
-                {!isUndefined(props.route.params.topLevelCommentId) && (
-                  <CommentThread
-                    eventId={props.route.params.eventId}
-                    topLevelCommentId={props.route.params.topLevelCommentId}
-                    replyParentIds={focusComment.data.parentReplyIds}
-                  />
-                )}
-                <CommentButton
+            <>
+              <Heading
+                alignSelf="flex-start"
+                marginLeft={10}>
+                Comment Thread:
+              </Heading>
+              {!isUndefined(props.route.params.topLevelCommentId) && (
+                <CommentThread
                   eventId={props.route.params.eventId}
-                  comment={focusComment}
                   topLevelCommentId={props.route.params.topLevelCommentId}
-                  disableButton
-                  refreshCountTrigger={[
-                    showPostCommentModal,
-                    focusComment.data
-                  ]}
+                  replyParentIds={focusComment.data.parentReplyIds}
                 />
-                <SectionDivider />
-                <ReplySection
-                  eventId={props.route.params.eventId}
-                  eventOrganiserExec={event?.data.organiser.exec}
-                  showPostCommentModal={showPostCommentModal}
-                  setShowPostCommentModal={setShowPostCommentModal}
-                  comment={focusComment}
-                  topLevelCommentId={props.route.params.topLevelCommentId}
-                />
-              </>
-            )
+              )}
+              <CommentButton
+                eventId={props.route.params.eventId}
+                comment={focusComment}
+                topLevelCommentId={props.route.params.topLevelCommentId}
+                disableButton
+                refreshCountTrigger={[showPostCommentModal, focusComment.data]}
+              />
+              <SectionDivider />
+              <ReplySection
+                eventId={props.route.params.eventId}
+                eventOrganiserExec={event?.data.organiser.exec}
+                showPostCommentModal={showPostCommentModal}
+                setShowPostCommentModal={setShowPostCommentModal}
+                comment={focusComment}
+                topLevelCommentId={props.route.params.topLevelCommentId}
+              />
+            </>
           )}
         </ScrollView>
       </ScreenView>

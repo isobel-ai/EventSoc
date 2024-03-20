@@ -6,7 +6,8 @@ import {
   InputSlot,
   SearchIcon,
   Text,
-  ScrollView
+  ScrollView,
+  Spinner
 } from "@gluestack-ui/themed";
 import { ComponentType, ReactElement, useEffect, useState } from "react";
 import { DimensionValue, Keyboard, FlatList } from "react-native";
@@ -36,17 +37,15 @@ export default function SearchList<Item>(props: Props<Item>) {
     Keyboard.dismiss(), setSearchTerm("");
   }, props.clearSearchTriggers ?? []);
 
-  const filteredData = !isUndefined(props.data)
-    ? searchFilter(searchTerm, props.data, props.searchKeys)
-    : [];
+  const filteredData = isUndefined(props.data)
+    ? undefined
+    : searchFilter(searchTerm, props.data, props.searchKeys);
 
-  const showList = !props.listErrorMsg && !isUndefined(props.data);
-
-  const stickyHeaderIndices = showList
-    ? isUndefined(props.ListHeaderComponent)
-      ? [0]
-      : [1]
-    : undefined;
+  const stickyHeaderIndices = isUndefined(filteredData)
+    ? undefined
+    : isUndefined(props.ListHeaderComponent)
+    ? [0]
+    : [1];
 
   return (
     <ScrollView
@@ -55,13 +54,12 @@ export default function SearchList<Item>(props: Props<Item>) {
       contentContainerStyle={{ gap: 5 }}
       stickyHeaderIndices={stickyHeaderIndices}>
       {!isUndefined(props.ListHeaderComponent) && props.ListHeaderComponent()}
-      {props.listErrorMsg && (
+      {props.listErrorMsg ? (
         <ErrorAlert
           message={props.listErrorMsg}
           style={{ marginVertical: 10 }}
         />
-      )}
-      {showList && (
+      ) : (
         <>
           {!isUndefined(props.StickyListHeaderComponent) &&
             props.StickyListHeaderComponent()}
@@ -81,24 +79,29 @@ export default function SearchList<Item>(props: Props<Item>) {
           </Input>
         </>
       )}
-      {showList && (
-        <FlatList
-          scrollEnabled={false}
-          data={filteredData}
-          extraData={props.data}
-          renderItem={({ item }) => props.renderItem(item)}
-          ItemSeparatorComponent={props.itemSeperator}
-          keyboardShouldPersistTaps="always"
-          ListEmptyComponent={
+      <FlatList
+        scrollEnabled={false}
+        data={filteredData}
+        extraData={props.data}
+        renderItem={({ item }) => props.renderItem(item)}
+        ItemSeparatorComponent={props.itemSeperator}
+        keyboardShouldPersistTaps="always"
+        ListEmptyComponent={
+          isUndefined(filteredData) ? (
+            <Spinner
+              size="large"
+              marginVertical={15}
+            />
+          ) : (
             <Text
               fontSize={"$lg"}
               alignSelf="center"
               paddingTop={10}>
               {props.listEmptyText || ""}
             </Text>
-          }
-        />
-      )}
+          )
+        }
+      />
     </ScrollView>
   );
 }

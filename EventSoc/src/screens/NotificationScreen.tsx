@@ -1,4 +1,4 @@
-import { Text } from "@gluestack-ui/themed";
+import { Spinner, Text } from "@gluestack-ui/themed";
 import { useIsFocused } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import ScreenView from "../components/general/ScreenView";
@@ -47,22 +47,27 @@ export default function NotificationScreen() {
           style={{ marginTop: 10 }}
         />
       ) : (
-        !isUndefined(notifications) && (
-          <FlatList
-            data={notifications}
-            renderItem={({ item }) => (
-              <NotificationListButton notification={item} />
-            )}
-            ListEmptyComponent={
+        <FlatList
+          data={notifications}
+          renderItem={({ item }) => (
+            <NotificationListButton notification={item} />
+          )}
+          ListEmptyComponent={
+            isUndefined(notifications) ? (
+              <Spinner
+                size="large"
+                marginTop={20}
+              />
+            ) : (
               <Text
                 fontSize={"$lg"}
                 alignSelf="center">
                 No Notifications
               </Text>
-            }
-            contentContainerStyle={{ gap: 10, paddingVertical: 10 }}
-          />
-        )
+            )
+          }
+          contentContainerStyle={{ gap: 10, paddingVertical: 10 }}
+        />
       )}
     </ScreenView>
   );
