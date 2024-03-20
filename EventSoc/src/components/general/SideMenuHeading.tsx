@@ -1,5 +1,5 @@
 import { Heading } from "@gluestack-ui/themed";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 
 type Props = {
   heading: string;

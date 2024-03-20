@@ -13,7 +13,7 @@ import ScreenView from "../general/ScreenView";
 import { EventDoc, EventDocAndRecScore } from "../../../../Shared/models/Event";
 import EventFilterSideMenu from "./EventFilterSideMenu";
 import { Item } from "../../../libs/multi-selectbox";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import EventSortAndFilterButton from "./EventSortAndFilterButton";
 
 type Props = {

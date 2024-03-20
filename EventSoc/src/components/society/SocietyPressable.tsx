@@ -6,7 +6,7 @@ import {
   Heading,
   Pressable
 } from "@gluestack-ui/themed";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import { SocietyOverview } from "../../../../Shared/models/Society";
 import { useEffect, useState } from "react";
 import { retrieveSocietyImage } from "../../services/society/societiesService";

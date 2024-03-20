@@ -24,7 +24,7 @@ import {
   createReplyToComment,
   createReplyToReply
 } from "../../services/event/eventCommentRepliesService";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 
 type Props = {
   showModal: boolean;

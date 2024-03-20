@@ -17,7 +17,7 @@ import {
 } from "react-native";
 import Icon from "./src/components/Icon";
 import Toggle from "./src/components/Toggle";
-import { config } from "../../config/gluestack-ui.config";
+import { config } from "../../src/config/gluestack-ui.config";
 
 const hitSlop = { top: 14, bottom: 14, left: 14, right: 14 };
 

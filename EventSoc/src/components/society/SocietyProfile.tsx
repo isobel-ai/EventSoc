@@ -12,7 +12,7 @@ import {
 } from "@gluestack-ui/themed";
 import { useEffect, useState } from "react";
 import { SocietyData } from "../../../../Shared/models/Society";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import {
   NavigationProp,
   useIsFocused,

@@ -21,7 +21,7 @@ import { EventData } from "../../../../Shared/models/Event";
 import { useRef, useState } from "react";
 import TagInput from "../tag/TagInput";
 import { isEmpty, toInteger, xor } from "lodash";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import { useScrollOnResize } from "../../hooks/useScrollOnResize";
 
 type Props = {

@@ -17,7 +17,7 @@ import {
 } from "../../helpers/AuthInputValidationHelper";
 import { register } from "../../services/authService";
 import ErrorAlert from "../error/ErrorAlert";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 type Input = {

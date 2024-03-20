@@ -2,7 +2,7 @@ import {
   StackNavigationOptions,
   createStackNavigator
 } from "@react-navigation/stack";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import {
   EventStackParamList,
   EventStackScreens,

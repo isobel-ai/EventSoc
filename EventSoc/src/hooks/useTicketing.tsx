@@ -1,7 +1,7 @@
 import { useStripe } from "@stripe/stripe-react-native";
 import { isUndefined } from "lodash";
 import { retrieveClientSecret } from "../services/stripeService";
-import { config } from "../../config/gluestack-ui.config";
+import { config } from "../config/gluestack-ui.config";
 
 export default function useTicketing(
   eventOrganiser: string,

@@ -17,7 +17,7 @@ import CommentInputModal from "../comment/CommentInputModal";
 import { UserOverview } from "../../../../Shared/models/User";
 import { CommentDoc } from "../../../../Shared/models/CommentOrReply";
 import ErrorAlert from "../error/ErrorAlert";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 
 type Props = {
   eventId: string;

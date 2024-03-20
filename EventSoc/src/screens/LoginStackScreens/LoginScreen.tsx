@@ -1,6 +1,6 @@
 import { Button, ButtonText, Divider, Heading } from "@gluestack-ui/themed";
 import ScreenView from "../../components/general/ScreenView";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import { StackScreenProps } from "@react-navigation/stack";
 import { LoginStackParamList } from "../../navigation/LoginStackNavigator";
 import LoginForm from "../../components/login/LoginForm";

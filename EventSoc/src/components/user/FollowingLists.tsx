@@ -6,7 +6,7 @@ import {
   Heading,
   VStack
 } from "@gluestack-ui/themed";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import { StyleProp, ViewStyle } from "react-native";
 import InterestFollowingList from "./InterestFollowingList";
 import SocietyFollowingList from "./SocietyFollowingList";

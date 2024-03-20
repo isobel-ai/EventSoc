@@ -7,7 +7,7 @@ import {
   Button
 } from "@gluestack-ui/themed";
 import { Keyboard } from "react-native";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import { signIn } from "../../services/authService";
 import { isUndefined } from "lodash";
 import { useEffect, useState } from "react";

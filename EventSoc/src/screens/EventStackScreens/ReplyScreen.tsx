@@ -3,7 +3,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { EventStackParamList } from "../../navigation/CrossTabStackScreens/EventStackScreens";
 import { Divider, Heading } from "@gluestack-ui/themed";
 import React, { useEffect, useState } from "react";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import { useIsFocused } from "@react-navigation/native";
 import { ScrollView } from "react-native";
 import { EventDoc } from "../../../../Shared/models/Event";

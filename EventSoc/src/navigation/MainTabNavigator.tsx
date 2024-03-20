@@ -3,7 +3,7 @@ import {
   createBottomTabNavigator
 } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { config } from "../../config/gluestack-ui.config";
+import { config } from "../config/gluestack-ui.config";
 import SocietiesNavigator from "./SocietiesNavigator/SocietiesNavigator";
 import EventsStackNavigator, {
   EventsStackParamList

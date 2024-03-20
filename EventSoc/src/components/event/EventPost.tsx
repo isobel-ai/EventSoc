@@ -20,7 +20,7 @@ import { retrieveEventImage } from "../../services/event/eventsService";
 import { isUndefined } from "lodash";
 import { useIsFocused } from "@react-navigation/native";
 import ErrorAlert from "../error/ErrorAlert";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 
 type Props = {
   event: EventDoc;

@@ -13,7 +13,7 @@ import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { EventStackParamList } from "../../navigation/CrossTabStackScreens/EventStackScreens";
 import { useOnDeleteEventContext } from "../../contexts/OnDeleteEventContext";
 import { deleteEvent } from "../../services/event/eventsService";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import {
   Menu,
   MenuOption,

@@ -1,12 +1,7 @@
-import {
-  createStackNavigator
-} from "@react-navigation/stack";
-import { config } from "../../config/gluestack-ui.config";
+import { createStackNavigator } from "@react-navigation/stack";
+import { config } from "../config/gluestack-ui.config";
 
-
-import {
-  SocietiesStackParamList
-} from "./SocietiesNavigator/SocietiesStackNavigator";
+import { SocietiesStackParamList } from "./SocietiesNavigator/SocietiesStackNavigator";
 import MyEventsScreen from "../screens/MyEventsScreen";
 import {
   EventStackParamList,

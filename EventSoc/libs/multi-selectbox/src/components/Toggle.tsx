@@ -5,7 +5,7 @@ import {
   ColorValue
 } from "react-native";
 import Icon from "./Icon";
-import { config } from "../../../../config/gluestack-ui.config";
+import { config } from "../../../../src/config/gluestack-ui.config";
 
 export type ToggleProps = PropsWithoutRef<{
   onTouch?: (event: GestureResponderEvent) => void;

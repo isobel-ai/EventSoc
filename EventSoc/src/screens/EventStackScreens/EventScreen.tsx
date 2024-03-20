@@ -13,7 +13,7 @@ import OnDeleteEventContext, {
 import EventCommentSection from "../../components/event/EventCommentSection";
 import ErrorAlert from "../../components/error/ErrorAlert";
 import EventPostAndSignUp from "../../components/event/EventPostAndSignUp";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 
 type Props = StackScreenProps<EventStackParamList, "Event">;
 

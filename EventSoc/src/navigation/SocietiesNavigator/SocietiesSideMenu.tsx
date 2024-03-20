@@ -10,7 +10,7 @@ import SocietyList from "../../components/society/SocietyList";
 import SideMenu, {
   ReactNativeSideMenuProps
 } from "react-native-side-menu-updated";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import { useUserContext } from "../../contexts/UserContext";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { SocietiesStackParamList } from "./SocietiesStackNavigator";

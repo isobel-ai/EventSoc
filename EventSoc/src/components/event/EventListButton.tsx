@@ -1,6 +1,6 @@
 import { Button, ButtonText, HStack, Image } from "@gluestack-ui/themed";
 import { EventOverview } from "../../../../Shared/models/Event";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import {
   useNavigation,
   NavigationProp,

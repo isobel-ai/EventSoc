@@ -13,7 +13,7 @@ import { DimensionValue, Keyboard, FlatList } from "react-native";
 import { searchFilter } from "../../helpers/SearchHelper";
 import { isUndefined } from "lodash";
 import ErrorAlert from "../error/ErrorAlert";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 
 type Props<I> = {
   ListHeaderComponent?: () => ReactElement;

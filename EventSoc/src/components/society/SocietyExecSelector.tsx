@@ -16,7 +16,7 @@ import {
   InfoIcon
 } from "@gluestack-ui/themed";
 import { useEffect, useState } from "react";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import { isUndefined, xorBy } from "lodash";
 import SelectBox, { Item } from "../../../libs/multi-selectbox";
 import { useUserContext } from "../../contexts/UserContext";

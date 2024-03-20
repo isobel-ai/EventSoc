@@ -11,7 +11,7 @@ import { SocietyStackParamList } from "../../navigation/CrossTabStackScreens/Soc
 import { deleteUserSocietyFollow } from "../../services/user/userSocietiesFollowingService";
 import SocietyListButton from "../society/SocietyListButton";
 import { useUserContext } from "../../contexts/UserContext";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 
 type Props = {
   society: Name;

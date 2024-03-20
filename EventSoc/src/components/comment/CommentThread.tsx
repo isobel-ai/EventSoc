@@ -8,7 +8,7 @@ import { isUndefined } from "lodash";
 import { retrieveReplyParentReplies } from "../../services/event/eventCommentRepliesService";
 import { retrieveComment } from "../../services/event/eventCommentsService";
 import { useIsFocused } from "@react-navigation/native";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 
 type Props = {
   eventId: string;
