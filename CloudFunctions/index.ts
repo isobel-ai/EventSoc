@@ -12,3 +12,6 @@ exports.eventIntegrity = eventIntegrityTriggers;
 
 import recScoreUpdateTriggers = require("./src/triggers/recScoreUpdateTriggers");
 exports.recScoreUpdates = recScoreUpdateTriggers;
+
+import stripeRequests = require("./src/requests/stripeRequests");
+exports.stripeRequests = stripeRequests;
