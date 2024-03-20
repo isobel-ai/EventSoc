@@ -8,7 +8,9 @@ import {
   where,
   writeBatch,
   increment,
-  WriteBatch
+  WriteBatch,
+  updateDoc,
+  runTransaction
 } from "firebase/firestore";
 import { db, eventPicturesRef, eventsCol } from "../../config/firebaseConfig";
 import {
@@ -117,6 +119,19 @@ export async function updateEvent(
   }
 
   await batch.commit();
+}
+
+export function reserveTicket(eventId: string) {
+  return runTransaction(db, async (transaction: Transaction) => {
+    if (await retrieveIsEventFull(eventId, transaction)) {
+      throw Error("Event Full");
+    }
+    transaction.update(doc(eventsCol, eventId), { attendance: increment(1) });
+  });
+}
+
+export function unreserveTicket(eventId: string) {
+  return updateDoc(doc(eventsCol, eventId), { attendance: increment(-1) });
 }
 
 export function incrementEventAttendance(

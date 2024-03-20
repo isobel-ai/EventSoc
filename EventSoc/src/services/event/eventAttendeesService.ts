@@ -22,7 +22,11 @@ import {
   deleteUserEventAttending
 } from "../user/userEventsAttendingService";
 
-export async function createEventAttendee(eventId: string, userId: string) {
+export async function createEventAttendee(
+  eventId: string,
+  userId: string,
+  ticketReserved?: boolean
+) {
   await runTransaction(db, async (transaction) => {
     if (await retrieveIsEventFull(eventId, transaction)) {
       throw Error("Event Full");
@@ -33,7 +37,7 @@ export async function createEventAttendee(eventId: string, userId: string) {
 
     transaction.set(doc(eventAttendeesCol(eventId), userId), attendee);
     createUserEventAttending(userId, eventId, event, transaction);
-    incrementEventAttendance(eventId, 1, transaction);
+    !ticketReserved && incrementEventAttendance(eventId, 1, transaction);
   });
 }
 

@@ -3,17 +3,21 @@ import { useState, useEffect } from "react";
 import { useUserContext } from "../../contexts/UserContext";
 import useDismissableToast from "../../hooks/useDismissableToast";
 import ConfirmDialog from "../general/ConfirmDialog";
-import { config } from "../../../config/gluestack-ui.config";
 import { EventDoc } from "../../../../Shared/models/Event";
 import { useIsFocused } from "@react-navigation/native";
 import {
   createEventAttendee,
   deleteEventAttendee,
-  retrieveEventAttendeeCount,
   retrieveIsUserEventAttendee
 } from "../../services/event/eventAttendeesService";
 import { isUndefined } from "lodash";
 import ErrorAlert from "../error/ErrorAlert";
+import useTicketing from "../../hooks/useTicketing";
+import {
+  reserveTicket,
+  unreserveTicket
+} from "../../services/event/eventsService";
+import { PaymentSheetError } from "@stripe/stripe-react-native";
 
 type Props = {
   event: EventDoc;
@@ -26,14 +30,11 @@ export default function EventSignUp(props: Props) {
     (member) => member.id === userId
   );
 
-  const [numOfAttendees, setNumOfAttendees] = useState<number>();
-  const [showRetrieveNumOfAttendeesErr, setShowRetrieveNumOfAttendeesErr] =
-    useState<boolean>(false);
-
   const isEventFull =
     props.event.data.capacity >= 0 &&
-    !isUndefined(numOfAttendees) &&
-    props.event.data.capacity <= numOfAttendees;
+    props.event.data.attendance >= props.event.data.capacity;
+
+  const isEventPaid = Boolean(props.event.data.ticketPrice);
 
   const [isSignedUp, setIsSignedUp] = useState<boolean>();
   const [showRetreiveIsSignedUpErr, setShowRetrieveIsSignedUpErr] =
@@ -44,16 +45,6 @@ export default function EventSignUp(props: Props) {
   const updateComponent = () =>
     Promise.allSettled([
       props.updateEvent(),
-
-      retrieveEventAttendeeCount(props.event.id)
-        .then((count) => {
-          setNumOfAttendees(count);
-          setShowRetrieveNumOfAttendeesErr(false);
-        })
-        .catch((err) => {
-          console.error(err.message);
-          setShowRetrieveNumOfAttendeesErr(true);
-        }),
 
       retrieveIsUserEventAttendee(userId, props.event.id)
         .then((isSignedUp) => {
@@ -70,30 +61,39 @@ export default function EventSignUp(props: Props) {
     isFocused && updateComponent();
   }, [isFocused]);
 
-  const showSignUpErrToast = useDismissableToast();
+  const { buyTicket } = useTicketing(
+    props.event.data.organiser.name,
+    props.event.data.ticketPrice
+  );
 
   const signUp = () => {
-    updateComponent()
-      .then(async () => {
-        if (isUndefined(numOfAttendees)) {
-          throw Error;
-        }
-
-        if (
-          props.event.data.capacity >= 0 &&
-          props.event.data.capacity <= numOfAttendees
-        ) {
-          showSignUpErrToast({ title: "Event Full" });
-        } else {
-          await createEventAttendee(props.event.id, userId).then(
-            updateComponent
+    if (props.event.data.ticketPrice) {
+      reserveTicket(props.event.id)
+        .then(buyTicket)
+        .then(() => createEventAttendee(props.event.id, userId, true))
+        .then(updateComponent)
+        .catch((err) => {
+          err.code !== PaymentSheetError.Canceled && handleSignUpError(err);
+          unreserveTicket(props.event.id).catch((err) =>
+            console.error(err.message)
           );
-        }
-      })
-      .catch((err) => {
-        console.error(err.message);
-        showSignUpErrToast({ title: "Unable to sign-up. Try again later." });
-      });
+        });
+    } else {
+      createEventAttendee(props.event.id, userId)
+        .then(updateComponent)
+        .catch(handleSignUpError);
+    }
+  };
+
+  const showSignUpErrToast = useDismissableToast();
+  const handleSignUpError = (err: any) => {
+    console.error(err.message);
+    showSignUpErrToast({
+      title:
+        err.message === "Event Full."
+          ? "Event Full."
+          : "Unable to sign-up. Try again later."
+    });
   };
 
   const [showWithdrawSignUpDialog, setShowWithdrawSignUpDialog] =
@@ -114,21 +114,13 @@ export default function EventSignUp(props: Props) {
           alignSelf="flex-start"
           paddingLeft={10}>
           <Text fontWeight="$bold">Sign-ups: </Text>
-          {showRetrieveNumOfAttendeesErr ? (
-            <Text color={config.tokens.colors.error}>
-              Could not retrieve sign-up information. Try again later.
-            </Text>
-          ) : (
-            !isUndefined(numOfAttendees) && (
-              <Text color={config.tokens.colors.black}>
-                {`${numOfAttendees}${
-                  props.event.data.capacity >= 0
-                    ? `/${props.event.data.capacity}`
-                    : ``
-                }`}
-              </Text>
-            )
-          )}
+          <Text>
+            {`${props.event.data.attendance}${
+              props.event.data.capacity >= 0
+                ? `/${props.event.data.capacity}`
+                : ``
+            }`}
+          </Text>
         </Text>
       )}
       <Text
@@ -137,7 +129,7 @@ export default function EventSignUp(props: Props) {
         <Text fontWeight="$bold">Ticket Price: </Text>
         <Text>
           {props.event.data.ticketPrice
-            ? `£${props.event.data.ticketPrice}`
+            ? `£${props.event.data.ticketPrice.toFixed(2)}`
             : "Free"}
         </Text>
       </Text>
@@ -147,17 +139,27 @@ export default function EventSignUp(props: Props) {
         !isUndefined(isSignedUp) && (
           <Button
             action={
-              isSignedUp ? "negative" : isEventFull ? "secondary" : "positive"
+              isSignedUp
+                ? isEventPaid
+                  ? "secondary"
+                  : "negative"
+                : isEventFull
+                ? "secondary"
+                : "positive"
             }
             onPress={
               isSignedUp ? () => setShowWithdrawSignUpDialog(true) : signUp
             }
-            isDisabled={!isSignedUp && isEventFull}
+            isDisabled={
+              (!isSignedUp && isEventFull) || (isSignedUp && isEventPaid)
+            }
             alignSelf="center"
             width="80%">
             <ButtonText>
               {isSignedUp
-                ? "Withdraw Sign-up"
+                ? isEventPaid
+                  ? "Signed-Up"
+                  : "Withdraw Sign-up"
                 : isEventFull
                 ? "Event Full"
                 : "Sign-up"}

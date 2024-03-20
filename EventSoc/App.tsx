@@ -8,6 +8,8 @@ import { LogBox } from "react-native";
 import NotificationProvider from "./src/providers/NotificationProvider";
 import { MenuProvider } from "react-native-popup-menu";
 import { NavigationContainer } from "@react-navigation/native";
+import { StripeProvider } from "@stripe/stripe-react-native";
+import UserContext from "./src/contexts/UserContext";
 
 export default function App() {
   const { loggedIn, userId } = useAuth();
@@ -18,11 +20,15 @@ export default function App() {
     <GluestackUIProvider config={config}>
       <NavigationContainer>
         <NotificationProvider {...{ userId, loggedIn }}>
-          <SafeAreaProvider>
-            <MenuProvider>
-              <AppNavigator {...{ userId, loggedIn }} />
-            </MenuProvider>
-          </SafeAreaProvider>
+          <UserContext.Provider value={{ userId }}>
+            <StripeProvider publishableKey="pk_test_51O1C0sE3ylGeoycXkm2dJKlmiKfd8VSzwkxYt5QQipsS2H3q1kJ2JcmMWVqkRq7aCsY5k5wYAGAGhVLRxomdRxX200w0OYxhCF">
+              <SafeAreaProvider>
+                <MenuProvider>
+                  <AppNavigator {...{ userId, loggedIn }} />
+                </MenuProvider>
+              </SafeAreaProvider>
+            </StripeProvider>
+          </UserContext.Provider>
         </NotificationProvider>
       </NavigationContainer>
     </GluestackUIProvider>
