@@ -36,6 +36,8 @@ export default function EventSignUp(props: Props) {
 
   const isEventPaid = Boolean(props.event.data.ticketPrice);
 
+  const isEventUpcoming = props.event.data.endDate > new Date();
+
   const [isSignedUp, setIsSignedUp] = useState<boolean>();
   const [showRetreiveIsSignedUpErr, setShowRetrieveIsSignedUpErr] =
     useState<boolean>(false);
@@ -133,40 +135,41 @@ export default function EventSignUp(props: Props) {
             : "Free"}
         </Text>
       </Text>
-      {showRetreiveIsSignedUpErr ? (
-        <ErrorAlert message="Couldn't retrieve your sign-up status. Try again later." />
-      ) : (
-        !isUndefined(isSignedUp) && (
-          <Button
-            action={
-              isSignedUp
-                ? isEventPaid
+      {isEventUpcoming &&
+        (showRetreiveIsSignedUpErr ? (
+          <ErrorAlert message="Couldn't retrieve your sign-up status. Try again later." />
+        ) : (
+          !isUndefined(isSignedUp) && (
+            <Button
+              action={
+                isSignedUp
+                  ? isEventPaid
+                    ? "secondary"
+                    : "negative"
+                  : isEventFull
                   ? "secondary"
-                  : "negative"
-                : isEventFull
-                ? "secondary"
-                : "positive"
-            }
-            onPress={
-              isSignedUp ? () => setShowWithdrawSignUpDialog(true) : signUp
-            }
-            isDisabled={
-              (!isSignedUp && isEventFull) || (isSignedUp && isEventPaid)
-            }
-            alignSelf="center"
-            width="80%">
-            <ButtonText>
-              {isSignedUp
-                ? isEventPaid
-                  ? "Signed-Up"
-                  : "Withdraw Sign-up"
-                : isEventFull
-                ? "Event Full"
-                : "Sign-up"}
-            </ButtonText>
-          </Button>
-        )
-      )}
+                  : "positive"
+              }
+              onPress={
+                isSignedUp ? () => setShowWithdrawSignUpDialog(true) : signUp
+              }
+              isDisabled={
+                (!isSignedUp && isEventFull) || (isSignedUp && isEventPaid)
+              }
+              alignSelf="center"
+              width="80%">
+              <ButtonText>
+                {isSignedUp
+                  ? isEventPaid
+                    ? "Signed-Up"
+                    : "Withdraw Sign-up"
+                  : isEventFull
+                  ? "Event Full"
+                  : "Sign-up"}
+              </ButtonText>
+            </Button>
+          )
+        ))}
       <ConfirmDialog
         confirmFunc={withdrawSignUp}
         heading="Withdraw Sign-up?"
