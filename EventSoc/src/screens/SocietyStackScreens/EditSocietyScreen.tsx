@@ -20,6 +20,7 @@ import { UserOverview } from "../../../../Shared/models/User";
 import { retrieveSocietyExec } from "../../services/society/societyExecService";
 import { SocietyStackParamList } from "../../navigation/CrossTabStackScreens/SocietyStackScreens";
 import { useIsFocused } from "@react-navigation/native";
+import useDismissableToast from "../../hooks/useDismissableToast";
 
 type Props = StackScreenProps<SocietyStackParamList, "Edit Society">;
 
@@ -77,6 +78,8 @@ export default function EditSocietyScreen(props: Props) {
     }
   }, [isFocused]);
 
+  const showEditSocSuccessToast = useDismissableToast();
+
   const editSociety = () => {
     if (
       isUndefined(beforeSociety) ||
@@ -107,7 +110,11 @@ export default function EditSocietyScreen(props: Props) {
               message: result,
               showDialog: true
             })
-          : props.navigation.goBack();
+          : (props.navigation.goBack(),
+            showEditSocSuccessToast({
+              title: `${afterSociety.name} updated`,
+              action: "success"
+            }));
       })
       .catch((err) => {
         console.error(err.message);

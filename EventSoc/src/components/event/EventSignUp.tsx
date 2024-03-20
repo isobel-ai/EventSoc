@@ -73,7 +73,7 @@ export default function EventSignUp(props: Props) {
       reserveTicket(props.event.id)
         .then(buyTicket)
         .then(() => createEventAttendee(props.event.id, userId, true))
-        .then(updateComponent)
+        .then(handleSignUpSuccess)
         .catch((err) => {
           err.code !== PaymentSheetError.Canceled && handleSignUpError(err);
           unreserveTicket(props.event.id).catch((err) =>
@@ -82,15 +82,24 @@ export default function EventSignUp(props: Props) {
         });
     } else {
       createEventAttendee(props.event.id, userId)
-        .then(updateComponent)
+        .then(handleSignUpSuccess)
         .catch(handleSignUpError);
     }
   };
 
-  const showSignUpErrToast = useDismissableToast();
+  const showSignUpResultToast = useDismissableToast();
+
+  const handleSignUpSuccess = () =>
+    updateComponent().then(
+      showSignUpResultToast({
+        title: `You are signed up for ${props.event.data.name}`,
+        action: "success"
+      })
+    );
+
   const handleSignUpError = (err: any) => {
     console.error(err.message);
-    showSignUpErrToast({
+    showSignUpResultToast({
       title:
         err.message === "Event Full."
           ? "Event Full."
@@ -104,6 +113,11 @@ export default function EventSignUp(props: Props) {
   const withdrawSignUp = () =>
     deleteEventAttendee(props.event.id, userId)
       .then(updateComponent)
+      .then(() =>
+        showSignUpResultToast({
+          title: `You have withdrawn from ${props.event.data.name}`
+        })
+      )
       .catch((err) => {
         console.error(err.message);
         throw Error("Unable to withdraw sign-up. Try again later.");
