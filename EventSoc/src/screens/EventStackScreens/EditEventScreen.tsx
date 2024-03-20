@@ -15,7 +15,6 @@ import {
   retrieveEventImage,
   updateEvent
 } from "../../services/event/eventsService";
-import { retrieveEventAttendeeCount } from "../../services/event/eventAttendeesService";
 import { cloneDeep, isUndefined } from "lodash";
 import { EventStackParamList } from "../../navigation/CrossTabStackScreens/EventStackScreens";
 import { useIsFocused } from "@react-navigation/native";
@@ -81,29 +80,17 @@ export default function EditEventScreen(props: Props) {
       return;
     }
 
-    const handleError = (err: Error) => {
-      console.error(err.message);
+    const eventUpdates = getUpdates(beforeEvent, afterEvent);
+
+    if (
+      !isUndefined(eventUpdates.capacity) &&
+      eventUpdates.capacity < beforeEvent.attendance
+    ) {
       setErrDialogState({
-        message: "Unable to update event. Try again later.",
+        message:
+          "Updated capacity must not be smaller than number of sign-ups.",
         showDialog: true
       });
-    };
-
-    const eventUpdates = getUpdates(beforeEvent, afterEvent);
-    try {
-      if (
-        !isUndefined(eventUpdates.capacity) &&
-        !(await isValidCapacity(eventUpdates.capacity))
-      ) {
-        setErrDialogState({
-          message:
-            "Updated capacity must not be smaller than number of sign-ups.",
-          showDialog: true
-        });
-        return;
-      }
-    } catch (err: any) {
-      handleError(err);
       return;
     }
 
@@ -115,15 +102,13 @@ export default function EditEventScreen(props: Props) {
       beforeImage !== afterImage ? afterImage : undefined
     )
       .then(props.navigation.goBack)
-      .catch(handleError);
-  };
-
-  const isValidCapacity = (capacity: number) => {
-    return capacity < 0
-      ? true
-      : retrieveEventAttendeeCount(props.route.params.eventId).then(
-          (numOfAttendees) => numOfAttendees <= capacity
-        );
+      .catch((err) => {
+        console.error(err.message);
+        setErrDialogState({
+          message: "Unable to update event. Try again later.",
+          showDialog: true
+        });
+      });
   };
 
   return (

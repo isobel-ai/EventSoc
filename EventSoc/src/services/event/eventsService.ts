@@ -1,13 +1,14 @@
 import {
   doc,
-  updateDoc,
   getDocs,
   query,
   orderBy,
   getDoc,
   Transaction,
   where,
-  writeBatch
+  writeBatch,
+  increment,
+  WriteBatch
 } from "firebase/firestore";
 import { db, eventPicturesRef, eventsCol } from "../../config/firebaseConfig";
 import {
@@ -44,8 +45,18 @@ export async function createEvent(
   return eventRef.id;
 }
 
-export function retrieveEventData(eventId: string) {
-  return getDoc(doc(eventsCol, eventId)).then(docToEventData);
+export function retrieveEventData(eventId: string, transaction?: Transaction) {
+  return (
+    isUndefined(transaction)
+      ? getDoc(doc(eventsCol, eventId))
+      : transaction.get(doc(eventsCol, eventId))
+  ).then(docToEventData);
+}
+
+export function retrieveIsEventFull(eventId: string, transaction: Transaction) {
+  return retrieveEventData(eventId, transaction).then(
+    (event) => event.capacity >= 0 && event.attendance >= event.capacity
+  );
 }
 
 export function retrieveEventOverview(
@@ -106,6 +117,18 @@ export async function updateEvent(
   }
 
   await batch.commit();
+}
+
+export function incrementEventAttendance(
+  eventId: string,
+  by: number,
+  transOrBatch: Transaction | WriteBatch
+) {
+  if (transOrBatch instanceof Transaction) {
+    transOrBatch.update(doc(eventsCol, eventId), { attendance: increment(by) });
+  } else {
+    transOrBatch.update(doc(eventsCol, eventId), { attendance: increment(by) });
+  }
 }
 
 /**
