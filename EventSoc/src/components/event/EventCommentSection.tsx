@@ -5,7 +5,8 @@ import {
   Icon,
   AddIcon,
   ButtonText,
-  Button
+  Button,
+  Spinner
 } from "@gluestack-ui/themed";
 import { useIsFocused } from "@react-navigation/native";
 import { isUndefined } from "lodash";
@@ -17,7 +18,7 @@ import CommentInputModal from "../comment/CommentInputModal";
 import { UserOverview } from "../../../../Shared/models/User";
 import { CommentDoc } from "../../../../Shared/models/CommentOrReply";
 import ErrorAlert from "../error/ErrorAlert";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 
 type Props = {
   eventId: string;
@@ -89,6 +90,8 @@ export default function EventCommentSection(props: Props) {
       ListEmptyComponent={
         showRetrieveCommentErr ? (
           <ErrorAlert message="Couldn't retrieve comments. Try again later." />
+        ) : isUndefined(comments) ? (
+          <Spinner />
         ) : (
           <Text
             fontSize={"$lg"}

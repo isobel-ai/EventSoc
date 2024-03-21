@@ -1,5 +1,5 @@
 import React, { useState, memo, useMemo, PropsWithoutRef } from "react";
-import { isEmpty, find } from "lodash";
+import { isEmpty, find, isUndefined } from "lodash";
 import {
   View,
   FlatList,
@@ -17,7 +17,8 @@ import {
 } from "react-native";
 import Icon from "./src/components/Icon";
 import Toggle from "./src/components/Toggle";
-import { config } from "../../config/gluestack-ui.config";
+import { config } from "../../src/config/gluestack-ui.config";
+import { Spinner } from "@gluestack-ui/themed";
 
 const hitSlop = { top: 14, bottom: 14, left: 14, right: 14 };
 
@@ -243,9 +244,16 @@ function SelectBox({
     };
     return (
       <View style={kOptionListViewStyle}>
-        <Text style={kListEmptyLabelStyle}>
-          {filteredSuggestions?.length === 0 && listEmptyText}
-        </Text>
+        {isUndefined(options) ? (
+          <Spinner
+            marginTop={15}
+            size="large"
+          />
+        ) : (
+          <Text style={kListEmptyLabelStyle}>
+            {filteredSuggestions?.length === 0 && listEmptyText}
+          </Text>
+        )}
       </View>
     );
   }

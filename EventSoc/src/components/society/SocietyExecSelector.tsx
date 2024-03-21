@@ -16,7 +16,6 @@ import {
   InfoIcon
 } from "@gluestack-ui/themed";
 import { useEffect, useState } from "react";
-import { config } from "../../../config/gluestack-ui.config";
 import { isUndefined, xorBy } from "lodash";
 import SelectBox, { Item } from "../../../libs/multi-selectbox";
 import { useUserContext } from "../../contexts/UserContext";
@@ -24,6 +23,7 @@ import { UserOverview } from "../../../../Shared/models/User";
 import { useIsFocused } from "@react-navigation/native";
 import ErrorAlert from "../error/ErrorAlert";
 import { retrieveUserNames } from "../../services/namesService";
+import { config } from "../../config/gluestack-ui.config";
 
 type Props = {
   exec: UserOverview[];

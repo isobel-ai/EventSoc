@@ -5,7 +5,7 @@ import {
   HStack,
   Text
 } from "@gluestack-ui/themed";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 
 type Props = {
   interest: string;

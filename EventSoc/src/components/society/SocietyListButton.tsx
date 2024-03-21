@@ -8,7 +8,7 @@ import {
 import { Name } from "../../../../Shared/models/Name";
 import { useEffect, useState } from "react";
 import { retrieveSocietyImage } from "../../services/society/societiesService";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import { useIsFocused } from "@react-navigation/native";
 
 type Props = {

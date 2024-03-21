@@ -1,5 +1,5 @@
 import { GluestackUIProvider } from "@gluestack-ui/themed";
-import { config } from "./config/gluestack-ui.config";
+import { config } from "./src/config/gluestack-ui.config";
 import AppNavigator from "./src/navigation/AppNavigator";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useAuth } from "./src/hooks/useAuth";

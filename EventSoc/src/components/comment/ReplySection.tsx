@@ -5,7 +5,8 @@ import {
   AddIcon,
   Button,
   ButtonText,
-  Text
+  Text,
+  Spinner
 } from "@gluestack-ui/themed";
 import { FlatList } from "react-native";
 import CommentButton from "./CommentButton";
@@ -33,7 +34,7 @@ type Props = {
 );
 
 export default function ReplySection(props: Props) {
-  const [replies, setReplies] = useState<ReplyDoc[]>([]);
+  const [replies, setReplies] = useState<ReplyDoc[]>();
   const [showRetrieveRepliesErr, setShowRetrieveRepliesErr] =
     useState<boolean>(false);
 
@@ -55,7 +56,7 @@ export default function ReplySection(props: Props) {
         })
         .catch((err) => {
           console.error(err);
-          !replies.length && setShowRetrieveRepliesErr(true);
+          !replies?.length && setShowRetrieveRepliesErr(true);
         });
     }
   }, [isFocused, props.showPostCommentModal, props.comment.data]);
@@ -119,6 +120,8 @@ export default function ReplySection(props: Props) {
       ListEmptyComponent={
         showRetrieveRepliesErr ? (
           <ErrorAlert message="Couldn't retrieve replies. Try again later." />
+        ) : isUndefined(replies) ? (
+          <Spinner marginTop={5} />
         ) : (
           <Text
             fontSize={"$lg"}

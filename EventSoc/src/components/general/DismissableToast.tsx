@@ -1,5 +1,6 @@
 import {
-  CloseCircleIcon,
+  AlertCircleIcon,
+  CheckCircleIcon,
   Icon,
   Pressable,
   Toast,
@@ -11,6 +12,7 @@ import {
 export interface DismissableToastProps {
   title: string;
   description?: string;
+  action?: "success" | "error";
 }
 
 type Props = DismissableToastProps & {
@@ -28,9 +30,9 @@ export default function DismissableToast(props: Props) {
         width="95%"
         alignSelf="center"
         nativeID={props.id}
-        bg="$error">
+        bg={`$${props.action ?? "error"}`}>
         <Icon
-          as={CloseCircleIcon}
+          as={props.action === "success" ? CheckCircleIcon : AlertCircleIcon}
           color="$white"
           size="lg"
           alignSelf="center"

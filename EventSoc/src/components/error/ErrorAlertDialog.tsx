@@ -14,7 +14,7 @@ import {
   ButtonText,
   Text
 } from "@gluestack-ui/themed";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export type ErrDialogState = {

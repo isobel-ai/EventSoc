@@ -5,7 +5,7 @@ import {
   MessageCircleIcon,
   HStack
 } from "@gluestack-ui/themed";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import { StyleProp, TextStyle } from "react-native";
 import { toTimeAgoString } from "../../helpers/DateTimeHelper";
 import { useIsFocused, useNavigation } from "@react-navigation/native";

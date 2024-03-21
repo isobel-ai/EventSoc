@@ -1,24 +1,25 @@
-import ScreenView from "../../components/general/ScreenView";
+import { Button, ButtonText, Spinner } from "@gluestack-ui/themed";
+import { useIsFocused } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { EventData } from "../../../../Shared/models/Event";
+import { cloneDeep, isUndefined } from "lodash";
 import { useEffect, useState } from "react";
-import { getEventErrMsg } from "../../helpers/EventInputValidationHelper";
-import EventForm from "../../components/event/EventForm";
-import { Button, ButtonText } from "@gluestack-ui/themed";
+import { EventData } from "../../../../Shared/models/Event";
 import ErrorAlertDialog, {
   ErrDialogState,
   defaultErrDialogState
 } from "../../components/error/ErrorAlertDialog";
+import EventForm from "../../components/event/EventForm";
+import ScreenView from "../../components/general/ScreenView";
+import { useUserContext } from "../../contexts/UserContext";
+import { getEventErrMsg } from "../../helpers/EventInputValidationHelper";
 import { getUpdates } from "../../helpers/UpdateHelper";
+import { EventStackParamList } from "../../navigation/CrossTabStackScreens/EventStackScreens";
 import {
   retrieveEventData,
   retrieveEventImage,
   updateEvent
 } from "../../services/event/eventsService";
-import { cloneDeep, isUndefined } from "lodash";
-import { EventStackParamList } from "../../navigation/CrossTabStackScreens/EventStackScreens";
-import { useIsFocused } from "@react-navigation/native";
-import { useUserContext } from "../../contexts/UserContext";
+import useDismissableToast from "../../hooks/useDismissableToast";
 
 type Props = StackScreenProps<EventStackParamList, "Edit Event">;
 
@@ -65,7 +66,9 @@ export default function EditEventScreen(props: Props) {
     }
   }, [isFocused]);
 
-  const editEvent = async () => {
+  const showUpdateSuccess = useDismissableToast();
+
+  const editEvent = () => {
     if (
       isUndefined(beforeEvent) ||
       isUndefined(beforeImage) ||
@@ -102,6 +105,12 @@ export default function EditEventScreen(props: Props) {
       beforeImage !== afterImage ? afterImage : undefined
     )
       .then(props.navigation.goBack)
+      .then(() =>
+        showUpdateSuccess({
+          title: `${afterEvent.name} has been updated`,
+          action: "success"
+        })
+      )
       .catch((err) => {
         console.error(err.message);
         setErrDialogState({
@@ -113,7 +122,12 @@ export default function EditEventScreen(props: Props) {
 
   return (
     <ScreenView useTopPadding>
-      {!isEventUndefined && (
+      {isEventUndefined ? (
+        <Spinner
+          size="large"
+          marginVertical={10}
+        />
+      ) : (
         <>
           <EventForm
             event={afterEvent}

@@ -17,6 +17,7 @@ import { createSociety } from "../services/society/societiesService";
 import { useUserContext } from "../contexts/UserContext";
 import { UserOverview } from "../../../Shared/models/User";
 import { retrieveUserOverview } from "../services/user/usersService";
+import useDismissableToast from "../hooks/useDismissableToast";
 
 type Props = StackScreenProps<SocietiesStackParamList, "Register Society">;
 
@@ -30,6 +31,8 @@ export default function RegisterScreen(props: Props) {
   const [errDialogState, setErrDialogState] = useState<ErrDialogState>(
     defaultErrDialogState
   );
+
+  const showRegisterSocSuccessToast = useDismissableToast();
 
   const registerSociety = () => {
     const invalidErrMsg = getSocietyErrMsg(society);
@@ -48,6 +51,10 @@ export default function RegisterScreen(props: Props) {
             });
           } else {
             props.navigation.navigate("Society", { societyId: result });
+            showRegisterSocSuccessToast({
+              title: `${society.name} registered`,
+              action: "success"
+            });
             setErrDialogState({
               message: "",
               showDialog: false

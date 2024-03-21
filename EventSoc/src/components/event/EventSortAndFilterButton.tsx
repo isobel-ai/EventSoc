@@ -1,5 +1,5 @@
 import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import {
   Button,
   ButtonText,

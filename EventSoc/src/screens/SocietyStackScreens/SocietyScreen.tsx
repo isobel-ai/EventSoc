@@ -11,7 +11,7 @@ import ScreenView from "../../components/general/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useIsFocused } from "@react-navigation/native";
 import { useUserContext } from "../../contexts/UserContext";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import SearchList from "../../components/general/SearchList";
 import EventListButton from "../../components/event/EventListButton";
 import { SocietyStackParamList } from "../../navigation/CrossTabStackScreens/SocietyStackScreens";

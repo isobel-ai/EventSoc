@@ -1,5 +1,5 @@
 import { View, Text, Icon, CloseCircleIcon } from "@gluestack-ui/themed";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import { TextStyle, TouchableOpacity, ViewStyle } from "react-native";
 
 type Props = {

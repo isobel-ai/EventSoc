@@ -11,6 +11,7 @@ import ErrorAlertDialog, {
 } from "../../components/error/ErrorAlertDialog";
 import { SocietyStackParamList } from "../../navigation/CrossTabStackScreens/SocietyStackScreens";
 import { createSocietyEvent } from "../../services/society/societyEventsService";
+import useDismissableToast from "../../hooks/useDismissableToast";
 
 type Props = StackScreenProps<SocietyStackParamList, "Create Event">;
 
@@ -23,6 +24,8 @@ export default function CreateEventScreen(props: Props) {
     defaultErrDialogState
   );
 
+  const showCreateEventSuccessToast = useDismissableToast();
+
   const handleCreateEvent = () => {
     const invalidErrMsg = getEventErrMsg(event);
     if (invalidErrMsg) {
@@ -30,6 +33,12 @@ export default function CreateEventScreen(props: Props) {
     } else {
       createSocietyEvent(props.route.params.organiserId, event, image)
         .then(props.navigation.goBack)
+        .then(() =>
+          showCreateEventSuccessToast({
+            title: `${event.name} created`,
+            action: "success"
+          })
+        )
         .catch((err) => {
           console.error(err.message);
           setErrDialogState({

@@ -7,7 +7,7 @@ import SideMenu, {
 import { toDateRangeString, endOfUniYear } from "../../helpers/DateTimeHelper";
 import SideMenuHeading from "../general/SideMenuHeading";
 import Tag from "../tag/Tag";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import SelectBox, { Item } from "../../../libs/multi-selectbox";
 import { isEqual, isUndefined, xorBy } from "lodash";
 import { Dimensions, Keyboard } from "react-native";

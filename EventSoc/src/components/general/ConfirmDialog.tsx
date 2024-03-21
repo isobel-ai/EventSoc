@@ -17,7 +17,7 @@ import {
 } from "@gluestack-ui/themed";
 import { useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import ErrorAlert from "../error/ErrorAlert";
 
 type Props = {

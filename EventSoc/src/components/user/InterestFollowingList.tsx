@@ -11,7 +11,7 @@ import {
 } from "@gluestack-ui/themed";
 import { useUserContext } from "../../contexts/UserContext";
 import { useState } from "react";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import {
   createUserInterest,
   deleteUserInterest

@@ -20,9 +20,10 @@ import { endOfUniYear, setDate, setTime } from "../../helpers/DateTimeHelper";
 import { EventData } from "../../../../Shared/models/Event";
 import { useRef, useState } from "react";
 import TagInput from "../tag/TagInput";
-import { isEmpty, toInteger, xor } from "lodash";
-import { config } from "../../../config/gluestack-ui.config";
+import { toInteger, xor } from "lodash";
+import { config } from "../../config/gluestack-ui.config";
 import { useScrollOnResize } from "../../hooks/useScrollOnResize";
+import { useFlashScrollIndicators } from "../../hooks/useFlashScrollIndicators";
 
 type Props = {
   event: EventData;
@@ -35,6 +36,7 @@ type Props = {
 export default function EventForm(props: Props) {
   const scrollViewRef = useRef<ScrollView>(null);
   const handleFormSizeChange = useScrollOnResize(scrollViewRef);
+  useFlashScrollIndicators(scrollViewRef);
 
   const [rawTicketPrice, setRawTicketPrice] = useState<string>(
     props.event.ticketPrice.toFixed(2)

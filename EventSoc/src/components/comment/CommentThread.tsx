@@ -1,4 +1,4 @@
-import { Divider } from "@gluestack-ui/themed";
+import { Divider, Spinner } from "@gluestack-ui/themed";
 import { FlatList } from "react-native";
 import CommentButton from "./CommentButton";
 import ErrorAlert from "../error/ErrorAlert";
@@ -8,7 +8,7 @@ import { isUndefined } from "lodash";
 import { retrieveReplyParentReplies } from "../../services/event/eventCommentRepliesService";
 import { retrieveComment } from "../../services/event/eventCommentsService";
 import { useIsFocused } from "@react-navigation/native";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 
 type Props = {
   eventId: string;
@@ -60,7 +60,9 @@ export default function CommentThread(props: Props) {
       scrollEnabled={false}
       ListHeaderComponent={
         <>
-          {!isUndefined(topLevelComment) && (
+          {isUndefined(topLevelComment) ? (
+            <Spinner marginVertical={10} />
+          ) : (
             <>
               {topLevelComment instanceof Error ? (
                 <ErrorAlert
@@ -73,7 +75,7 @@ export default function CommentThread(props: Props) {
                   comment={topLevelComment}
                 />
               )}
-              <CommentDivider />
+              {!isUndefined(parentReplies) && <CommentDivider />}
             </>
           )}
         </>
@@ -96,6 +98,9 @@ export default function CommentThread(props: Props) {
       ItemSeparatorComponent={CommentDivider}
       ListFooterComponent={
         parentReplies?.length ? <CommentDivider /> : undefined
+      }
+      ListEmptyComponent={
+        isUndefined(parentReplies) ? <Spinner marginVertical={10} /> : undefined
       }
     />
   );

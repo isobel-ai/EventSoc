@@ -1,5 +1,5 @@
 import { HStack, Image, Button, ButtonText, Text } from "@gluestack-ui/themed";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import {
   useNavigation,
   NavigationProp,

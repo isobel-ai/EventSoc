@@ -1,7 +1,7 @@
 import { AnimationResolver } from "@gluestack-style/animation-resolver";
 import { MotionAnimationDriver } from "@gluestack-style/legend-motion-animation-driver";
 import { createConfig, createComponents } from "@gluestack-style/react";
-import * as componentsTheme from "./theme";
+import * as componentsTheme from "../../libs/gluestack-components";
 
 export const gluestackUIConfig = createConfig({
   aliases: {
@@ -37,6 +37,7 @@ export const gluestackUIConfig = createConfig({
       defaultBackgroundLight: "#F5F5F5",
       infoBlue: "#0077E6",
       error: "#E63535",
+      success: "#348352",
       rose50: "#fff1f2",
       rose100: "#ffe4e6",
       rose200: "#fecdd3",

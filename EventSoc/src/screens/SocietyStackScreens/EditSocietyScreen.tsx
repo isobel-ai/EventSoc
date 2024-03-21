@@ -1,7 +1,7 @@
 import ScreenView from "../../components/general/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useEffect, useState } from "react";
-import { Button, ButtonText } from "@gluestack-ui/themed";
+import { Button, ButtonText, Spinner } from "@gluestack-ui/themed";
 import ErrorAlertDialog, {
   ErrDialogState,
   defaultErrDialogState
@@ -20,6 +20,7 @@ import { UserOverview } from "../../../../Shared/models/User";
 import { retrieveSocietyExec } from "../../services/society/societyExecService";
 import { SocietyStackParamList } from "../../navigation/CrossTabStackScreens/SocietyStackScreens";
 import { useIsFocused } from "@react-navigation/native";
+import useDismissableToast from "../../hooks/useDismissableToast";
 
 type Props = StackScreenProps<SocietyStackParamList, "Edit Society">;
 
@@ -77,6 +78,8 @@ export default function EditSocietyScreen(props: Props) {
     }
   }, [isFocused]);
 
+  const showEditSocSuccessToast = useDismissableToast();
+
   const editSociety = () => {
     if (
       isUndefined(beforeSociety) ||
@@ -107,7 +110,11 @@ export default function EditSocietyScreen(props: Props) {
               message: result,
               showDialog: true
             })
-          : props.navigation.goBack();
+          : (props.navigation.goBack(),
+            showEditSocSuccessToast({
+              title: `${afterSociety.name} updated`,
+              action: "success"
+            }));
       })
       .catch((err) => {
         console.error(err.message);
@@ -120,7 +127,12 @@ export default function EditSocietyScreen(props: Props) {
 
   return (
     <ScreenView useTopPadding>
-      {!isSocietyUndefined && (
+      {isSocietyUndefined ? (
+        <Spinner
+          size="large"
+          marginTop={20}
+        />
+      ) : (
         <>
           <SocietyForm
             society={afterSociety}

@@ -9,7 +9,7 @@ import ScreenView from "../../components/general/ScreenView";
 import { StackScreenProps } from "@react-navigation/stack";
 import React from "react";
 import { LoginStackParamList } from "../../navigation/LoginStackNavigator";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import RegisterForm from "../../components/login/RegisterForm";
 
 type Props = StackScreenProps<LoginStackParamList, "Register">;

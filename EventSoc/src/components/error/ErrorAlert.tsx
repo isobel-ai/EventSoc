@@ -1,5 +1,5 @@
 import { Alert, AlertText } from "@gluestack-ui/themed";
-import { config } from "../../../config/gluestack-ui.config";
+import { config } from "../../config/gluestack-ui.config";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { DimensionValue, StyleProp, ViewStyle } from "react-native";
 
