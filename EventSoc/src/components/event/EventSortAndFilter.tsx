@@ -51,19 +51,15 @@ export default function EventSortAndFilter(props: Props) {
         "data.tags"
       ]);
 
-      switch (sortMethod) {
-        case "REC":
-          props.setEventFeed(searchedEvents.sort((a, b) => b.score - a.score));
-          break;
-        case "DATE":
-          props.setEventFeed(
-            searchedEvents.sort(
-              (a, b) => a.data.startDate.getTime() - b.data.startDate.getTime()
-            )
-          );
-      }
+      props.setEventFeed(
+        searchedEvents.sort((a, b) =>
+          sortMethod === "REC"
+            ? b.score - a.score
+            : a.data.startDate.getTime() - b.data.startDate.getTime()
+        )
+      );
     }
-  }, [sortMethod, searchTerm, props.events, isFilterMenuOpen]);
+  }, [props.events, isFilterMenuOpen, searchTerm, sortMethod]);
 
   return (
     <EventFilterSideMenu
@@ -96,9 +92,7 @@ export default function EventSortAndFilter(props: Props) {
           </InputSlot>
         </Input>
         <EventSortAndFilterButton
-          setIsFilterMenuOpen={setIsFilterMenuOpen}
-          sortMethod={sortMethod}
-          setSortMethod={setSortMethod}
+          {...{ setIsFilterMenuOpen, sortMethod, setSortMethod }}
         />
         {props.children}
       </ScreenView>

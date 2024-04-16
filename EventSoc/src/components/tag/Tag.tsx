@@ -22,7 +22,7 @@ export default function Tag(props: Props) {
   };
 
   const labelStyle: TextStyle = {
-    color: "#fff",
+    color: config.tokens.colors.white,
     fontSize: config.tokens.fontSizes.sm
   };
 
