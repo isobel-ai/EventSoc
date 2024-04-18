@@ -44,9 +44,10 @@ export function createAccountLink(id: string) {
     });
 }
 
-export function retrieveClientSecret(ticketPrice: number) {
+export function retrieveClientSecret(ticketPrice: number, recipientID: string) {
   const requestBody: CreatePayIntentReq = {
-    amount: ticketPrice
+    amount: ticketPrice,
+    recipientID: recipientID
   };
 
   return fetch(

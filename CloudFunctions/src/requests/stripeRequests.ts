@@ -63,13 +63,15 @@ export const createAccountLink = onRequest(
 export const createPaymentIntent = onRequest(
   { cors: true, region: region },
   (req, res) => {
-    const ticketPriceInPounds = (<CreatePayIntentReq>JSON.parse(req.body))
-      .amount;
+    const reqBody = <CreatePayIntentReq>JSON.parse(req.body);
 
     const params: Stripe.PaymentIntentCreateParams = {
-      amount: ticketPriceInPounds * 100,
+      amount: reqBody.amount * 100,
       currency: "gbp",
-      automatic_payment_methods: { enabled: true }
+      automatic_payment_methods: { enabled: true },
+      transfer_data: {
+        destination: reqBody.recipientID
+      }
     };
 
     stripe.paymentIntents

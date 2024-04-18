@@ -13,9 +13,10 @@ export function defaultSocietyData(): SocietyData {
 export type SocietyOverview = {
   id: string;
   name: string;
+  stripeID: string;
   exec: UserOverview[];
 };
 
 export function defaultSocietyOverview(): SocietyOverview {
-  return { id: "", name: "", exec: <UserOverview[]>[] };
+  return { id: "", name: "", stripeID: "", exec: <UserOverview[]>[] };
 }
