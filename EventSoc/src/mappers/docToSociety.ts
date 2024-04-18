@@ -16,6 +16,7 @@ export function docToSocietyOverviewNarrow(
   const societyOverview: SocietyOverview = {
     id: doc.id,
     name: data.name,
+    stripeID: data.stripeID,
     exec: exec
   };
 

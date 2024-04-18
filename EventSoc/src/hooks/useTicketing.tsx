@@ -1,20 +1,21 @@
 import { useStripe } from "@stripe/stripe-react-native";
-import { isUndefined } from "lodash";
+import { isNull, isUndefined } from "lodash";
 import { retrieveClientSecret } from "../services/stripeService";
 import { config } from "../config/gluestack-ui.config";
+import { SocietyOverview } from "../../../Shared/models/Society";
 
 export default function useTicketing(
-  eventOrganiser: string,
+  eventOrganiser: SocietyOverview,
   ticketPrice: number
 ) {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
   const buyTicket = () =>
-    retrieveClientSecret(ticketPrice)
+    retrieveClientSecret(ticketPrice, eventOrganiser.stripeID)
       .then((clientSecret) =>
         initPaymentSheet({
-          merchantDisplayName: eventOrganiser,
-          paymentIntentClientSecret: clientSecret,
+          merchantDisplayName: eventOrganiser.name,
+          paymentIntentClientSecret: clientSecret || "",
           appearance: {
             colors: {
               primary: config.tokens.colors.primary500,

@@ -64,7 +64,7 @@ export default function EventSignUp(props: Props) {
   }, [isFocused]);
 
   const { buyTicket } = useTicketing(
-    props.event.data.organiser.name,
+    props.event.data.organiser,
     props.event.data.ticketPrice
   );
 

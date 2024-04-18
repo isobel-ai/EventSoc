@@ -44,6 +44,6 @@ export function updateBadgeCount(by: number) {
       .then((count) =>
         Notifications.setBadgeCountAsync(Math.max(0, count + by))
       )
-      .then((result) => !result && console.log("Failed to update badge"))
-      .catch((err) => console.log(err));
+      .then((result) => !result && console.error("Failed to update badge"))
+      .catch((err) => console.error(err));
 }

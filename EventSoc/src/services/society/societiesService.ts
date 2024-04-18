@@ -32,10 +32,6 @@ export async function createSociety(
   image: string,
   exec: UserOverview[]
 ) {
-  if (await retrieveDoesSocietyNameExist(society.name)) {
-    return Error("Society name taken.");
-  }
-
   const socRef = doc(societiesCol);
 
   if (image) {
