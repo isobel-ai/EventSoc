@@ -1,5 +1,5 @@
 import { useStripe } from "@stripe/stripe-react-native";
-import { isUndefined } from "lodash";
+import { isNull, isUndefined } from "lodash";
 import { retrieveClientSecret } from "../services/stripeService";
 import { config } from "../config/gluestack-ui.config";
 
@@ -14,7 +14,7 @@ export default function useTicketing(
       .then((clientSecret) =>
         initPaymentSheet({
           merchantDisplayName: eventOrganiser,
-          paymentIntentClientSecret: clientSecret,
+          paymentIntentClientSecret: clientSecret || "",
           appearance: {
             colors: {
               primary: config.tokens.colors.primary500,
