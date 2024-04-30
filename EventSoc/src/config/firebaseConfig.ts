@@ -11,7 +11,13 @@ import {
   getAuth,
   Auth
 } from "firebase/auth";
-import { collection, getFirestore } from "firebase/firestore";
+import {
+  Firestore,
+  collection,
+  getFirestore,
+  initializeFirestore,
+  persistentLocalCache
+} from "firebase/firestore";
 import { getStorage, ref } from "firebase/storage";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -27,17 +33,19 @@ const firebaseConfig: FirebaseOptions = {
 
 let app: FirebaseApp;
 export let auth: Auth;
+export let db: Firestore;
 if (!getApps().length) {
   app = initializeApp(firebaseConfig);
   auth = initializeAuth(app, {
     persistence: getReactNativePersistence(ReactNativeAsyncStorage)
   });
+  db = initializeFirestore(app, { localCache: persistentLocalCache() });
 } else {
   app = getApp();
   auth = getAuth(app);
+  db = getFirestore(app);
 }
-
-export const db = getFirestore(app);
+const storage = getStorage(app);
 
 export const eventsCol = collection(db, "events");
 export const eventAttendeesCol = (eventId: string) =>
@@ -68,6 +76,5 @@ export const societyEventsCol = (socId: string) =>
 export const userNamesCol = collection(db, "userNames");
 export const societyNamesCol = collection(db, "societyNames");
 
-const storage = getStorage(app);
 export const eventPicturesRef = ref(storage, "eventPictures");
 export const societyPicturesRef = ref(storage, "societyPictures");

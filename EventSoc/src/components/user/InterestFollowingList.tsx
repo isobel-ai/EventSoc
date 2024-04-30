@@ -1,14 +1,5 @@
 import { FlatList, Keyboard } from "react-native";
-import {
-  AddIcon,
-  Divider,
-  Icon,
-  Input,
-  InputField,
-  InputIcon,
-  InputSlot,
-  Text
-} from "@gluestack-ui/themed";
+import { Divider, Input, InputField, Text } from "@gluestack-ui/themed";
 import { useUserContext } from "../../contexts/UserContext";
 import { useState } from "react";
 import { config } from "../../config/gluestack-ui.config";
@@ -74,11 +65,6 @@ export default function InterestFollowingList(props: Props) {
             onChangeText={(t) => setNewInterest(t)}
             onSubmitEditing={handleAddInterest}
           />
-          <InputSlot paddingRight="$1.5">
-            <InputIcon>
-              <Icon as={AddIcon} />
-            </InputIcon>
-          </InputSlot>
         </Input>
       }
       data={sortedInterests}

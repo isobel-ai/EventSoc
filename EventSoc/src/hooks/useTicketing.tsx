@@ -1,5 +1,5 @@
 import { useStripe } from "@stripe/stripe-react-native";
-import { isNull, isUndefined } from "lodash";
+import { isUndefined } from "lodash";
 import { retrieveClientSecret } from "../services/stripeService";
 import { config } from "../config/gluestack-ui.config";
 import { SocietyOverview } from "../../../Shared/models/Society";
